@@ -106,7 +106,7 @@ def findCrop(webcam):
 
             errorScale = 8
             finalMinX = blobs[0].maxX + errorScale
-            finalMinY = blobs[0].minY  + errorScale
+            finalMinY = blobs[0].minY + errorScale
             finalMaxX = blobs[1].minX - errorScale
             finalMaxY = blobs[1].maxY - errorScale
             return finalMinY, finalMaxY, finalMinX, finalMaxX
