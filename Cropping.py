@@ -34,10 +34,7 @@ def findCrop(webcam):
         # print("Upper: ", upperValue)
 
         mask = cv2.inRange(hsv, lowerValue, upperValue)
-        res = cv2.bitwise_and(hsv, hsv, mask=mask)
-
-        cv2.imshow('blured', hsv)
-        cv2.waitKey(0)
+        # res = cv2.bitwise_and(hsv, hsv, mask=mask)
 
         kernel = np.ones((9, 9), np.uint8)
 
@@ -111,16 +108,7 @@ def findCrop(webcam):
             finalMinX = blobs[0].maxX + errorScale
             finalMinY = blobs[0].minY + errorScale
             finalMaxX = blobs[1].minX - errorScale
-            finalMaxY = blobs[1].maxY - errorScale
-
-            crop_img = opening2[finalMinY:finalMaxY, finalMinX:finalMaxX]
-
-            # Just for helpful visuals, should be deleted
-            # TODO Delete this
-            # cv2.imshow('crop', crop_img)
-            # cv2.imshow('frame', frame)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
+            finalMaxY = blobs[1].maxY + errorScale
             return finalMinY, finalMaxY, finalMinX, finalMaxX
 
         # If no markers are found, handle the error

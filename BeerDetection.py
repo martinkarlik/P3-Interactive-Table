@@ -18,7 +18,8 @@ if __name__ == '__main__':
             # frame = cv2.imread('Images/Marker.jpg', 1)
             # frame = cv2.imread('Images/Marker2.jpg', 1)
 
-            hsv = cv2.cvtColor(crop_frame, cv2.COLOR_BGR2HSV)
+            blurred_frame = cv2.GaussianBlur(crop_frame, (5, 5), cv2.BORDER_DEFAULT)
+            hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
 
             # Input BGR color to get HSV
             colorBGR = np.uint8([[[24, 56, 99]]])
@@ -35,9 +36,8 @@ if __name__ == '__main__':
             upperValue[0] += 15
             # print("Upper: ", upperValue)
 
-            blurred_frame = cv2.GaussianBlur(hsv, (5, 5), cv2.BORDER_DEFAULT)
-            mask = cv2.inRange(blurred_frame, lowerValue, upperValue)
-            res = cv2.bitwise_and(blurred_frame, blurred_frame, mask=mask)
+            mask = cv2.inRange(hsv, lowerValue, upperValue)
+            # res = cv2.bitwise_and(hsv, hsv, mask=mask)
 
             kernel = np.ones((9, 9), np.uint8)
 
