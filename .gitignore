@@ -123,3 +123,6 @@ dmypy.json
 .pyre/
 .idea/misc.xml
 .idea/p3.iml
+.idea/workspace.xml
+.idea/p3.iml
+.idea/misc.xml
