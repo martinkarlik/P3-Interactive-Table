@@ -9,3 +9,5 @@ while True:
     cv2.imshow("frame", frame)
     if cv2.waitKey(1) and 0xFF == ord('q'):
         break
+
+print("update")
