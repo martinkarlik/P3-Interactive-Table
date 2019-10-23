@@ -9,7 +9,6 @@ class Blob:
     circular = 0
     marker = False
     beer = False
-    coloured = False
     minX = 0
     maxX = 0
     minY = 0
@@ -19,7 +18,7 @@ class Blob:
         self.pixels = []
 
     def calcCompactness(self, area):
-        return (area / ((self.maxX - self.minX + 1) * (self.maxY - self.minY + 1)))
+        return area / ((self.maxX - self.minX + 1) * (self.maxY - self.minY + 1))
 
     def isBeer(self, threshold):
         return self.circular > threshold

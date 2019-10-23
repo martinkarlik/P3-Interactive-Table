@@ -5,11 +5,12 @@ import numpy as np
 import random
 
 if __name__ == '__main__':
-    webcam = 1
-    finalMinY, finalMaxY, finalMinX, finalMaxX = findCrop(webcam)
-    # Check if the webcam is detected, if not this is not run
-    if cv2.VideoCapture(webcam).isOpened():
-        cap = cv2.VideoCapture(webcam)
+    # This controls which web cam is being used
+    web_cam = 1
+    finalMinY, finalMaxY, finalMinX, finalMaxX = findCrop(web_cam)
+    # Check if the web_cam is detected, if not this is not run
+    if cv2.VideoCapture(web_cam).isOpened():
+        cap = cv2.VideoCapture(web_cam)
         while True:
             _, frame = cap.read()
 
@@ -124,6 +125,6 @@ if __name__ == '__main__':
                 break
         cap.release()
         cv2.destroyAllWindows()
-    # No webcam detected, handle it
+    # No web cam detected, handle it
     else:
         print("No camera found")

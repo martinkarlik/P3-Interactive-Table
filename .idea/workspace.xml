@@ -2,8 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/BeerPong.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeerDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/BeerDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlobClass.py" beforeDir="false" afterPath="$PROJECT_DIR$/BlobClass.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cropping.py" beforeDir="false" afterPath="$PROJECT_DIR$/Cropping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Balls.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/BeerPong.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/BeerPongTemplate.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Binary.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Cup.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Cup1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Cup2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Cup3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Football.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Frodo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Test1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/filename.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/shapes.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -126,7 +144,21 @@
       <option name="project" value="LOCAL" />
       <updated>1571745146520</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="I updated the repository">
+      <created>1571745750735</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1571745750735</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Fixed the errorscaling value">
+      <created>1571745806358</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1571745806358</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -144,6 +176,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="I updated the repository" />
-    <option name="LAST_COMMIT_MESSAGE" value="I updated the repository" />
+    <MESSAGE value="Fixed the errorscaling value" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed the errorscaling value" />
   </component>
 </project>
