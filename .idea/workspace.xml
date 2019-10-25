@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlobClass.py" beforeDir="false" afterPath="$PROJECT_DIR$/BlobClass.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cropping.py" beforeDir="false" afterPath="$PROJECT_DIR$/Cropping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -106,7 +103,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571745146520</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="I updated the repository">
+      <created>1571759554856</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1571759554856</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -126,8 +130,8 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/p3" />
     </ignored-roots>
-    <MESSAGE value="I updated the repository" />
     <MESSAGE value="I updated the repository again" />
-    <option name="LAST_COMMIT_MESSAGE" value="I updated the repository again" />
+    <MESSAGE value="I updated the repository" />
+    <option name="LAST_COMMIT_MESSAGE" value="I updated the repository" />
   </component>
 </project>
