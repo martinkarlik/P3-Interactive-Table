@@ -2,7 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/BeerPong.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeerDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/BeerDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlobClass.py" beforeDir="false" afterPath="$PROJECT_DIR$/BlobClass.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cropping.py" beforeDir="false" afterPath="$PROJECT_DIR$/Cropping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Balls.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/BeerPong.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/BeerPongTemplate.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Binary.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Cup.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Cup1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Cup2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Cup3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Football.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Frodo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/Test1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/filename.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/shapes.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +62,28 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.BeerDetection">
+    <configuration name="BeerDetection" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="p3" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/BeerDetection.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -67,6 +107,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.BeerDetection" />
         <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
@@ -89,12 +130,12 @@
       <option name="project" value="LOCAL" />
       <updated>1571743514191</updated>
     </task>
-    <task id="LOCAL-00002" summary="I updated the repository again">
-      <created>1571743705689</created>
+    <task id="LOCAL-00002" summary="I updated the repository">
+      <created>1571745325534</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1571743705691</updated>
+      <updated>1571745325534</updated>
     </task>
     <task id="LOCAL-00003" summary="I updated the repository again">
       <created>1571745146520</created>
@@ -104,13 +145,20 @@
       <updated>1571745146520</updated>
     </task>
     <task id="LOCAL-00004" summary="I updated the repository">
-      <created>1571759554856</created>
+      <created>1571745750735</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1571759554856</updated>
+      <updated>1571745750735</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Fixed the errorscaling value">
+      <created>1571745806358</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1571745806358</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -127,11 +175,8 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <ignored-roots>
-      <path value="$PROJECT_DIR$/p3" />
-    </ignored-roots>
-    <MESSAGE value="I updated the repository again" />
     <MESSAGE value="I updated the repository" />
-    <option name="LAST_COMMIT_MESSAGE" value="I updated the repository" />
+    <MESSAGE value="Fixed the errorscaling value" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed the errorscaling value" />
   </component>
 </project>

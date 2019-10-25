@@ -5,11 +5,12 @@ import numpy as np
 import random
 
 if __name__ == '__main__':
-    webcam = 1
-    finalMinY, finalMaxY, finalMinX, finalMaxX = findCrop(webcam)
-    # Check if the webcam is detected, if not this is not run
-    if cv2.VideoCapture(webcam).isOpened():
-        cap = cv2.VideoCapture(webcam)
+    # This controls which web cam is being used
+    web_cam = 1
+    finalMinY, finalMaxY, finalMinX, finalMaxX = findCrop(web_cam)
+    # Check if the web_cam is detected, if not this is not run
+    if cv2.VideoCapture(web_cam).isOpened():
+        cap = cv2.VideoCapture(web_cam)
         while True:
             _, frame = cap.read()
 
@@ -18,7 +19,8 @@ if __name__ == '__main__':
             # frame = cv2.imread('Images/Marker.jpg', 1)
             # frame = cv2.imread('Images/Marker2.jpg', 1)
 
-            hsv = cv2.cvtColor(crop_frame, cv2.COLOR_BGR2HSV)
+            blurred_frame = cv2.GaussianBlur(crop_frame, (5, 5), cv2.BORDER_DEFAULT)
+            hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
 
             # Input BGR color to get HSV
             colorBGR = np.uint8([[[24, 56, 99]]])
@@ -35,9 +37,8 @@ if __name__ == '__main__':
             upperValue[0] += 15
             # print("Upper: ", upperValue)
 
-            blurred_frame = cv2.GaussianBlur(hsv, (5, 5), cv2.BORDER_DEFAULT)
-            mask = cv2.inRange(blurred_frame, lowerValue, upperValue)
-            res = cv2.bitwise_and(blurred_frame, blurred_frame, mask=mask)
+            mask = cv2.inRange(hsv, lowerValue, upperValue)
+            # res = cv2.bitwise_and(hsv, hsv, mask=mask)
 
             kernel = np.ones((9, 9), np.uint8)
 
@@ -124,6 +125,6 @@ if __name__ == '__main__':
                 break
         cap.release()
         cv2.destroyAllWindows()
-    # No webcam detected, handle it
+    # No web cam detected, handle it
     else:
         print("No camera found")

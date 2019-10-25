@@ -4,13 +4,14 @@ import cv2
 import numpy as np
 
 
-def findCrop(webcam):
-    # Check if the webcam is detected, if not this is not run
+def findCrop(web_cam):
+    # Check if the web_cam is detected, if not this is not run
     global finalMinX, finalMinY, finalMaxX, finalMaxY
-    if cv2.VideoCapture(webcam).isOpened():
-        cap = cv2.VideoCapture(webcam)
+    if cv2.VideoCapture(web_cam).isOpened():
+        cap = cv2.VideoCapture(web_cam)
         _, frame = cap.read()
-
+        cv2.imshow('Frame', frame)
+        cv2.waitKey(0)
         # For testing purposes
         # frame = cv2.imread('Images/Marker.jpg', 1)
         # frame = cv2.imread('Images/Marker2.jpg', 1)
@@ -34,10 +35,7 @@ def findCrop(webcam):
         # print("Upper: ", upperValue)
 
         mask = cv2.inRange(hsv, lowerValue, upperValue)
-        res = cv2.bitwise_and(hsv, hsv, mask=mask)
-
-        cv2.imshow('blured', hsv)
-        cv2.waitKey(0)
+        # res = cv2.bitwise_and(hsv, hsv, mask=mask)
 
         kernel = np.ones((9, 9), np.uint8)
 
@@ -112,25 +110,17 @@ def findCrop(webcam):
             finalMinY = blobs[0].minY + errorScale
             finalMaxX = blobs[1].minX - errorScale
             finalMaxY = blobs[1].maxY - errorScale
-
-            crop_img = opening2[finalMinY:finalMaxY, finalMinX:finalMaxX]
-
-            # Just for helpful visuals, should be deleted
-            # TODO Delete this
-            # cv2.imshow('crop', crop_img)
-            # cv2.imshow('frame', frame)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
             return finalMinY, finalMaxY, finalMinX, finalMaxX
 
         # If no markers are found, handle the error
         except IndexError:
             print("Error, no markers found")
             pass
-    # No webcam detected, handle it
+    # No web cam detected, handle it
     else:
         print("No camera found")
 
-
-if __name__ == '__main__':
-    findCrop(1)
+# Used for testing purposes
+# if __name__ == '__main__':
+#     #The number here defines the web cam that is used
+#     findCrop(1)
