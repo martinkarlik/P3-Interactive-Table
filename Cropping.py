@@ -93,11 +93,11 @@ def findCrop(web_cam):
                         blob.minX = pixel[1]
                     if pixel[1] > blob.maxX:
                         blob.maxX = pixel[1]
-                blob.compactness = blob.calc_compactness(blob.area)
+                blob.compactness = blob.calcCompactness(blob.area)
 
             # Check if the blob has a compactness that matches a square and set it to be a marker
             for blob in blobs:
-                if blob.is_marker(0.89):
+                if blob.isMarker(0.89):
                     blob.marker = True
                     print(blob)
                 else:
@@ -106,7 +106,7 @@ def findCrop(web_cam):
             print(len(blobs))
 
             errorScale = 8
-            finalMinX = blobs[0].max + errorScale
+            finalMinX = blobs[0].minX + errorScale
             finalMinY = blobs[0].minY + errorScale
             finalMaxX = blobs[1].minX - errorScale
             finalMaxY = blobs[1].maxY - errorScale

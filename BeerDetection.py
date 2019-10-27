@@ -14,7 +14,7 @@ if __name__ == '__main__':
         while True:
             _, frame = cap.read()
 
-            crop_frame = frame[finalMinY:finalMaxY , finalMinX:finalMaxX]
+            crop_frame = frame[finalMinY:finalMaxY, finalMinX:finalMaxX]
             # For testing purposes
             # frame = cv2.imread('Images/Marker.jpg', 1)
             # frame = cv2.imread('Images/Marker2.jpg', 1)

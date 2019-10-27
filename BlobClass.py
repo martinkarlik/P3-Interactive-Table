@@ -16,8 +16,8 @@ class Blob:
     def calcCompactness(self, area):
         return area / ((self.maxX - self.minX + 1) * (self.maxY - self.minY + 1))
 
-    def is_beer(self, threshold):
+    def isBeer(self, threshold):
         return self.circular > threshold
 
-    def is_marker(self, threshold):
+    def isMarker(self, threshold):
         return self.compactness >= threshold

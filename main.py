@@ -1,11 +1,17 @@
 import cv2
-cam = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
+
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480))
 
 while True:
-    ret, frame = cam.read()
+    _, frame = cap.read()
     cv2.imshow("frame", frame)
-    if cv2.waitKey(1) and 0xFF == ord('q'):
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    out.write(frame)
+    if cv2.waitKey(1) & 0xff == ord('q'):
         break
 
-print("update")
-print("update2")
+cap.release()
+out.release()
+cv2.destroyAllWindows()
