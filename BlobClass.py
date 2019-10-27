@@ -1,6 +1,3 @@
-import cv2
-import numpy as np
-
 class Blob:
 
     def __init__(self):
@@ -20,7 +17,7 @@ class Blob:
         return area / ((self.maxX - self.minX + 1) * (self.maxY - self.minY + 1))
 
     def is_beer(self, threshold):
-        return self.circularity > threshold
+        return self.circular > threshold
 
     def is_marker(self, threshold):
         return self.compactness >= threshold
