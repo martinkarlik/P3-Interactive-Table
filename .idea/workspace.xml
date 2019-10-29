@@ -1,15 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="Saving a video to analyze">
-      <change afterPath="$PROJECT_DIR$/hand.avi" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/white_cupmiss2.avi" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/white_cupmiss3.avi" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/white_reassamble.avi" afterDir="false" />
+    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/recordings/10cups.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/1cup.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/2balls2cups.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/2balls2cups2.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/4cups.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/7cups.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/bouncemiss.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/bouncemissandhit.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/cupmiss.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/hand.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/hitmiss.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/miss2.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/miss3.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/misshit.avi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recordings/white_reassamble.avi" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/p3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/p3.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/10cups.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/1cup.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2balls2cups.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2balls2cups2.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/4cups.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/7cups.avi" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/GI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bouncemiss.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bouncemissandhit.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cupmiss.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hand.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hitmiss.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/miss2.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/miss3.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/misshit.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/white_reassamble.avi" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,7 +59,7 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -53,7 +78,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.GI">
     <configuration name="BeerDetection" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -161,8 +186,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.GI" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.UI" />
         <item itemvalue="Python.VideoProcessing" />
         <item itemvalue="Python.BeerDetection" />
@@ -236,7 +261,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572205003320</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Adding recordings">
+      <created>1572345841537</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1572345841537</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -258,6 +290,7 @@
     <MESSAGE value="Fixed the errorscaling value" />
     <MESSAGE value="Minor changes" />
     <MESSAGE value="Saving a video to analyze" />
-    <option name="LAST_COMMIT_MESSAGE" value="Saving a video to analyze" />
+    <MESSAGE value="Adding recordings" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding recordings" />
   </component>
 </project>
