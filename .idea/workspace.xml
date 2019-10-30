@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="" />
+    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeerDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/BeerDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlobClass.py" beforeDir="false" afterPath="$PROJECT_DIR$/BlobClass.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cropping.py" beforeDir="false" afterPath="$PROJECT_DIR$/Cropping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,13 +25,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1SC4V0BwJroI7l7gxWrT0yiCfaP" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -44,7 +47,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.GI">
+  <component name="RunManager" selected="Python.BeerDetection">
     <configuration name="BeerDetection" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -108,27 +111,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="VideoProcessing" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="p3" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/VideoProcessing.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -141,7 +123,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\karli\PycharmProjects\p3\SavingVideos.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -152,11 +134,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.BeerDetection" />
+        <item itemvalue="Python.UI" />
         <item itemvalue="Python.GI" />
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.UI" />
-        <item itemvalue="Python.VideoProcessing" />
-        <item itemvalue="Python.BeerDetection" />
       </list>
     </recent_temporary>
   </component>
@@ -206,42 +187,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571745806358</updated>
     </task>
-    <task id="LOCAL-00006" summary="Minor changes">
-      <created>1572184181791</created>
+    <task id="LOCAL-00006" summary="Added scripts:&#10;BeerPong, GI, GUI, UI&#10;These will be used later">
+      <created>1571836246276</created>
       <option name="number" value="00006" />
       <option name="presentableId" value="LOCAL-00006" />
       <option name="project" value="LOCAL" />
-      <updated>1572184181791</updated>
+      <updated>1571836246276</updated>
     </task>
-    <task id="LOCAL-00007" summary="Saving a video to analyze">
-      <created>1572202871413</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1572202871413</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Saving a video to analyze">
-      <created>1572205003320</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1572205003320</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Adding recordings">
-      <created>1572345841537</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1572345841537</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Adding recordings 2">
-      <created>1572347529960</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1572347529960</updated>
-    </task>
-    <option name="localTasksCounter" value="11" />
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -258,13 +211,9 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="I updated the repository" />
     <MESSAGE value="Fixed the errorscaling value" />
-    <MESSAGE value="Minor changes" />
-    <MESSAGE value="Saving a video to analyze" />
-    <MESSAGE value="Adding recordings" />
-    <MESSAGE value="Adding recordings 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding recordings 2" />
+    <MESSAGE value="Added scripts:&#10;BeerPong, GI, GUI, UI&#10;These will be used later" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added scripts:&#10;BeerPong, GI, GUI, UI&#10;These will be used later" />
   </component>
 </project>
