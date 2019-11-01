@@ -122,7 +122,7 @@ def thresh1(B, G, R, blobs):
 
 if __name__ == '__main__':
     # This controls which web cam is being used
-    web_cam = "recordings/10cups.avi"
+    web_cam = "recordings/hitmiss.avi"
     finalMinY, finalMaxY, finalMinX, finalMaxX = findCrop(web_cam)
     blobs = []
     frame1 = thresh1(24, 56, 99, blobs)

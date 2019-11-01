@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
+    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="Added scripts:&#10;BeerPong, GI, GUI, UI&#10;These will be used later">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BeerDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/BeerDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlobClass.py" beforeDir="false" afterPath="$PROJECT_DIR$/BlobClass.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cropping.py" beforeDir="false" afterPath="$PROJECT_DIR$/Cropping.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,7 +26,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -47,7 +45,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.BeerDetection">
+  <component name="RunManager" selected="Python.UI">
     <configuration name="BeerDetection" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -134,8 +132,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.BeerDetection" />
         <item itemvalue="Python.UI" />
+        <item itemvalue="Python.BeerDetection" />
         <item itemvalue="Python.GI" />
         <item itemvalue="Python.main" />
       </list>
