@@ -1,7 +1,51 @@
-import random
-from BlobClass import Blob
 import cv2
+import random
+from blob import Blob
 import numpy as np
+
+
+def matchTemplate(source, template):
+    return cv2.matchTemplate(source, template, cv2.TM_CCOEFF_NORMED)
+
+
+def threshold(source, value, max_value):
+    _, thresh = cv2.threshold(source, value, max_value, cv2.THRESH_BINARY)
+    return thresh
+
+
+def extractBlobs(binary_image):
+    blobs = []
+    for y in range(0, binary_image.shape[0]):
+        for x in range(0, binary_image.shape[1]):
+            if binary_image[y, x] > 0:
+                binary_image[y, x] = 0
+                blob = Blob()
+                queue = [[y, x]]
+
+                while len(queue) > 0:
+
+                    y_temp = queue[0][0]
+                    x_temp = queue[0][1]
+
+                    if x_temp + 1 < binary_image.shape[1] and binary_image[y_temp, x_temp + 1] > 0:
+                        binary_image[y_temp, x_temp + 1] = 0
+                        queue.append([y_temp, x_temp + 1])
+                    if y_temp + 1 < binary_image.shape[0] and binary_image[y_temp + 1, x_temp] > 0:
+                        binary_image[y_temp + 1, x_temp] = 0
+                        queue.append([y_temp + 1, x_temp])
+                    if x_temp - 1 > 0 and binary_image[y_temp, x_temp - 1] > 0:
+                        binary_image[y_temp, x_temp - 1] = 0
+                        queue.append([y_temp, x_temp - 1])
+                    if y_temp - 1 > 0 and binary_image[y_temp - 1, x_temp] > 0:
+                        binary_image[y_temp - 1, x_temp] = 0
+                        queue.append([y_temp - 1, x_temp])
+
+                    blob.pixels.append(queue.pop(0))
+                blobs.append(blob)
+    return blobs
+
+def associateBlobs():
+    pass
 
 
 def findCrop(web_cam):
@@ -119,8 +163,3 @@ def findCrop(web_cam):
     # No web cam detected, handle it
     else:
         print("No camera found")
-
-# Used for testing purposes
-# if __name__ == '__main__':
-#     #The number here defines the web cam that is used
-#     findCrop(1)

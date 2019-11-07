@@ -21,3 +21,7 @@ class Blob:
 
     def isMarker(self, threshold):
         return self.compactness >= threshold
+
+    @staticmethod
+    def iAmStatic():
+        print("static")
