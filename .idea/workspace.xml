@@ -43,9 +43,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1SC4V0BwJroI7l7gxWrT0yiCfaP" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../imageprocessing" />
@@ -233,40 +231,12 @@
       <option name="project" value="LOCAL" />
       <updated>1571745806358</updated>
     </task>
-    <task id="LOCAL-00006" summary="Minor changes">
-      <created>1572184181791</created>
+    <task id="LOCAL-00006" summary="Added scripts:&#10;BeerPong, GI, GUI, UI&#10;These will be used later">
+      <created>1571836246276</created>
       <option name="number" value="00006" />
       <option name="presentableId" value="LOCAL-00006" />
       <option name="project" value="LOCAL" />
-      <updated>1572184181791</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Saving a video to analyze">
-      <created>1572202871413</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1572202871413</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Saving a video to analyze">
-      <created>1572205003320</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1572205003320</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Adding recordings">
-      <created>1572345841537</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1572345841537</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Adding recordings 2">
-      <created>1572347529960</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1572347529960</updated>
+      <updated>1571836246276</updated>
     </task>
     <task id="LOCAL-00011" summary="Workspace to gitignore">
       <created>1572347819306</created>
@@ -292,7 +262,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="I updated the repository" />
     <MESSAGE value="Fixed the errorscaling value" />
     <MESSAGE value="Minor changes" />

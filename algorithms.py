@@ -49,22 +49,20 @@ def associateBlobs():
 
 
 def findCrop(web_cam):
-    # Check if the web_cam is detected, if not this is not run
+    B = 116
+    G = 77
+    R = 157
     global finalMinX, finalMinY, finalMaxX, finalMaxY
+    # Check if the web_cam is detected, if not this is not run
     if cv2.VideoCapture(web_cam).isOpened():
         cap = cv2.VideoCapture(web_cam)
         _, frame = cap.read()
-        cv2.imshow('Frame', frame)
-        cv2.waitKey(0)
-        # For testing purposes
-        # frame = cv2.imread('Images/Marker.jpg', 1)
-        # frame = cv2.imread('Images/Marker2.jpg', 1)
 
-        blurred_frame = cv2.GaussianBlur(frame, (5, 5), cv2.BORDER_DEFAULT)
+        blurred_frame = cv2.GaussianBlur(frame, (9, 9), cv2.BORDER_DEFAULT)
         hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
 
         # Input BGR color to get HSV
-        colorBGR = np.uint8([[[147, 117, 252]]])
+        colorBGR = np.uint8([[[B, G, R]]])
         hsv_color = cv2.cvtColor(colorBGR, cv2.COLOR_BGR2HSV)
 
         hue = hsv_color[0, 0, 0]
@@ -126,9 +124,9 @@ def findCrop(web_cam):
                 blob.maxY = blob.pixels[0][0]
 
                 for pixel in blob.pixels:
-                    frame[pixel[0], pixel[1], 0] = blue
-                    frame[pixel[0], pixel[1], 1] = green
-                    frame[pixel[0], pixel[1], 2] = red
+                    blurred_frame[pixel[0], pixel[1], 0] = blue
+                    blurred_frame[pixel[0], pixel[1], 1] = green
+                    blurred_frame[pixel[0], pixel[1], 2] = red
                     if pixel[0] < blob.minY:
                         blob.minY = pixel[0]
                     if pixel[0] > blob.maxY:
@@ -138,22 +136,26 @@ def findCrop(web_cam):
                     if pixel[1] > blob.maxX:
                         blob.maxX = pixel[1]
                 blob.compactness = blob.calcCompactness(blob.area)
-
             # Check if the blob has a compactness that matches a square and set it to be a marker
             for blob in blobs:
                 if blob.isMarker(0.89):
                     blob.marker = True
+                    blob.centerX = int(round(((blob.maxX - blob.minX) / 2) + blob.minX))
+                    blob.centerY = int(round(((blob.maxY - blob.minY) / 2) + blob.minY))
+                    print(blob.centerX, "Center X")
+                    print(blob.centerY, "Center Y")
                     print(blob)
                 else:
                     # Remove all other elements that aren't markers
                     blobs.remove(blob)
             print(len(blobs))
 
-            errorScale = 8
-            finalMinX = blobs[0].minX + errorScale
-            finalMinY = blobs[0].minY + errorScale
-            finalMaxX = blobs[1].minX - errorScale
-            finalMaxY = blobs[1].maxY - errorScale
+            # TODO Here calculate the different positions of the markers and use pythagoras to crops this shit
+            errorScale = 0
+            finalMinX = blobs[1].centerX + errorScale
+            finalMinY = blobs[1].centerY + errorScale
+            finalMaxX = blobs[0].centerX - errorScale
+            finalMaxY = blobs[2].centerY - errorScale
             return finalMinY, finalMaxY, finalMinX, finalMaxX
 
         # If no markers are found, handle the error

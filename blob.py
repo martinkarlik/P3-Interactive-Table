@@ -12,6 +12,8 @@ class Blob:
         self.maxX = 0
         self.minY = 0
         self.maxY = 0
+        self.centerX = 0
+        self.centerY = 0
 
     def calcCompactness(self, area):
         return area / ((self.maxX - self.minX + 1) * (self.maxY - self.minY + 1))

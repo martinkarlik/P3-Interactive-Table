@@ -1,0 +1,95 @@
+WindowManager:
+    MainWindow:
+    SecondWindow:
+    ThirdWindow:
+    FourthWindow:
+
+<MainWindow>:
+    name: "main"
+
+    Button:
+        text: "Casual"
+        on_release:
+            app.root.current = "second"
+
+
+<SecondWindow>:
+    name: "second"
+
+    GridLayout:
+        cols:1
+        GridLayout:
+            cols:1
+            rows:1
+            Label:
+                text:"Input your game names"
+                font_size: 30
+        GridLayout:
+            cols:2
+
+            Label:
+                text: "Team 1"
+                font_size: 30
+
+            Label:
+                text: "Team 2"
+                font_size: 30
+
+        GridLayout:
+            cols:4
+            rows:2
+
+            Image:
+                source:"Images/Blue_ball.png"
+            TextInput:
+                id: name_1
+                hint_text:"Input name here"
+                font_size: 20
+
+            Image:
+                source:"Images/Blue_ball.png"
+            TextInput:
+                id: name_2
+                hint_text:"Input name here"
+                font_size: 20
+
+            Image:
+                source:"Images/Red_ball.png"
+            TextInput:
+                id: name_3
+                hint_text:"Input name here"
+                font_size: 20
+
+            Image:
+                source:"Images/Red_ball.png"
+            TextInput:
+                id: name_4
+                hint_text:"Input name here"
+                font_size: 20
+
+        GridLayout:
+            cols:2
+            Label:
+            Button:
+                text: "Start the Game"
+                on_release:
+                    app.root.current = "third" if name_1.text != "" and name_2.text != "" and name_3.text != "" and name_4.text != "" else "second"
+                    root.manager.transition.direction = "left"
+
+
+<ThirdWindow>
+    name: "third"
+
+    Label:
+        text:"Game started"
+    Button:
+        text: "Go Back"
+        on_release:
+            app.root.current = "main"
+            root.manager.transition.direction = "right"
+
+<FourthWindow>
+    name: "fourth"
+
+    Label:
+        text:"under construction"
