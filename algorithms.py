@@ -2,10 +2,45 @@ import cv2
 import random
 from blob import Blob
 import numpy as np
+from scipy import signal
+from scipy import misc
 
 
 def matchTemplate(source, template):
     return cv2.matchTemplate(source, template, cv2.TM_CCOEFF_NORMED)
+
+
+def getImgKernel(x, y):
+    imgKernel = np.array([
+        [x - 1, y - 1, x, y - 1, x + 1, y - 1],
+        [x - 1, y, x, y, x + 1, y],
+        [x - 1, y + 1, x, y + 1, x + 1, y + 1]])
+    return imgKernel
+
+
+def matchTemplateSelf(source, template):
+    tempImg = np.copy(source)
+    templateArray = [[]]
+    height = template.shape[1]
+    width = template.shape[0]
+    for x in range(0, width):
+        for y in range(0, height):
+            templateArray = x, y
+
+    for x in range(0, source.shape[0]):
+        for y in range(0, source.shape[1]):
+            image = getImgKernel(x, y)
+
+            # # TODO make the comparision work between the template and the source
+            # if templateArray == image:
+            #     tempImg[x, y] = 255, 255, 255
+            # else:
+            #     tempImg[x, y] = 0, 0, 0
+            corr = signal.correlate2d(image, templateArray, boundary='symm', mode='same')
+            i, j = np.unravel_index(np.argmax(corr), corr.shape)
+            tempImg[x, y] = i, j
+    return tempImg
+
 
 
 def threshold(source, value, max_value):
@@ -43,6 +78,7 @@ def extractBlobs(binary_image):
                     blob.pixels.append(queue.pop(0))
                 blobs.append(blob)
     return blobs
+
 
 def associateBlobs():
     pass
