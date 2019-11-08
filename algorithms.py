@@ -9,7 +9,9 @@ def matchTemplate(source, template):
 
 
 def threshold(source, value, max_value):
-    _, thresh = cv2.threshold(source, value, max_value, cv2.THRESH_BINARY)
+
+    thresh = np.zeros([source.shape[0], source.shape[1]])
+    thresh[source >= value] = max_value
     return thresh
 
 
@@ -19,7 +21,7 @@ def extractBlobs(binary_image):
         for x in range(0, binary_image.shape[1]):
             if binary_image[y, x] > 0:
                 binary_image[y, x] = 0
-                blob = Blob()
+                blob_pixels = []
                 queue = [[y, x]]
 
                 while len(queue) > 0:
@@ -40,12 +42,23 @@ def extractBlobs(binary_image):
                         binary_image[y_temp - 1, x_temp] = 0
                         queue.append([y_temp - 1, x_temp])
 
-                    blob.pixels.append(queue.pop(0))
-                blobs.append(blob)
+                    blob_pixels.append(queue.pop(0))
+                blobs.append(Blob(blob_pixels))
     return blobs
 
-def associateBlobs():
-    pass
+
+def associateBlobs(blobs, beer_positions):
+
+    beers = [False for i in range(0, len(beer_positions))]  # init array beers with all False and length of beer_positions
+
+    for i in range(0, len(beer_positions)):
+        for blob in blobs:
+            distance = abs(blob.center[0] - beer_positions[i][0]) + abs(blob.center[1] - beer_positions[i][1])
+
+            if blob.area > 0 and distance < 30:  # some thresholds ->
+                beers[i] = True
+
+    return beers
 
 
 def findCrop(web_cam):

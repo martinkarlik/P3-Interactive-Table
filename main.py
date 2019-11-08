@@ -3,13 +3,11 @@ import numpy
 import algorithms
 from blob import Blob
 
+cap = cv2.VideoCapture("recordings/test2_gameplay.mp4")
+beer_template = cv2.imread("images/beer_classic.jpg")
 
-cap = cv2.VideoCapture("recordings/7cups.avi")
-
-beer_template = cv2.imread("images/beer2.jpg")
-
-_, frame = cap.read()
-gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+# _, frame = cap.read()
+# gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 # mid_area = gray[0:480, 220:420]
 
 # to access our image processing algos:
@@ -26,17 +24,23 @@ while cap.isOpened():
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     # frame = algorithms.findCrop()
 
-    beer_area = frame[130:350, 20:220]
+    beer_area = frame[130:350, 0:220]
 
-    beers_expected_centre = [[10, 10], [20, 20], [30, 30], [40, 40], [50, 50], [60, 60], [70, 70], [80, 80], [90, 90], [100, 100]]
+    beers_expected_center = [[21, 20], [18, 70], [15, 118], [12, 170], [64, 43], [61, 93], [56, 142], [107, 67], [102, 118], [147, 92]]
 
     beers_grayscale = algorithms.matchTemplate(beer_area, beer_template)
     beers_binary = algorithms.threshold(beers_grayscale, 0.4, 1)
-    # beers_blobs = algorithms.extractBlobs(beers_binary)  # might want to do this only once per x frames
 
-    # print(len(beers_blobs))
-    # beers = algorithms.associateBlobs(beers_blobs, beers_expected_centre)
 
+    beers_blobs = algorithms.extractBlobs(beers_binary)  # might want to do this only once per x frames
+    beers = algorithms.associateBlobs(beers_blobs, beers_expected_center)
+    print(beers)
+    print(len(beers_blobs))
+
+
+    # for i in range(0, len(beers_blobs)):
+    #     if beers[i]:
+    #         cv2.circle(beer_area, (beers_blobs[i].center[0], beers_blobs[i].center[1]), 5, (255, 0, 0), -1)
 
     cv2.imshow("beer area", beer_area)
     cv2.imshow("beers binary", beers_binary)
