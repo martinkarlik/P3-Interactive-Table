@@ -18,7 +18,7 @@ frame_count = 0
 
 while cap.isOpened():
 
-    frame_count += 1
+    # frame_count += 1
 
     _, frame = cap.read()
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -28,7 +28,7 @@ while cap.isOpened():
 
     beers_expected_center = [[21, 20], [18, 70], [15, 118], [12, 170], [64, 43], [61, 93], [56, 142], [107, 67], [102, 118], [147, 92]]
 
-    beers_grayscale = algorithms.matchTemplate(beer_area, beer_template)
+    beers_grayscale = algorithms.matchTemplateSelf(beer_area, beer_template)
     beers_binary = algorithms.threshold(beers_grayscale, 0.4, 1)
 
 
@@ -43,7 +43,7 @@ while cap.isOpened():
     #         cv2.circle(beer_area, (beers_blobs[i].center[0], beers_blobs[i].center[1]), 5, (255, 0, 0), -1)
 
     cv2.imshow("beer area", beer_area)
-    cv2.imshow("beers binary", beers_binary)
+    cv2.imshow("beers binary", beers_grayscale)
 
     if cv2.waitKey(1) & 0xff == ord('q'):
         break
