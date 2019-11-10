@@ -21,10 +21,10 @@ class Blob:
         return self.compactness >= threshold
 
     def findBoundingBox(self):
-        min_x = self.pixels[0][1]
         min_y = self.pixels[0][0]
-        max_x = self.pixels[0][1]
+        min_x = self.pixels[0][1]
         max_y = self.pixels[0][0]
+        max_x = self.pixels[0][1]
 
         for pixel in self.pixels:
 
@@ -37,7 +37,7 @@ class Blob:
             if pixel[1] > max_x:
                 max_x = pixel[1]
 
-        return [min_x, min_y, max_x, max_y]
+        return [min_y, min_x, max_y, max_x]
 
     def findCenter(self):
         return [int((self.bounding_box[0] + self.bounding_box[2]) / 2), int((self.bounding_box[1] + self.bounding_box[3]) / 2)]

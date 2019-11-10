@@ -27,13 +27,9 @@ class WindowManager(ScreenManager):
     pass
 
 
-kv = Builder.load_file("ui.kv")
-
-
 class UI(App):
+
     def build(self):
-        return kv
+        return Builder.load_file("ui.kv")
 
 
-if __name__ == "__main__":
-    UI().run()

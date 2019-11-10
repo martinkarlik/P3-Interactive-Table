@@ -2,14 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/beer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/beer.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/beer2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/beer3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/beer_black.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Images/beer_highlighted.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Images/beer_highlighted.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blob.py" beforeDir="false" afterPath="$PROJECT_DIR$/blob.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/group_1.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/random_footage.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/saving_videos.py" beforeDir="false" afterPath="$PROJECT_DIR$/saving_videos.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,7 +38,7 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../imageprocessing" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -111,7 +115,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/UI.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\karli\PycharmProjects\p3\UI.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -141,7 +145,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="saving_videos" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="table_interface" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -153,7 +157,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\karli\PycharmProjects\p3\saving_videos.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\karli\PycharmProjects\p3\UI.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -165,10 +169,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main (1)" />
-        <item itemvalue="Python.UI" />
         <item itemvalue="Python.GI" />
+        <item itemvalue="Python.table_interface" />
+        <item itemvalue="Python.UI" />
         <item itemvalue="Python.SavingVideos (1)" />
-        <item itemvalue="Python.saving_videos" />
       </list>
     </recent_temporary>
   </component>
@@ -232,7 +236,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572347819306</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="beer association (in progress)&#10;connecting computer vision with ui">
+      <created>1573241283392</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1573241283392</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -256,6 +267,7 @@
     <MESSAGE value="Adding recordings" />
     <MESSAGE value="Adding recordings 2" />
     <MESSAGE value="Workspace to gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="Workspace to gitignore" />
+    <MESSAGE value="beer association (in progress)&#10;connecting computer vision with ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="beer association (in progress)&#10;connecting computer vision with ui" />
   </component>
 </project>
