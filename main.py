@@ -30,7 +30,7 @@ while cap.isOpened():
 
     beers_expected_centre = [[10, 10], [20, 20], [30, 30], [40, 40], [50, 50], [60, 60], [70, 70], [80, 80], [90, 90], [100, 100]]
 
-    beers_grayscale = algorithms.matchTemplateSelf(beer_area, beer_template)
+    beers_grayscale = algorithms.matchTemplate(beer_area, beer_template)
     beers_binary = algorithms.threshold(beers_grayscale, 0.4, 1)
     # beers_blobs = algorithms.extractBlobs(beers_binary)  # might want to do this only once per x frames
 

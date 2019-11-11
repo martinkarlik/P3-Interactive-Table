@@ -3,7 +3,6 @@ import random
 from blob import Blob
 import numpy as np
 from scipy import signal
-from scipy import misc
 
 
 def matchTemplate(source, template):
@@ -19,28 +18,26 @@ def getImgKernel(x, y):
 
 
 def matchTemplateSelf(source, template):
-    tempImg = np.copy(source)
-    templateArray = [[]]
-    height = template.shape[1]
-    width = template.shape[0]
-    for x in range(0, width):
-        for y in range(0, height):
-            templateArray = x, y
+    tempImg = source
+    sourceArr = [source[0], source[1], source[2]]
+
+    templateBlue = template[0]
+    templateGreen = template[1]
+    templateRed = template[2]
 
     for x in range(0, source.shape[0]):
         for y in range(0, source.shape[1]):
-            image = getImgKernel(x, y)
+            sourceBlueKernel = getImgKernel(x, y)
+            sourceGreenKernel = getImgKernel(x, y)
+            sourceRedKernel = getImgKernel(x, y)
 
-            # # TODO make the comparision work between the template and the source
-            # if templateArray == image:
-            #     tempImg[x, y] = 255, 255, 255
-            # else:
-            #     tempImg[x, y] = 0, 0, 0
-            corr = signal.correlate2d(image, templateArray, boundary='symm', mode='same')
-            i, j = np.unravel_index(np.argmax(corr), corr.shape)
-            tempImg[x, y] = i, j
+            corrBlue = signal.correlate2d(sourceBlueKernel, templateBlue, boundary='symm', mode='same')
+            corrGreen = signal.correlate2d(sourceGreenKernel, templateGreen, boundary='symm', mode='same')
+            corrRed = signal.correlate2d(sourceRedKernel, templateRed, boundary='symm', mode='same')
+            i, j = np.unravel_index(np.argmax(corrBlue), corrBlue.shape)
+            tempImg = corrBlue
+
     return tempImg
-
 
 
 def threshold(source, value, max_value):
