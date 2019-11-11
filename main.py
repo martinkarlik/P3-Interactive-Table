@@ -1,48 +1,138 @@
 import cv2
-import numpy
 import algorithms
+import numpy as np
 from blob import Blob
+from beer import Beer
+
+cap = cv2.VideoCapture("recordings/test2_gameplay2.mp4")
+
+beer_template_left = cv2.imread("images/beer_reg_left.jpg")
+beer_template_right = cv2.imread("images/beer_reg_right.jpg")
 
 
-cap = cv2.VideoCapture("recordings/7cups.avi")
+if __name__ == "__main__":
+    # UI.UI().run()
+    # crop -> get size -> get beer positions
 
-beer_template = cv2.imread("images/beer2.jpg")
+    beers_centers_10_left = [[20, 21], [70, 18], [118, 15], [170, 12], [43, 64], [93, 61], [142, 56], [67, 107],
+                              [118, 102], [92, 147]]
 
-_, frame = cap.read()
-gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-# mid_area = gray[0:480, 220:420]
+    beers_centers_10_right = [[11, 144], [60, 148], [109, 150], [158, 150], [33, 101], [84, 107], [133, 107], [64, 61],
+                              [113, 62], [91, 21]]
 
-# to access our image processing algos:
-# algorithms.matchTemplate()
-# algorithms.findCrop() etc.
+    beers_left = []
+    for i in range(0, 10):
+        beers_left.append(Beer(beers_centers_10_left[i]))
 
-frame_count = 0
+    beers_right = []
+    for i in range(0, 10):
+        beers_right.append(Beer(beers_centers_10_right[i]))
 
-while cap.isOpened():
+    while cap.isOpened():
 
-    # frame_count += 1
+        _, frame = cap.read()
 
-    _, frame = cap.read()
-    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    # frame = algorithms.findCrop()
+        # ---------- MIDDLE AREA
 
-    beer_area = frame[130:350, 20:220]
-
-    beers_expected_centre = [[10, 10], [20, 20], [30, 30], [40, 40], [50, 50], [60, 60], [70, 70], [80, 80], [90, 90], [100, 100]]
-
-    beers_grayscale = algorithms.matchTemplate(beer_area, beer_template)
-    beers_binary = algorithms.threshold(beers_grayscale, 0.4, 1)
-    # beers_blobs = algorithms.extractBlobs(beers_binary)  # might want to do this only once per x frames
-
-    # print(len(beers_blobs))
-    # beers = algorithms.associateBlobs(beers_blobs, beers_expected_centre)
+        middle_area = frame[130:350, 220:420]
 
 
-    cv2.imshow("beer area", beer_area)
-    cv2.imshow("beers binary", beers_grayscale)
+        # cv2.imshow("middle area", middle_area)
 
-    if cv2.waitKey(1) & 0xff == ord('q'):
-        break
+        # ----------- BEER AREA LEFT
 
-cap.release()
-cv2.destroyAllWindows()
+        beer_area_left = frame[130:350, 0:220]
+
+        beers_regular_left = algorithms.matchTemplate(beer_area_left, beer_template_left)
+        # beers_highlighted = algorithms.matchTemplate(beer_area, beer_template)
+        # beers_foam = algorithms.matchTemplate(beer_area, beer_template)
+        # ... different templates / different color thresholds to find all the beers
+
+        # beers_likelihood = beers_classic || beers_highlighted || beers_foam
+        # ... all the found beers combined
+        beers_likelihood_left = beers_regular_left  # for now we just look for the classic non-highlighted beer
+
+        beers_binary_left = algorithms.threshold(beers_likelihood_left, 0.4, 1)
+        blobs_left = algorithms.extractBlobs(np.copy(beers_binary_left))
+
+        algorithms.informBeers(beers_left, blobs_left, beer_area_left)
+
+        # ------------- BEER AREA RIGHT
+
+        beer_area_right = frame[130:350, 420:640]
+        beers_regular_right = algorithms.matchTemplate(beer_area_right, beer_template_right)
+        # beers_highlighted = algorithms.matchTemplate(beer_area, beer_template)
+        # beers_foam = algorithms.matchTemplate(beer_area, beer_template)
+        # ... different templates / different color thresholds to find all the beers
+
+        # beers_likelihood = beers_classic || beers_highlighted || beers_foam
+        # ... all the found beers combined
+        beers_likelihood_right = beers_regular_right  # for now we just look for the classic non-highlighted beer
+
+        beers_binary_right = algorithms.threshold(beers_likelihood_right, 0.4, 1)
+        blobs_right = algorithms.extractBlobs(np.copy(beers_binary_right))
+
+        algorithms.informBeers(beers_right, blobs_right, beer_area_right)
+
+
+
+
+        # -------------- RESULT
+
+        result = np.zeros([50, 150, 3], np.uint8)
+        result_beer_centers_left = [[10, 10], [10, 20], [10, 30], [10, 40], [20, 15], [20, 25], [20, 35], [30, 20],
+                                   [30, 30], [40, 25]]
+
+        result_beer_centers_right = [[140, 10], [140, 20], [140, 30], [140, 40], [130, 15], [130, 25], [130, 35], [120, 20],
+                                    [120, 30], [110, 25]]
+
+        for i in range(0, len(result_beer_centers_left)):
+            if beers_left[i].is_present:
+                if beers_left[i].green_ball:
+                    cv2.circle(result, (result_beer_centers_left[i][0], result_beer_centers_left[i][1]), 3, (0, 255, 0), -1)
+                elif beers_left[i].red_ball:
+                    cv2.circle(result, (result_beer_centers_left[i][0], result_beer_centers_left[i][1]), 3, (0, 0, 255), -1)
+                else:
+                    cv2.circle(result, (result_beer_centers_left[i][0], result_beer_centers_left[i][1]), 3, (255, 255, 255), -1)
+
+        for i in range(0, len(result_beer_centers_right)):
+            if beers_right[i].is_present:
+                if beers_right[i].green_ball:
+                    cv2.circle(result, (result_beer_centers_right[i][0], result_beer_centers_right[i][1]), 3, (0, 255, 0), -1)
+                elif beers_right[i].red_ball:
+                    cv2.circle(result, (result_beer_centers_right[i][0], result_beer_centers_right[i][1]), 3, (0, 0, 255), -1)
+                else:
+                    cv2.circle(result, (result_beer_centers_right[i][0], result_beer_centers_right[i][1]), 3, (255, 255, 255), -1)
+
+        # for beer in beers_right:
+        #     end_point_y = beer.ideal_center[0] + 40 if beer.ideal_center[0] + 40 < beer_area_right.shape[0] else \
+        #     beer_area_right.shape[0]
+        #     end_point_x = beer.ideal_center[1] + 40 if beer.ideal_center[1] + 40 < beer_area_right.shape[1] else \
+        #     beer_area_right.shape[1]
+        #
+        #     beer_area_right[beer.ideal_center[0]:end_point_y, beer.ideal_center[1]:end_point_x] = (255, 0, 0)
+        #
+        # for beer in beers_left:
+        #     end_point_y = beer.ideal_center[0] + 40 if beer.ideal_center[0] + 40 < beer_area_left.shape[0] else \
+        #     beer_area_left.shape[0]
+        #     end_point_x = beer.ideal_center[1] + 40 if beer.ideal_center[1] + 40 < beer_area_left.shape[1] else \
+        #     beer_area_left.shape[1]
+        #
+        #     beer_area_left[beer.ideal_center[0]:end_point_y, beer.ideal_center[1]:end_point_x] = (255, 0, 0)
+
+        # cv2.imshow("beers binary left", beers_binary_left)
+        # cv2.imshow("beers binary right", beers_binary_right)
+        cv2.imshow("beer area left", beer_area_left)
+        cv2.imshow("beer area right", beer_area_right)
+        cv2.imshow("result", result)
+
+        if cv2.waitKey(1) & 0xff == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+# TODO keep track of the history of detection (was this beer detected at least once in the last 20 frames?)
+# TODO detect rounds
+# TODO dynamic UI (map computer vision findings to the UI)
+# TODO database of players

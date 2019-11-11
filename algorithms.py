@@ -1,6 +1,7 @@
 import cv2
 import random
 from blob import Blob
+from beer import Beer
 import numpy as np
 from scipy import signal
 
@@ -39,9 +40,10 @@ def matchTemplateSelf(source, template):
 
     return tempImg
 
+def threshold(source, threhsold_value, max_value):
 
-def threshold(source, value, max_value):
-    _, thresh = cv2.threshold(source, value, max_value, cv2.THRESH_BINARY)
+    thresh = np.zeros([source.shape[0], source.shape[1]])
+    thresh[source >= threhsold_value] = max_value
     return thresh
 
 
@@ -51,7 +53,7 @@ def extractBlobs(binary_image):
         for x in range(0, binary_image.shape[1]):
             if binary_image[y, x] > 0:
                 binary_image[y, x] = 0
-                blob = Blob()
+                blob_pixels = []
                 queue = [[y, x]]
 
                 while len(queue) > 0:
@@ -72,14 +74,90 @@ def extractBlobs(binary_image):
                         binary_image[y_temp - 1, x_temp] = 0
                         queue.append([y_temp - 1, x_temp])
 
-                    blob.pixels.append(queue.pop(0))
-                blobs.append(blob)
+                    blob_pixels.append(queue.pop(0))
+                blobs.append(Blob(blob_pixels))
     return blobs
 
 
-def associateBlobs():
-    pass
+def informBeers(beers, blobs,  beer_area):
 
+    for beer in beers:
+        beer.is_present = False
+
+        for blob in blobs:
+
+            if blob.area > 0:  # some threshold to eliminate noise
+                distance = abs(blob.center[0] - beer.ideal_center[0]) + abs(blob.center[1] - beer.ideal_center[1])
+
+                if distance < 30:  # some other threshold
+                    beer.is_present = True
+
+                    end_point_y = beer.ideal_center[0] + 40 if beer.ideal_center[0] + 40 < beer_area.shape[0] else beer_area.shape[0]
+                    end_point_x = beer.ideal_center[1] + 40 if beer.ideal_center[1] + 40 < beer_area.shape[1] else beer_area.shape[1]
+
+                    current_beer_area = beer_area[beer.ideal_center[0]:end_point_y, beer.ideal_center[1]:end_point_x]
+
+                    beer.green_ball = checkColor(current_beer_area, (120, 0.7, 0.5))
+                    beer.red_ball = checkColor(current_beer_area, (350, 0.9, 0.5))
+
+
+def checkColor(source, target_color):
+
+    hsv = bgrToHsi(source)
+
+    hue = hsv[:, :, 0]
+    saturation = hsv[:, :, 1]
+    intensity = hsv[:, :, 2]
+
+    hue_match = abs(hue - target_color[0]) < 10
+    saturation_match = abs(saturation - target_color[1]) < 0.3
+    intensity_match = abs(intensity - target_color[2]) < 0.5
+
+    result = hue_match & saturation_match & intensity_match
+
+    # for y in range(0, hsv.shape[0]):
+    #     for x in range(0, hsv.shape[1]):
+    #         if abs(hsv[y, x][0] - target_color[0]) < 10 and abs(hsv[y, x][1] - target_color[1]) < 0.3 and abs(hsv[y, x][2] - target_color[2]) < 0.5:
+    #             return True
+
+    return result.any()
+
+
+def bgrToHsi(image_bgr):
+
+    blue = image_bgr[:, :, 0] / 255
+    green = image_bgr[:, :, 1] / 255
+    red = image_bgr[:, :, 2] / 255
+
+    # following code implements the formulas for calculating hue, saturation and intensity from a BGR image
+    # since these are point processing operations, they can be implemented using element-wise matrix operations with numpy
+
+    nominator = (red - green) + (red - blue)
+    denominator = 2 * np.sqrt((red - green) * (red - green) + (red - blue) * (green - blue))
+
+    theta = np.zeros([image_bgr.shape[0], image_bgr.shape[1]])
+
+    # get indices where denominator is non-zero
+    non_zeros = denominator > 0
+    theta[non_zeros] = np.degrees(np.arccos(nominator[non_zeros] / denominator[non_zeros]))
+
+    hue = np.zeros([image_bgr.shape[0], image_bgr.shape[1]])
+    hue[blue <= green] = theta[blue <= green]
+    hue[blue > green] = (360 - theta[blue > green])
+
+    saturation = np.zeros([image_bgr.shape[0], image_bgr.shape[1]])
+    non_zeros = (red + green + blue) > 0
+    saturation[non_zeros] = 1 - (3 / (red[non_zeros] + green[non_zeros] + blue[non_zeros]) *
+                                 np.minimum(np.minimum(red[non_zeros], green[non_zeros]), blue[non_zeros]))
+
+    intensity = (red + green + blue) / 3
+
+    image_hsi = np.zeros([image_bgr.shape[0], image_bgr.shape[1], image_bgr.shape[2]])
+    image_hsi[:, :, 0] = hue
+    image_hsi[:, :, 1] = saturation
+    image_hsi[:, :, 2] = intensity
+
+    return image_hsi
 
 def findCrop(web_cam):
     B = 116
