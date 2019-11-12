@@ -4,7 +4,7 @@ import numpy as np
 from blob import Blob
 from beer import Beer
 
-cap = cv2.VideoCapture("recordings/test2_gameplay2.mp4")
+cap = cv2.VideoCapture("recordings/black1.avi")
 
 beer_template_left = cv2.imread("images/beer_reg_left.jpg")
 beer_template_right = cv2.imread("images/beer_reg_right.jpg")
