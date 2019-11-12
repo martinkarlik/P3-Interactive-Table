@@ -5,10 +5,7 @@ from kivy.properties import ObjectProperty
 
 
 class MainWindow(Screen):
-    name_1 = ObjectProperty(None)
-    name_2 = ObjectProperty(None)
-    name_3 = ObjectProperty(None)
-    name_4 = ObjectProperty(None)
+    pass
 
 
 class SecondWindow(Screen):
@@ -33,3 +30,4 @@ class UI(App):
         return Builder.load_file("ui.kv")
 
 
+UI().run()

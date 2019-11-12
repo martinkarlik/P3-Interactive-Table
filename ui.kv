@@ -1,8 +1,6 @@
 WindowManager:
     MainWindow:
     SecondWindow:
-    ThirdWindow:
-    FourthWindow:
 
 <MainWindow>:
     name: "main"
@@ -75,21 +73,3 @@ WindowManager:
                 on_release:
                     app.root.current = "third" if name_1.text != "" and name_2.text != "" and name_3.text != "" and name_4.text != "" else "second"
                     root.manager.transition.direction = "left"
-
-
-<ThirdWindow>
-    name: "third"
-
-    Label:
-        text:"Game started"
-    Button:
-        text: "Go Back"
-        on_release:
-            app.root.current = "main"
-            root.manager.transition.direction = "right"
-
-<FourthWindow>
-    name: "fourth"
-
-    Label:
-        text:"under construction"
