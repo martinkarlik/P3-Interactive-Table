@@ -45,3 +45,6 @@ class Blob:
     @staticmethod
     def iAmStatic():
         print("no you aint ya bitch")
+
+
+

@@ -28,15 +28,28 @@ if __name__ == "__main__":
     for i in range(0, 10):
         beers_right.append(Beer(beers_centers_10_right[i]))
 
+    greens = 0
+    reds = 0
+
     while cap.isOpened():
 
         _, frame = cap.read()
 
         # ---------- MIDDLE AREA
 
-        middle_area = frame[130:350, 220:420]
-
-
+        # middle_area = frame[130:350, 220:420]
+        # cv2.imshow("middle area", middle_area)
+        #
+        # balls = algorithms.detectBalls(middle_area)
+        #
+        # if balls[0]:
+        #     greens += 1
+        #     print("greens: ", greens)
+        #
+        # if balls[1]:
+        #     reds += 1
+        #     print("reds: ", reds)
+        #
         # cv2.imshow("middle area", middle_area)
 
         # ----------- BEER AREA LEFT
@@ -104,24 +117,6 @@ if __name__ == "__main__":
                 else:
                     cv2.circle(result, (result_beer_centers_right[i][0], result_beer_centers_right[i][1]), 3, (255, 255, 255), -1)
 
-        # for beer in beers_right:
-        #     end_point_y = beer.ideal_center[0] + 40 if beer.ideal_center[0] + 40 < beer_area_right.shape[0] else \
-        #     beer_area_right.shape[0]
-        #     end_point_x = beer.ideal_center[1] + 40 if beer.ideal_center[1] + 40 < beer_area_right.shape[1] else \
-        #     beer_area_right.shape[1]
-        #
-        #     beer_area_right[beer.ideal_center[0]:end_point_y, beer.ideal_center[1]:end_point_x] = (255, 0, 0)
-        #
-        # for beer in beers_left:
-        #     end_point_y = beer.ideal_center[0] + 40 if beer.ideal_center[0] + 40 < beer_area_left.shape[0] else \
-        #     beer_area_left.shape[0]
-        #     end_point_x = beer.ideal_center[1] + 40 if beer.ideal_center[1] + 40 < beer_area_left.shape[1] else \
-        #     beer_area_left.shape[1]
-        #
-        #     beer_area_left[beer.ideal_center[0]:end_point_y, beer.ideal_center[1]:end_point_x] = (255, 0, 0)
-
-        # cv2.imshow("beers binary left", beers_binary_left)
-        # cv2.imshow("beers binary right", beers_binary_right)
         cv2.imshow("beer area left", beer_area_left)
         cv2.imshow("beer area right", beer_area_right)
         cv2.imshow("result", result)
@@ -132,7 +127,18 @@ if __name__ == "__main__":
     cap.release()
     cv2.destroyAllWindows()
 
+#PIPELINE
+# crop frame(Input: original frame, Output: cropped frame based on 3 markers)
+# extract beers(Input: cropped frame, Output: array of Beer objects):
+#   a, associate beers with their predetermined positions on the table
+#   b, assume no predetermined positions for the beers
+# detect balls in cups(Input: array of Beer objects, Output: array of Beer objects with info about each beer having green/red/both balls in it)
+#   note: this could be done together with extracting beers
+# detect turns(Input: cropped frame (maybe just the middle area), Output: you know, who just shot, who's turn it is now)
+
+
+
 # TODO keep track of the history of detection (was this beer detected at least once in the last 20 frames?)
-# TODO detect rounds
+# TODO detect turns
 # TODO dynamic UI (map computer vision findings to the UI)
 # TODO database of players

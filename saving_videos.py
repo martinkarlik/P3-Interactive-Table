@@ -3,7 +3,7 @@ cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_EXPOSURE, -5)
 
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('recordings/lo-fi_test2.avi', fourcc, 20.0, (640, 480))
+out = cv2.VideoWriter('recordings/throwing_balls11.avi', fourcc, 20.0, (640, 480))
 
 
 while True:

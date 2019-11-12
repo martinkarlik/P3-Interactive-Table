@@ -19,12 +19,13 @@ def getImgKernel(x, y):
 
 
 def matchTemplateSelf(source, template):
-    tempImg = source
-    sourceArr = [source[0], source[1], source[2]]
-
-    templateBlue = template[0]
-    templateGreen = template[1]
-    templateRed = template[2]
+    tempImg = np.copy(source)
+    templateArray = [[]]
+    height = template.shape[1]
+    width = template.shape[0]
+    for x in range(0, width):
+        for y in range(0, height):
+            templateArray = x, y
 
     for x in range(0, source.shape[0]):
         for y in range(0, source.shape[1]):
@@ -40,10 +41,10 @@ def matchTemplateSelf(source, template):
 
     return tempImg
 
-def threshold(source, threhsold_value, max_value):
+def threshold(source, threshold_value, max_value):
 
     thresh = np.zeros([source.shape[0], source.shape[1]])
-    thresh[source >= threhsold_value] = max_value
+    thresh[source >= threshold_value] = max_value
     return thresh
 
 
@@ -97,30 +98,31 @@ def informBeers(beers, blobs,  beer_area):
 
                     current_beer_area = beer_area[beer.ideal_center[0]:end_point_y, beer.ideal_center[1]:end_point_x]
 
-                    beer.green_ball = checkColor(current_beer_area, (120, 0.7, 0.5))
-                    beer.red_ball = checkColor(current_beer_area, (350, 0.9, 0.5))
+                    beer.green_ball = checkColor(current_beer_area, (120, 0.7, 0.5), (10, 0.3, 0.5))
+                    beer.red_ball = checkColor(current_beer_area, (350, 0.9, 0.5), (10, 0.3, 0.5))
 
 
-def checkColor(source, target_color):
+def checkColor(source, target_color, target_offset):
 
     hsv = bgrToHsi(source)
 
-    hue = hsv[:, :, 0]
-    saturation = hsv[:, :, 1]
-    intensity = hsv[:, :, 2]
-
-    hue_match = abs(hue - target_color[0]) < 10
-    saturation_match = abs(saturation - target_color[1]) < 0.3
-    intensity_match = abs(intensity - target_color[2]) < 0.5
+    hue_match = abs(hsv[:, :, 0] - target_color[0]) < target_offset[0]
+    saturation_match = abs(hsv[:, :, 1] - target_color[1]) < target_offset[1]
+    intensity_match = abs(hsv[:, :, 2] - target_color[2]) < target_offset[2]
 
     result = hue_match & saturation_match & intensity_match
 
+    # ... the above does the same as the below, just faster
     # for y in range(0, hsv.shape[0]):
     #     for x in range(0, hsv.shape[1]):
     #         if abs(hsv[y, x][0] - target_color[0]) < 10 and abs(hsv[y, x][1] - target_color[1]) < 0.3 and abs(hsv[y, x][2] - target_color[2]) < 0.5:
     #             return True
 
     return result.any()
+
+
+def detectBalls(source):
+    return [checkColor(source, (105, 0.13, 0.58), (10, 0.07, 0.07)), checkColor(source, (0, 0.13, 0.58), (10, 0.08, 0.08))]
 
 
 def bgrToHsi(image_bgr):
