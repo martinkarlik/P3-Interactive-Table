@@ -1,5 +1,5 @@
-from Cropping import findCrop
-from BlobClass import Blob
+from algorithms import findCrop
+from blob import Blob
 import cv2
 import numpy as np
 import random
