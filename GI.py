@@ -1,58 +1,57 @@
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.config import Config
+from kivy.uix.button import Button
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 
 class FirstScreen(Screen):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.add_widget(Image(source='images/tableImages/PlaceCups.png'))
+
+    def AddCircle(self, positionX, positionY, identifier):
+        # TODO Get Screen name
+        # TODO add circle to the current screen
+        self.add_widget(Image(source='images/tableImages/circle_white.png', pos=(positionX, positionY), id=identifier,
+                              size_hint_x=0.05, allow_stretch=True))
 
 
 class SecondScreen(Screen):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.add_widget(Image(source='images/tableImages/GameStarted.png'))
 
-# beer_frame = cv2.imread("images/test2_nonhighlighted.png")
 
 class ThirdScreen(Screen):
-    pass
-
-cv2.imshow("green ball", green_ball)
-
-class FourthScreen(Screen):
-    pass
-
-# beer = beer_frame[200:240, 100:140]
-# cv2.imshow("beer", beer)
-# cv2.imwrite("images/beer_reg_left.jpg", beer)
-
-class MyScreenManager(ScreenManager):
-
     def __init__(self, **kwargs):
-        super(MyScreenManager, self).__init__(**kwargs)
-        Clock.schedule_once(self.screen_switch_one, 2)
-
-    def screen_switch_one(self, dt):
-        self.current = '_first_screen_'
-        Clock.schedule_once(self.screen_switch_two, 2)
-
-    def screen_switch_two(self, dt):
-        self.current = '_second_screen_'
-        self.ids.first_screen.ids.first_screen_label.text = "Hi I'm The Fifth Screen"
-        Clock.schedule_once(self.screen_switch_three, 2)
-
-    def screen_switch_three(self, dt):
-        self.current = '_third_screen_'
-        Clock.schedule_once(self.screen_switch_four, 2)
-
-    def screen_switch_four(self, dt):
-        self.current = '_fourth_screen_'
-        Clock.schedule_once(self.screen_switch_one, 2)
+        super().__init__(**kwargs)
+        self.add_widget(Image(source='images/tableImages/GameStarted.png'))
 
 
 class GIApp(App):
+    Config.set('graphics', 'position', 'auto')
+    Config.write()
 
     def build(self):
-        return MyScreenManager()
+        self.screen_manager = ScreenManager()
+
+        self.first_screen = FirstScreen()
+        screen_1 = Screen(name="first_screen")
+        screen_1.add_widget(self.first_screen)
+        self.screen_manager.add_widget(screen_1)
+
+        self.second_screen = SecondScreen()
+        screen_2 = Screen(name="second_screen")
+        screen_2.add_widget(self.second_screen)
+        self.screen_manager.add_widget(screen_2)
+
+        return self.screen_manager
 
 
 if __name__ == "__main__":
-    GIApp().run()
+    gi_app = GIApp()
+    gi_app.run()
+
