@@ -2,12 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/p3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/p3.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blob.py" beforeDir="false" afterPath="$PROJECT_DIR$/blob.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/beer.py" beforeDir="false" afterPath="$PROJECT_DIR$/beer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/beer_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/beer_detection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saving_videos.py" beforeDir="false" afterPath="$PROJECT_DIR$/saving_videos.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/10cups.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/1cup.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/2balls2cups.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/2balls2cups2.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/4cups.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/7cups.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/bouncemiss.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/bouncemissandhit.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/cupmiss.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/hand.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/hitmiss.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/miss2.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/miss3.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/misshit.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/white_reassamble.avi" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -55,7 +72,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.GUI">
+  <component name="RunManager" selected="Python.main">
     <configuration name="GUI" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -77,7 +94,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="UI" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="algorithms" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -89,7 +106,28 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\karli\PycharmProjects\p3\UI.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="beer_detection" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="p3" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/beer_detection.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -111,27 +149,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="saving_videos" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="p3" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/saving_videos.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -163,11 +180,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python.algorithms" />
+        <item itemvalue="Python.GUI" />
+        <item itemvalue="Python.beer_detection" />
         <item itemvalue="Python.main (1)" />
-        <item itemvalue="Python.saving_videos" />
-        <item itemvalue="Python.GI" />
-        <item itemvalue="Python.table_interface" />
-        <item itemvalue="Python.UI" />
       </list>
     </recent_temporary>
   </component>
@@ -271,6 +288,7 @@
     <MESSAGE value="Workspace to gitignore" />
     <MESSAGE value="beer association (in progress)&#10;connecting computer vision with ui" />
     <MESSAGE value="individual beers association&#10;red and red ball in the cup recognition" />
-    <option name="LAST_COMMIT_MESSAGE" value="individual beers association&#10;red and red ball in the cup recognition" />
+    <MESSAGE value="pipeline" />
+    <option name="LAST_COMMIT_MESSAGE" value="pipeline" />
   </component>
 </project>

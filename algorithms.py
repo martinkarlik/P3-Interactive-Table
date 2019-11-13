@@ -21,6 +21,10 @@ def getImgKernel(x, y):
 def matchTemplateSelf(source, template):
     tempImg = np.copy(source)
     templateArray = [[]]
+    templateBlue = template[:, :, 0]
+    templateGreen = template[:, :, 1]
+    templateRed = template[:, :, 2]
+
     height = template.shape[1]
     width = template.shape[0]
     for x in range(0, width):
@@ -80,6 +84,16 @@ def extractBlobs(binary_image):
     return blobs
 
 
+def extractBeers(blobs):
+    beers = []
+
+    for blob in blobs:
+        if blob.area > 20:  # if blob is a beer
+            beers.append(Beer(blob.center))
+
+    pass
+
+
 def informBeers(beers, blobs,  beer_area):
 
     for beer in beers:
@@ -88,15 +102,15 @@ def informBeers(beers, blobs,  beer_area):
         for blob in blobs:
 
             if blob.area > 0:  # some threshold to eliminate noise
-                distance = abs(blob.center[0] - beer.ideal_center[0]) + abs(blob.center[1] - beer.ideal_center[1])
+                distance = abs(blob.center[0] - beer.center[0]) + abs(blob.center[1] - beer.center[1])
 
                 if distance < 30:  # some other threshold
                     beer.is_present = True
 
-                    end_point_y = beer.ideal_center[0] + 40 if beer.ideal_center[0] + 40 < beer_area.shape[0] else beer_area.shape[0]
-                    end_point_x = beer.ideal_center[1] + 40 if beer.ideal_center[1] + 40 < beer_area.shape[1] else beer_area.shape[1]
+                    end_point_y = beer.center[0] + 40 if beer.center[0] + 40 < beer_area.shape[0] else beer_area.shape[0]
+                    end_point_x = beer.center[1] + 40 if beer.center[1] + 40 < beer_area.shape[1] else beer_area.shape[1]
 
-                    current_beer_area = beer_area[beer.ideal_center[0]:end_point_y, beer.ideal_center[1]:end_point_x]
+                    current_beer_area = beer_area[beer.center[0]:end_point_y, beer.center[1]:end_point_x]
 
                     beer.green_ball = checkColor(current_beer_area, (120, 0.7, 0.5), (10, 0.3, 0.5))
                     beer.red_ball = checkColor(current_beer_area, (350, 0.9, 0.5), (10, 0.3, 0.5))
@@ -120,6 +134,27 @@ def checkColor(source, target_color, target_offset):
 
     return result.any()
 
+
+def colorThreshold(source, target_color, target_offset):
+
+    hsi = bgrToHsi(source)
+
+    hue_match = abs(hsi[:, :, 0] - target_color[0]) < target_offset[0]
+    saturation_match = abs(hsi[:, :, 1] - target_color[1]) < target_offset[1]
+    intensity_match = abs(hsi[:, :, 2] - target_color[2]) < target_offset[2]
+
+    match = hue_match & saturation_match & intensity_match
+
+    result = np.zeros([source.shape[0], source.shape[1]])
+    result[match] = 255
+
+    # ... the above does the same as the below, just faster
+    # for y in range(0, hsv.shape[0]):
+    #     for x in range(0, hsv.shape[1]):
+    #         if abs(hsv[y, x][0] - target_color[0]) < 10 and abs(hsv[y, x][1] - target_color[1]) < 0.3 and abs(hsv[y, x][2] - target_color[2]) < 0.5:
+    #             return True
+
+    return result
 
 def detectBalls(source):
     return [checkColor(source, (105, 0.13, 0.58), (10, 0.07, 0.07)), checkColor(source, (0, 0.13, 0.58), (10, 0.08, 0.08))]
@@ -161,120 +196,20 @@ def bgrToHsi(image_bgr):
 
     return image_hsi
 
-def findCrop(web_cam):
-    B = 116
-    G = 77
-    R = 157
-    global finalMinX, finalMinY, finalMaxX, finalMaxY
-    # Check if the web_cam is detected, if not this is not run
-    if cv2.VideoCapture(web_cam).isOpened():
-        cap = cv2.VideoCapture(web_cam)
-        _, frame = cap.read()
+def findCrop(source):
+    markers_binary = colorThreshold(source, (331, 0.5, 0.5), (10, 0.2, 0.5))
 
-        blurred_frame = cv2.GaussianBlur(frame, (9, 9), cv2.BORDER_DEFAULT)
-        hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
 
-        # Input BGR color to get HSV
-        colorBGR = np.uint8([[[B, G, R]]])
-        hsv_color = cv2.cvtColor(colorBGR, cv2.COLOR_BGR2HSV)
+    markers = extractBlobs(markers_binary)
 
-        hue = hsv_color[0, 0, 0]
-        # print(hue)
+    # right now taking only the two markers in two opposing the corners.. cropping based on that
+    # would not work if you angle the camera or the table
+    # need to look into camera callibration, extrinsic parameters
 
-        lowerValue = np.array([hue, 80, 0])
-        upperValue = np.array([hue, 255, 255])
+    start_y = markers[0].bounding_box[0]
+    start_x = markers[0].bounding_box[1]
+    end_y = markers[1].bounding_box[2]
+    end_x = markers[1].bounding_box[3]
+    print(start_y, end_y, start_x, end_x)
+    return [start_y, end_y, start_x, end_x]
 
-        lowerValue[0] -= 15
-        # print("Lower", lowerValue)
-        upperValue[0] += 15
-        # print("Upper: ", upperValue)
-
-        mask = cv2.inRange(hsv, lowerValue, upperValue)
-        # res = cv2.bitwise_and(hsv, hsv, mask=mask)
-
-        kernel = np.ones((9, 9), np.uint8)
-
-        # Opening removes false positives from the background
-        opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-        opening2 = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-
-        # In a try block we see if there are any markers, if not handle them later
-        try:
-            blobs = []
-            for y in range(0, opening.shape[0]):
-                for x in range(0, opening.shape[1]):
-                    if opening[y, x] > 0:
-                        opening[y, x] = 0
-                        tempBlob = Blob()
-                        queue = [[y, x]]
-                        while len(queue) > 0:
-                            y_temp = queue[0][0]
-                            x_temp = queue[0][1]
-                            if x_temp + 1 < opening.shape[1] and opening[y_temp, x_temp + 1] > 0:
-                                opening[y_temp, x_temp + 1] = 0
-                                queue.append([y_temp, x_temp + 1])
-                            if y_temp + 1 < opening.shape[0] and opening[y_temp + 1, x_temp] > 0:
-                                opening[y_temp + 1, x_temp] = 0
-                                queue.append([y_temp + 1, x_temp])
-                            if x_temp - 1 > 0 and opening[y_temp, x_temp - 1] > 0:
-                                opening[y_temp, x_temp - 1] = 0
-                                queue.append([y_temp, x_temp - 1])
-                            if y_temp - 1 > 0 and opening[y_temp - 1, x_temp] > 0:
-                                opening[y_temp - 1, x_temp] = 0
-                                queue.append([y_temp - 1, x_temp])
-                            tempBlob.pixels.append(queue.pop(0))
-                        blobs.append(tempBlob)
-
-            for blob in blobs:
-                blue = random.randint(0, 255)
-                green = random.randint(0, 255)
-                red = random.randint(0, 255)
-
-                blob.area = len(blob.pixels)
-                blob.minX = blob.pixels[0][1]
-                blob.maxX = blob.pixels[0][1]
-                blob.minY = blob.pixels[0][0]
-                blob.maxY = blob.pixels[0][0]
-
-                for pixel in blob.pixels:
-                    blurred_frame[pixel[0], pixel[1], 0] = blue
-                    blurred_frame[pixel[0], pixel[1], 1] = green
-                    blurred_frame[pixel[0], pixel[1], 2] = red
-                    if pixel[0] < blob.minY:
-                        blob.minY = pixel[0]
-                    if pixel[0] > blob.maxY:
-                        blob.maxY = pixel[0]
-                    if pixel[1] < blob.minX:
-                        blob.minX = pixel[1]
-                    if pixel[1] > blob.maxX:
-                        blob.maxX = pixel[1]
-                blob.compactness = blob.calcCompactness(blob.area)
-            # Check if the blob has a compactness that matches a square and set it to be a marker
-            for blob in blobs:
-                if blob.isMarker(0.89):
-                    blob.marker = True
-                    blob.centerX = int(round(((blob.maxX - blob.minX) / 2) + blob.minX))
-                    blob.centerY = int(round(((blob.maxY - blob.minY) / 2) + blob.minY))
-                    print(blob.centerX, "Center X")
-                    print(blob.centerY, "Center Y")
-                    print(blob)
-                else:
-                    # Remove all other elements that aren't markers
-                    blobs.remove(blob)
-            print(len(blobs))
-
-            # TODO Here calculate the different positions of the markers and use pythagoras to crops this shit
-            errorScale = 0
-            finalMinX = blobs[1].centerX + errorScale
-            finalMinY = blobs[1].centerY + errorScale
-            finalMaxX = blobs[0].centerX - errorScale
-            finalMaxY = blobs[2].centerY - errorScale
-            return finalMinY, finalMaxY, finalMinX, finalMaxX
-
-        # If no markers are found, handle the error
-        except IndexError:
-            print("Error, no markers found")
-            pass
-    # No web cam detected, handle it
-    else:
-        print("No camera found")
