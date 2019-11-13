@@ -5,7 +5,7 @@ if __name__ == '__main__':
     pygame.init()
 
     # Create the screen
-    screen = pygame.display.set_mode((1920, 1080))
+    screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 
     # Setup the frame
     pygame.display.set_caption("BeerPong")
