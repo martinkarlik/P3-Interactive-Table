@@ -36,10 +36,10 @@ if __name__ == '__main__':
 
         screen.fill(0)
 
+        # The exit conditions, both pressing x and esc works so far
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 app_running = False
-
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
