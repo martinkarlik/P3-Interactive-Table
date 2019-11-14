@@ -1,4 +1,6 @@
 import pygame
+import cv2
+import algorithms
 
 
 if __name__ == '__main__':
@@ -25,6 +27,7 @@ if __name__ == '__main__':
     #cropped_dimensions = algorithms.findCrop()
 
     while app_running and cap.isOpened():
+        _, frame = cap.read()
 
         beer_area_left = frame[130:350, 0:220]
         templates = [beer_template_left]
