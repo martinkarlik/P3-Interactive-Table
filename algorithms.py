@@ -9,41 +9,41 @@ from scipy import signal
 def matchTemplate(source, template):
     return cv2.matchTemplate(source, template, cv2.TM_CCOEFF_NORMED)
 
-
-def getImgKernel(x, y):
-    imgKernel = np.array([
-        [x - 1, y - 1, x, y - 1, x + 1, y - 1],
-        [x - 1, y, x, y, x + 1, y],
-        [x - 1, y + 1, x, y + 1, x + 1, y + 1]])
-    return imgKernel
-
-
-def matchTemplateSelf(source, template):
-    tempImg = np.copy(source)
-    templateArray = [[]]
-    templateBlue = template[:, :, 0]
-    templateGreen = template[:, :, 1]
-    templateRed = template[:, :, 2]
-
-    height = template.shape[1]
-    width = template.shape[0]
-    for x in range(0, width):
-        for y in range(0, height):
-            templateArray = x, y
-
-    for x in range(0, source.shape[0]):
-        for y in range(0, source.shape[1]):
-            sourceBlueKernel = getImgKernel(x, y)
-            sourceGreenKernel = getImgKernel(x, y)
-            sourceRedKernel = getImgKernel(x, y)
-
-            corrBlue = signal.correlate2d(sourceBlueKernel, templateBlue, boundary='symm', mode='same')
-            corrGreen = signal.correlate2d(sourceGreenKernel, templateGreen, boundary='symm', mode='same')
-            corrRed = signal.correlate2d(sourceRedKernel, templateRed, boundary='symm', mode='same')
-            i, j = np.unravel_index(np.argmax(corrBlue), corrBlue.shape)
-            tempImg = corrBlue
-
-    return tempImg
+# TODO Doesn't work, fix
+# def getImgKernel(x, y):
+#     imgKernel = np.array([
+#         [x - 1, y - 1, x, y - 1, x + 1, y - 1],
+#         [x - 1, y, x, y, x + 1, y],
+#         [x - 1, y + 1, x, y + 1, x + 1, y + 1]])
+#     return imgKernel
+#
+#
+# def matchTemplateSelf(source, template):
+#     tempImg = np.copy(source)
+#     templateArray = [[]]
+#     templateBlue = template[:, :, 0]
+#     templateGreen = template[:, :, 1]
+#     templateRed = template[:, :, 2]
+#
+#     height = template.shape[1]
+#     width = template.shape[0]
+#     for x in range(0, width):
+#         for y in range(0, height):
+#             templateArray = x, y
+#
+#     for x in range(0, source.shape[0]):
+#         for y in range(0, source.shape[1]):
+#             sourceBlueKernel = getImgKernel(x, y)
+#             sourceGreenKernel = getImgKernel(x, y)
+#             sourceRedKernel = getImgKernel(x, y)
+#
+#             corrBlue = signal.correlate2d(sourceBlueKernel, templateBlue, boundary='symm', mode='same')
+#             corrGreen = signal.correlate2d(sourceGreenKernel, templateGreen, boundary='symm', mode='same')
+#             corrRed = signal.correlate2d(sourceRedKernel, templateRed, boundary='symm', mode='same')
+#             i, j = np.unravel_index(np.argmax(corrBlue), corrBlue.shape)
+#             tempImg = corrBlue
+#
+#     return tempImg
 
 def threshold(source, threshold_value, max_value):
 
