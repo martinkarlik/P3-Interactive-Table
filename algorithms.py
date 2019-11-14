@@ -9,43 +9,42 @@ def matchTemplate(source, template):
     return cv2.matchTemplate(source, template, cv2.TM_CCOEFF_NORMED)
 
 
-def getImgKernel(x, y):
-    imgKernel = np.array([
-        [x - 1, y - 1, x, y - 1, x + 1, y - 1],
-        [x - 1, y, x, y, x + 1, y],
-        [x - 1, y + 1, x, y + 1, x + 1, y + 1]])
-    return imgKernel
+# TODO doesn't work, fix
+# def getImgKernel(x, y):
+#     imgKernel = np.array([
+#         [x - 1, y - 1, x, y - 1, x + 1, y - 1],
+#         [x - 1, y, x, y, x + 1, y],
+#         [x - 1, y + 1, x, y + 1, x + 1, y + 1]])
+#     return imgKernel
 
-
-def matchTemplateSelf(source, template):
-    tempImg = np.copy(source)
-    templateArray = [[]]
-    templateBlue = template[:, :, 0]
-    templateGreen = template[:, :, 1]
-    templateRed = template[:, :, 2]
-
-    height = template.shape[1]
-    width = template.shape[0]
-    for x in range(0, width):
-        for y in range(0, height):
-            templateArray = x, y
-
-    for x in range(0, source.shape[0]):
-        for y in range(0, source.shape[1]):
-            sourceBlueKernel = getImgKernel(x, y)
-            sourceGreenKernel = getImgKernel(x, y)
-            sourceRedKernel = getImgKernel(x, y)
-
-            corrBlue = signal.correlate2d(sourceBlueKernel, templateBlue, boundary='symm', mode='same')
-            corrGreen = signal.correlate2d(sourceGreenKernel, templateGreen, boundary='symm', mode='same')
-            corrRed = signal.correlate2d(sourceRedKernel, templateRed, boundary='symm', mode='same')
-            i, j = np.unravel_index(np.argmax(corrBlue), corrBlue.shape)
-            tempImg = corrBlue
-
-    return tempImg
+# def matchTemplateSelf(source, template):
+#     tempImg = np.copy(source)
+#     templateArray = [[]]
+#     templateBlue = template[:, :, 0]
+#     templateGreen = template[:, :, 1]
+#     templateRed = template[:, :, 2]
+#
+#     height = template.shape[1]
+#     width = template.shape[0]
+#     for x in range(0, width):
+#         for y in range(0, height):
+#             templateArray = x, y
+#
+#     for x in range(0, source.shape[0]):
+#         for y in range(0, source.shape[1]):
+#             sourceBlueKernel = getImgKernel(x, y)
+#             sourceGreenKernel = getImgKernel(x, y)
+#             sourceRedKernel = getImgKernel(x, y)
+#
+#             corrBlue = signal.correlate2d(sourceBlueKernel, templateBlue, boundary='symm', mode='same')
+#             corrGreen = signal.correlate2d(sourceGreenKernel, templateGreen, boundary='symm', mode='same')
+#             corrRed = signal.correlate2d(sourceRedKernel, templateRed, boundary='symm', mode='same')
+#             i, j = np.unravel_index(np.argmax(corrBlue), corrBlue.shape)
+#             tempImg = corrBlue
+#
+#     return tempImg
 
 def threshold(source, threshold_value, max_value):
-
     thresh = np.zeros([source.shape[0], source.shape[1]])
     thresh[source >= threshold_value] = max_value
     return thresh
@@ -138,7 +137,6 @@ def extractBeers(source, templates, target_color=None):
 
 
 def checkColor(source, target_color, target_offset):
-
     hsv = bgrToHsi(source)
 
     hue_match = abs(hsv[:, :, 0] - target_color[0]) < target_offset[0]
@@ -154,7 +152,6 @@ def checkColor(source, target_color, target_offset):
 
 
 def colorThreshold(source, target_color, target_offset):
-
     hsi = bgrToHsi(source)
 
     hue_match = abs(hsi[:, :, 0] - target_color[0]) < target_offset[0]
@@ -170,11 +167,11 @@ def colorThreshold(source, target_color, target_offset):
 
 
 def detectBalls(source):
-    return [checkColor(source, (105, 0.13, 0.58), (10, 0.07, 0.07)), checkColor(source, (0, 0.13, 0.58), (10, 0.08, 0.08))]
+    return [checkColor(source, (105, 0.13, 0.58), (10, 0.07, 0.07)),
+            checkColor(source, (0, 0.13, 0.58), (10, 0.08, 0.08))]
 
 
 def bgrToHsi(image_bgr):
-
     blue = image_bgr[:, :, 0] / 255
     green = image_bgr[:, :, 1] / 255
     red = image_bgr[:, :, 2] / 255
@@ -217,7 +214,7 @@ def findCrop(source):
 
     # right now taking only the two markers in two opposing the corners.. cropping based on that
     # would not work if you angle the camera or the table
-    # need to look into camera callibration, extrinsic parameters
+    # need to look into camera calibration, extrinsic parameters
 
     start_y = markers[0].bounding_box[0]
     start_x = markers[0].bounding_box[1]
@@ -225,4 +222,3 @@ def findCrop(source):
     end_x = markers[1].bounding_box[3]
 
     return [start_y, end_y, start_x, end_x]
-

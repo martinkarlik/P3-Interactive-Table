@@ -1,6 +1,5 @@
 import pygame
-import cv2
-import algorithms
+
 
 if __name__ == '__main__':
 
@@ -15,19 +14,17 @@ if __name__ == '__main__':
 
     # Setup the frame
     pygame.display.set_caption("BeerPong")
-    icon = pygame.image.load("images/tableImages/cheers.png")
+    icon = pygame.image.load("images/cheers.png")
     pygame.display.set_icon(icon)
 
     tableimg1 = pygame.image.load("images/tableImages/PlaceCups.png")
-    circle_white = pygame.image.load("images/tableImages/circle_white.png")
+    circle_white = pygame.image.load("images//tableImages/circle_white.png")
 
     app_running = True
 
     #cropped_dimensions = algorithms.findCrop()
 
     while app_running and cap.isOpened():
-
-        _, frame = cap.read()
 
         beer_area_left = frame[130:350, 0:220]
         templates = [beer_template_left]
@@ -41,6 +38,7 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 app_running = False
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
