@@ -2,29 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/p3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/p3.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/beer.py" beforeDir="false" afterPath="$PROJECT_DIR$/beer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/beer_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/beer_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blob.py" beforeDir="false" afterPath="$PROJECT_DIR$/blob.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Blue_ball.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Marker.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Marker2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Red_ball.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/TableTemplate.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/beer_frame.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/beer_frame_bs.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/beer_highlighted.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cheers.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/10cups.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/1cup.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/2balls2cups.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/2balls2cups2.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/4cups.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/7cups.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/bouncemiss.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/bouncemissandhit.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/cupmiss.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/hand.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/hitmiss.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/miss2.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/miss3.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/misshit.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/white_reassamble.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/black1.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/black2.avi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recordings/bothsides.avi" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -72,7 +69,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.game">
     <configuration name="GUI" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -136,7 +133,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="game" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -148,7 +145,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/game.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -180,11 +177,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.game" />
         <item itemvalue="Python.main" />
         <item itemvalue="Python.algorithms" />
         <item itemvalue="Python.GUI" />
         <item itemvalue="Python.beer_detection" />
-        <item itemvalue="Python.main (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -262,7 +259,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573421147518</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="added colorThreshold optimized non cv func">
+      <created>1573665030751</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1573665030751</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -289,6 +293,7 @@
     <MESSAGE value="beer association (in progress)&#10;connecting computer vision with ui" />
     <MESSAGE value="individual beers association&#10;red and red ball in the cup recognition" />
     <MESSAGE value="pipeline" />
-    <option name="LAST_COMMIT_MESSAGE" value="pipeline" />
+    <MESSAGE value="added colorThreshold optimized non cv func" />
+    <option name="LAST_COMMIT_MESSAGE" value="added colorThreshold optimized non cv func" />
   </component>
 </project>

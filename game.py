@@ -1,34 +1,40 @@
 import pygame
+import cv2
+import algorithms
 
 if __name__ == '__main__':
+
+    cap = cv2.VideoCapture("recordings/dark.avi")
+    beer_template_left = cv2.imread("images/beer_reg_left.jpg")
+    beer_template_right = cv2.imread("images/beer_reg_right.jpg")
 
     pygame.init()
 
     # Create the screen
-    screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((640, 480))
 
     # Setup the frame
     pygame.display.set_caption("BeerPong")
-    icon = pygame.image.load("images/cheers.png")
+    icon = pygame.image.load("images/tableImages/cheers.png")
     pygame.display.set_icon(icon)
 
     tableimg1 = pygame.image.load("images/tableImages/PlaceCups.png")
-    circle_white = pygame.image.load("images//tableImages/circle_white.png")
-
-
-    def showTable(image, x, y):
-        screen.blit(image, (x, y))
-
-
-    def addCircle(x, y, identifier):
-        screen.blit(circle_white, (x, y))
-
+    circle_white = pygame.image.load("images/tableImages/circle_white.png")
 
     app_running = True
-    while app_running:
-        # Background
-        screen.fill((0, 0, 0))
-        showTable(tableimg1, 0, 0)
+    while cap.isOpened():
+
+        _, frame = cap.read()
+
+        beer_area_left = frame[130:350, 0:220]
+        templates = [beer_template_left]
+        beers_left = algorithms.extractBeers(beer_area_left, templates)
+
+        beer_area_right = frame[130:350, 420:640]
+        templates = [beer_template_right]
+        beers_right = algorithms.extractBeers(beer_area_right, templates)
+
+        screen.fill(0)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -38,8 +44,11 @@ if __name__ == '__main__':
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
 
-        # call this to display the circles
-        # for beer in beerArray:
-        #     addCircle(1920/2, 1080/2, 1)
+        pygame.draw.circle(screen, (255, 255, 255), (50, 50), 20)
 
-        pygame.display.update()
+        cv2.imshow("frame", frame)
+        if cv2.waitKey(1) & 0xff == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
