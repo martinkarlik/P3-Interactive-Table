@@ -84,28 +84,14 @@ def extractBlobs(binary_image):
     return blobs
 
 
-def extractBeers(source, templates, target_color=None, locked_position=False):
-
-    beers_likelihood_samples = []
-    for template in templates:
-        beers_likelihood_samples.append(matchTemplate(source, template))
-
-    beers_binary_samples = []
-    for sample in beers_likelihood_samples:
-        beers_binary_samples = threshold(sample, 0.4, 1)
-
-    beers_binary = beers_binary_samples[0]
-    for i in range(1, len(beers_binary_samples)):
-        beers_binary = beers_binary & beers_binary_samples[i]  # logical AND operation performed on every binary image received from every passed template
-
-    blobs = extractBlobs(beers_binary)
-    # filterBlobs(blobs)
-
+def extractBeers(blobs):
     beers = []
-    for blob in blobs:
-        beers.append(Beer(blob.center))
 
-    return beers
+    for blob in blobs:
+        if blob.area > 20:  # if blob is a beer
+            beers.append(Beer(blob.center))
+
+    pass
 
 
 def informBeers(beers, blobs,  beer_area):
@@ -138,14 +124,9 @@ def checkColor(source, target_color, target_offset):
     saturation_match = abs(hsv[:, :, 1] - target_color[1]) < target_offset[1]
     intensity_match = abs(hsv[:, :, 2] - target_color[2]) < target_offset[2]
 
-    #  abs([7, 4, 1] - 3) results into [3, 1, -2].. [3, 1, -2] > 0 results into [True, True, False]
-    # it might look confusing but these element-wise matrix operations are necessary for our code to run in real time
-
     result = hue_match & saturation_match & intensity_match
-    # example: [False, True] & [True, False] -> [False, False]
 
     # ... the above does the same as the below, just faster
-    # ...
     # for y in range(0, hsv.shape[0]):
     #     for x in range(0, hsv.shape[1]):
     #         if abs(hsv[y, x][0] - target_color[0]) < 10 and abs(hsv[y, x][1] - target_color[1]) < 0.3 and abs(hsv[y, x][2] - target_color[2]) < 0.5:
