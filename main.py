@@ -4,31 +4,15 @@ import numpy as np
 from blob import Blob
 from beer import Beer
 
-cap = cv2.VideoCapture("recordings/black1.avi")
-
-beer_template_left = cv2.imread("images/beer_reg_left.jpg")
-beer_template_right = cv2.imread("images/beer_reg_right.jpg")
-
-
 if __name__ == "__main__":
-    # UI.UI().run()
+    cap = cv2.VideoCapture("recordings/black1.avi")
+
+    beer_template_left = cv2.imread("images/beer_reg_left.jpg")
+    beer_template_right = cv2.imread("images/beer_reg_right.jpg")
+
     # crop -> get size -> get beer positions
     # _, frame = cap.read()
     # cropped_dimensions = algorithms.findCrop(frame)
-
-    beers_centers_10_left = [[20, 21], [70, 18], [118, 15], [170, 12], [43, 64], [93, 61], [142, 56], [67, 107],
-                              [118, 102], [92, 147]]
-
-    beers_centers_10_right = [[11, 144], [60, 148], [109, 150], [158, 150], [33, 101], [84, 107], [133, 107], [64, 61],
-                              [113, 62], [91, 21]]
-
-    beers_left = []
-    for i in range(0, 10):
-        beers_left.append(Beer(beers_centers_10_left[i]))
-
-    beers_right = []
-    for i in range(0, 10):
-        beers_right.append(Beer(beers_centers_10_right[i]))
 
     while cap.isOpened():
 
@@ -44,42 +28,12 @@ if __name__ == "__main__":
         # ----------- BEER AREA LEFT
 
         beer_area_left = frame[130:350, 0:220]
-
-        beers_regular_left = algorithms.matchTemplate(beer_area_left, beer_template_left)
-        # beers_regular_left = algorithms.colorThreshold(beer_area_left, (47, 0.5, 0.66), (17, 0.2, 0.2))
-        # beers_highlighted = algorithms.matchTemplate(beer_area, beer_template)
-        # beers_foam = algorithms.matchTemplate(beer_area, beer_template)
-        # ... different templates / different color thresholds to find all the beers
-
-        # beers_likelihood = beers_classic || beers_highlighted || beers_foam
-        # ... all the found beers combined
-        beers_likelihood_left = beers_regular_left  # for now we just look for the classic non-highlighted beer
-
-        beers_binary_left = algorithms.threshold(beers_likelihood_left, 0.4, 1)
-        blobs_left = algorithms.extractBlobs(np.copy(beers_binary_left))
-
-        algorithms.informBeers(beers_left, blobs_left, beer_area_left)
-        # B, beers_left = algorithms.extractBeers(blobs_left)
-
-        # ------------- BEER AREA RIGHT
+        templates = [beer_template_left]
+        beers_left = algorithms.extractBeers(beer_area_left, templates)
 
         beer_area_right = frame[130:350, 420:640]
-        beers_regular_right = algorithms.matchTemplate(beer_area_right, beer_template_right)
-        # beers_highlighted = algorithms.matchTemplate(beer_area, beer_template)
-        # beers_foam = algorithms.matchTemplate(beer_area, beer_template)
-        # ... different templates / different color thresholds to find all the beers
-
-        # beers_likelihood = beers_classic || beers_highlighted || beers_foam
-        # ... all the found beers combined
-        beers_likelihood_right = beers_regular_right  # for now we just look for the classic non-highlighted beer
-
-        beers_binary_right = algorithms.threshold(beers_likelihood_right, 0.4, 1)
-        blobs_right = algorithms.extractBlobs(np.copy(beers_binary_right))
-
-        algorithms.informBeers(beers_right, blobs_right, beer_area_right)
-
-
-
+        templates = [beer_template_right]
+        beers_right = algorithms.extractBeers(beer_area_right, templates)
 
         # -------------- RESULT
 

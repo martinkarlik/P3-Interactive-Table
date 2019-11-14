@@ -30,10 +30,10 @@ if __name__ == '__main__':
         screen.fill((0, 0, 0))
         showTable(tableimg1, 0, 0)
 
-        # The exit conditions, both pressing x and esc works so far
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 app_running = False
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
@@ -42,9 +42,4 @@ if __name__ == '__main__':
         # for beer in beerArray:
         #     addCircle(1920/2, 1080/2, 1)
 
-<<<<<<< HEAD
-    cap.release()
-    cv2.destroyAllWindows()
-=======
-        pygame.display.update()
->>>>>>> parent of 278e49b... did nothing
+    pygame.display.update()

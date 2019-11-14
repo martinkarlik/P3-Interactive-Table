@@ -3,18 +3,16 @@ import pyglet
 import beer
 from pyglet.window import key
 from pyglet.gl import *
-
 import algorithms
 
+pyglet.options['audio'] = ('directsound', 'openal', 'pulse', 'silent')
 display = pyglet.canvas.get_display()
 screens = display.get_screens()
-window = (pyglet.window.Window(width=1280, height=800, fullscreen=True, screen=screens[0], caption="Beer pong"))
+window = (pyglet.window.Window(width=1920, height=1080, fullscreen=True, screen=screens[1], caption="Beer pong"))
+window2 = (
+    pyglet.window.Window(width=1, height=1, fullscreen=False, screen=screens[0], caption="Image pro", visible=False))
 circle_white = pyglet.image.load('images/tableImages/circle_white.png')
 names = ["Joe", "Jim", "Janis", "Jay-z"]
-b1 = beer.Beer(window.width//2, window.height//2)
-b2 = beer.Beer(100, 100)
-b3 = beer.Beer(600, 600)
-beers = [b1, b2, b3]
 
 # used to control the screens displayed
 screen = 1
@@ -75,20 +73,19 @@ def second_screen(table_img, namesArr):
 def on_key_pressed(symbol, modifiers):
     if symbol == key.ESCAPE:
         pyglet.app.exit()
-    if symbol == key.CAPSLOCK:
-        on_draw().call_place_circle()
 
 
+
+# Main draw window for displaying the UI
 @window.event
 def on_draw():
-    _, frame = cap.read()
-
-    beer_area_left = frame[130:350, 0:220]
-
-    beers_regular_left = algorithms.matchTemplate(beer_area_left, beer_template_left)
-
-    beer_area_right = frame[130:350, 420:640]
-    beers_right = algorithms.extractBeers(beer_area_right)
+    # beer_area_left = frame[130:350, 0:220]
+    # templates = [beer_template_left]
+    # beers_left = algorithms.extractBeers(beer_area_left, templates)
+    #
+    # beer_area_right = frame[130:350, 420:640]
+    # templates = [beer_template_right]
+    # beers_right = algorithms.extractBeers(beer_area_right, templates)
 
     if screen == 1:
         first_screen(pyglet.image.load('images/tableImages/PlaceCups.png'))
@@ -106,17 +103,28 @@ def on_draw():
                                   color=(255, 255, 0, 255))
         label.draw()
 
-    # for beer in beers:
+    # TODO find a way to make this function call work
+    # for beer in beers_left:
+    #     place_circle(beer.center[0], beer.center[1])
+    # for beer in beers_right:
     #     place_circle(beer.center[0], beer.center[1])
 
-    # TODO find a way to make this function call work
-    for beer in beers_left:
-        place_circle(beer.center[0], beer.center[1])
-    for beer in beers_right:
-        place_circle(beer.center[0], beer.center[1])
+
+# draw window for displaying the cv2 video
+@window2.event
+def on_draw():
+    while cap.isOpened():
+        _, frame = cap.read()
+        cv2.imshow('frame', frame)
+        if cv2.waitKey(50) & 0xff == ord('q'):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
-    cap = cv2.VideoCapture("recordings/bothsides.avi")
+    cap = cv2.VideoCapture(0)
+    # beer_template_left = cv2.imread("images/beer_reg_left.jpg")
+    # beer_template_right = cv2.imread("images/beer_reg_right.jpg")
 
     pyglet.app.run()

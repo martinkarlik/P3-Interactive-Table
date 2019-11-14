@@ -1,7 +1,7 @@
 class Beer:
 
-    def __init__(self, centerX, centerY):
-        self.center = [centerX, centerY]
+    def __init__(self, center):
+        self.center = center
         self.is_present = False
         self.highlighted = False
         self.green_ball = False

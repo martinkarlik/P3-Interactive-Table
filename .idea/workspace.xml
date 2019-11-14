@@ -1,36 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
-<<<<<<< HEAD
+    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="Probably fixed some stuff, idk. Made it possible to display cv2 video while the ui is being run.">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pygletApp.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygletApp.py" afterDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/p3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/p3.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/beer.py" beforeDir="false" afterPath="$PROJECT_DIR$/beer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/beer_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/beer_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/10cups.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/1cup.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/2balls2cups.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/2balls2cups2.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/4cups.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/7cups.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/bouncemiss.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/bouncemissandhit.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/cupmiss.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/hand.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/hitmiss.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/miss2.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/miss3.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/misshit.avi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recordings/white_reassamble.avi" beforeDir="false" />
->>>>>>> parent of 278e49b... did nothing
+      <change beforePath="$PROJECT_DIR$/pygletApp.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygletApp.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -54,12 +32,12 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../LearningCV" />
-    <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\karli\PycharmProjects\p3\images" />
       <recent name="C:\Users\karli\PycharmProjects\p3\recordings" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
@@ -78,13 +56,8 @@
       </list>
     </option>
   </component>
-<<<<<<< HEAD
   <component name="RunManager" selected="Python.pygletApp">
-    <configuration name="GI" type="PythonConfigurationType" factoryName="Python" temporary="true">
-=======
-  <component name="RunManager" selected="Python.main">
     <configuration name="GUI" type="PythonConfigurationType" factoryName="Python" temporary="true">
->>>>>>> parent of 278e49b... did nothing
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -96,7 +69,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GI.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GUI.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -117,7 +90,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/UI.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/algorithms.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -147,11 +120,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-<<<<<<< HEAD
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
-=======
-    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
->>>>>>> parent of 278e49b... did nothing
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -195,18 +164,11 @@
     </configuration>
     <recent_temporary>
       <list>
-<<<<<<< HEAD
         <item itemvalue="Python.pygletApp" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.game" />
-        <item itemvalue="Python.GI" />
-        <item itemvalue="Python.main" />
-=======
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.algorithms" />
         <item itemvalue="Python.GUI" />
-        <item itemvalue="Python.beer_detection" />
-        <item itemvalue="Python.main (1)" />
->>>>>>> parent of 278e49b... did nothing
       </list>
     </recent_temporary>
   </component>
@@ -277,32 +239,21 @@
       <option name="project" value="LOCAL" />
       <updated>1573218205322</updated>
     </task>
-    <task id="LOCAL-00013" summary="The UI switching should work but my kivy just fucked off">
-      <created>1573546298870</created>
+    <task id="LOCAL-00013" summary="individual beers association&#10;red and red ball in the cup recognition">
+      <created>1573421147518</created>
       <option name="number" value="00013" />
       <option name="presentableId" value="LOCAL-00013" />
       <option name="project" value="LOCAL" />
-      <updated>1573546298870</updated>
+      <updated>1573421147518</updated>
     </task>
-<<<<<<< HEAD
-    <task id="LOCAL-00014" summary="Fuck it">
-      <created>1573564617353</created>
+    <task id="LOCAL-00014" summary="added colorThreshold optimized non cv func">
+      <created>1573665030751</created>
       <option name="number" value="00014" />
       <option name="presentableId" value="LOCAL-00014" />
       <option name="project" value="LOCAL" />
-      <updated>1573564617353</updated>
+      <updated>1573665030751</updated>
     </task>
-    <task id="LOCAL-00015" summary="Fullscreen test">
-      <created>1573647208366</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1573647208366</updated>
-    </task>
-    <option name="localTasksCounter" value="16" />
-=======
-    <option name="localTasksCounter" value="14" />
->>>>>>> parent of 278e49b... did nothing
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -326,17 +277,11 @@
     <MESSAGE value="Adding recordings" />
     <MESSAGE value="Adding recordings 2" />
     <MESSAGE value="Workspace to gitignore" />
-<<<<<<< HEAD
-    <MESSAGE value="Tried to make manual template matching, didn't work. Martin help" />
-    <MESSAGE value="The UI switching should work but my kivy just fucked off" />
-    <MESSAGE value="Fuck it" />
-    <MESSAGE value="Fullscreen test" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fullscreen test" />
-=======
     <MESSAGE value="beer association (in progress)&#10;connecting computer vision with ui" />
     <MESSAGE value="individual beers association&#10;red and red ball in the cup recognition" />
     <MESSAGE value="pipeline" />
-    <option name="LAST_COMMIT_MESSAGE" value="pipeline" />
->>>>>>> parent of 278e49b... did nothing
+    <MESSAGE value="added colorThreshold optimized non cv func" />
+    <MESSAGE value="Probably fixed some stuff, idk. Made it possible to display cv2 video while the ui is being run." />
+    <option name="LAST_COMMIT_MESSAGE" value="Probably fixed some stuff, idk. Made it possible to display cv2 video while the ui is being run." />
   </component>
 </project>
