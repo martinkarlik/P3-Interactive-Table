@@ -5,7 +5,7 @@ if __name__ == '__main__':
     pygame.init()
 
     # Create the screen
-    screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN, 0, 2)
 
     # Setup the frame
     pygame.display.set_caption("BeerPong")
@@ -25,15 +25,16 @@ if __name__ == '__main__':
 
 
     app_running = True
+    # Like the draw function
     while app_running:
         # Background
         screen.fill((0, 0, 0))
         showTable(tableimg1, 0, 0)
 
+        # The exit conditions, both pressing x and esc works so far
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 app_running = False
-
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
