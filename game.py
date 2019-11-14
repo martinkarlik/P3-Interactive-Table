@@ -4,14 +4,14 @@ import algorithms
 
 if __name__ == '__main__':
 
-    cap = cv2.VideoCapture("recordings/dark.avi")
-    beer_template_left = cv2.imread("images/beer_reg_left.jpg")
-    beer_template_right = cv2.imread("images/beer_reg_right.jpg")
+    cap = cv2.VideoCapture("recordings/test2_gameplay2.mp4")
+    beer_template_left = cv2.imread("images/testImages/templates/beer_reg_left.jpg")
+    beer_template_right = cv2.imread("images/testImages/templates/beer_reg_right.jpg")
 
     pygame.init()
 
     # Create the screen
-    screen = pygame.display.set_mode((640, 480))
+    screen = pygame.display.set_mode((640, 480))  # just so that the whole screen isnt covered every time its run
 
     # Setup the frame
     pygame.display.set_caption("BeerPong")
@@ -22,7 +22,10 @@ if __name__ == '__main__':
     circle_white = pygame.image.load("images/tableImages/circle_white.png")
 
     app_running = True
-    while cap.isOpened():
+
+    #cropped_dimensions = algorithms.findCrop()
+
+    while app_running and cap.isOpened():
 
         _, frame = cap.read()
 
@@ -34,8 +37,6 @@ if __name__ == '__main__':
         templates = [beer_template_right]
         beers_right = algorithms.extractBeers(beer_area_right, templates)
 
-        screen.fill(0)
-
         # The exit conditions, both pressing x and esc works so far
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -44,11 +45,15 @@ if __name__ == '__main__':
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
 
-        pygame.draw.circle(screen, (255, 255, 255), (50, 50), 20)
+        screen.fill(0)
 
-        cv2.imshow("frame", frame)
-        if cv2.waitKey(1) & 0xff == ord('q'):
-            break
+        for beer in beers_left:
+            pygame.draw.circle(screen, (255, 255, 255), (beer.center[1], beer.center[0]), 5)
+
+        for beer in beers_right:
+            pygame.draw.circle(screen, (255, 255, 255), (300 + beer.center[1], beer.center[0]), 5)
+
+        pygame.display.update()
 
     cap.release()
     cv2.destroyAllWindows()

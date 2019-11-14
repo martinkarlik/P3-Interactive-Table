@@ -1,10 +1,12 @@
+import cv2
+import algorithms
 import pyglet
 from pyglet.window import key
 from pyglet.gl import *
 
 display = pyglet.canvas.get_display()
 screens = display.get_screens()
-window = (pyglet.window.Window(width=1920, height=1080, fullscreen=True, screen=screens[1], caption="Beer pong"))
+window = (pyglet.window.Window(width=640, height=480, fullscreen=False, screen=screens[0], caption="Beer pong"))
 circle_white = pyglet.image.load('images/tableImages/circle_white.png')
 names = ["Joe", "Jim", "Janis", "Jay-z"]
 beerArr = [[100, 200], [200, 400], [200, 300], [400, 300], [500, 500]]
@@ -18,7 +20,7 @@ def create_label(text, x, y, player):
     if player == 1:
         return pyglet.text.Label(text + ": 0",
                                  font_name='Times New Roman',
-                                 font_size=30,
+                                 font_size=15,
                                  x=x, y=y,
                                  anchor_x='center',
                                  anchor_y='center',
@@ -27,7 +29,7 @@ def create_label(text, x, y, player):
     if player == 2:
         return pyglet.text.Label(text + ": 0",
                                  font_name='Times New Roman',
-                                 font_size=30,
+                                 font_size=15,
                                  x=x, y=y,
                                  anchor_x='center',
                                  anchor_y='center',
@@ -74,6 +76,21 @@ def on_key_pressed(symbol, modifiers):
 
 @window.event
 def on_draw():
+
+    _, frame = cap.read()
+    cv2.imshow("frame", frame)
+
+
+    beer_area_left = frame[130:350, 0:220]
+    templates = [beer_template_left]
+    beers_left = algorithms.extractBeers(beer_area_left, templates)
+
+    beer_area_right = frame[130:350, 420:640]
+    templates = [beer_template_right]
+    beers_right = algorithms.extractBeers(beer_area_right, templates)
+
+    # cv2.imshow("hello", frame)
+
     if screen == 1:
         first_screen(pyglet.image.load('images/tableImages/PlaceCups.png'))
         # how to display the circle
@@ -84,15 +101,22 @@ def on_draw():
         window.clear()
         label = pyglet.text.Label('Error, no screen like that',
                                   font_name='Castellar',
-                                  font_size=70,
+                                  font_size=20,
                                   x=window.width // 2, y=window.height // 2,
                                   anchor_x='center', anchor_y='center',
                                   color=(255, 255, 0, 255))
         label.draw()
+        print("hello")
 
     # TODO find a way to make this function call work
-    for beer in beerArr:
-        place_circle(window.width // 2, window.height // 2)
+    # for beer in beers_left:
+    #     place_circle(beer.center[0], beer.center[1])
 
 
-pyglet.app.run()
+if __name__ == "__main__":
+
+    cap = cv2.VideoCapture("recordings/throwing_balls_green1.avi")
+    beer_template_left = cv2.imread("images/testImages/templates/beer_reg_left.jpg")
+    beer_template_right = cv2.imread("images/testImages/templates/beer_reg_right.jpg")
+
+    pyglet.app.run()
