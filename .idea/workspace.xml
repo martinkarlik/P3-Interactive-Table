@@ -3,11 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blob.py" beforeDir="false" afterPath="$PROJECT_DIR$/blob.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saving_videos.py" beforeDir="false" afterPath="$PROJECT_DIR$/saving_videos.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,11 +27,11 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../LearningCV" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\karli\PycharmProjects\p3\images" />
       <recent name="C:\Users\karli\PycharmProjects\p3\recordings" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
@@ -55,8 +50,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.GUI">
-    <configuration name="GUI" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.pygletApp">
+    <configuration name="GI" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -68,7 +63,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GUI.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GI.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -89,7 +84,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\karli\PycharmProjects\p3\UI.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/UI.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -98,7 +93,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="game" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -110,28 +105,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="saving_videos" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="p3" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/saving_videos.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/game.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -161,12 +135,33 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="pygletApp" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="p3" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pygletApp.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main (1)" />
-        <item itemvalue="Python.saving_videos" />
+        <item itemvalue="Python.pygletApp" />
+        <item itemvalue="Python.game" />
         <item itemvalue="Python.GI" />
-        <item itemvalue="Python.table_interface" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.UI" />
       </list>
     </recent_temporary>
@@ -238,14 +233,28 @@
       <option name="project" value="LOCAL" />
       <updated>1573218205322</updated>
     </task>
-    <task id="LOCAL-00013" summary="individual beers association&#10;red and red ball in the cup recognition">
-      <created>1573421147518</created>
+    <task id="LOCAL-00013" summary="The UI switching should work but my kivy just fucked off">
+      <created>1573546298870</created>
       <option name="number" value="00013" />
       <option name="presentableId" value="LOCAL-00013" />
       <option name="project" value="LOCAL" />
-      <updated>1573421147518</updated>
+      <updated>1573546298870</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Fuck it">
+      <created>1573564617353</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1573564617353</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Fullscreen test">
+      <created>1573647208366</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1573647208366</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -269,8 +278,10 @@
     <MESSAGE value="Adding recordings" />
     <MESSAGE value="Adding recordings 2" />
     <MESSAGE value="Workspace to gitignore" />
-    <MESSAGE value="beer association (in progress)&#10;connecting computer vision with ui" />
-    <MESSAGE value="individual beers association&#10;red and red ball in the cup recognition" />
-    <option name="LAST_COMMIT_MESSAGE" value="individual beers association&#10;red and red ball in the cup recognition" />
+    <MESSAGE value="Tried to make manual template matching, didn't work. Martin help" />
+    <MESSAGE value="The UI switching should work but my kivy just fucked off" />
+    <MESSAGE value="Fuck it" />
+    <MESSAGE value="Fullscreen test" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fullscreen test" />
   </component>
 </project>
