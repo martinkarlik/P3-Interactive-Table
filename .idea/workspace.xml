@@ -1,26 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/images/Blue_ball.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/Red_ball.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/TableTemplate.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/beer_frame.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/beer_frame_bs.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/beer_highlighted.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/beer_reg_left.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/beer_reg_right.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/cheers.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recordings/black1.avi" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recordings/black2.avi" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recordings/bothsides.avi" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sound/hit_the_golden_cup_jingle.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="Probably fixed some stuff, idk. Made it possible to display cv2 video while the ui is being run.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/beer.py" beforeDir="false" afterPath="$PROJECT_DIR$/beer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blob.py" beforeDir="false" afterPath="$PROJECT_DIR$/blob.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pygletApp.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygletApp.py" afterDir="false" />
     </list>
@@ -70,7 +52,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.pygletApp">
+  <component name="RunManager" selected="Python.game">
     <configuration name="GUI" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -183,7 +165,6 @@
         <item itemvalue="Python.main" />
         <item itemvalue="Python.game" />
         <item itemvalue="Python.algorithms" />
-        <item itemvalue="Python.GUI" />
       </list>
     </recent_temporary>
   </component>
