@@ -98,7 +98,9 @@ def extractBeers(source, templates, target_color=None):
         beers_binary = beers_binary_samples[0]
 
         for i in range(1, len(beers_binary_samples)):
-            beers_binary = beers_binary & beers_binary_samples[i]
+            temp = np.zeros([beers_binary.shape[0], beers_binary.shape[1]])
+            temp[beers_binary == beers_binary_samples[i]] = 1
+            beers_binary = temp
             # logical AND operation performed on every binary image received from every passed template
 
     elif target_color:

@@ -8,7 +8,7 @@ import algorithms
 pyglet.options['audio'] = ('directsound', 'openal', 'pulse', 'silent')
 display = pyglet.canvas.get_display()
 screens = display.get_screens()
-window = (pyglet.window.Window(width=1920, height=1080, fullscreen=True, screen=screens[1], caption="Beer pong"))
+window = (pyglet.window.Window(width=1920, height=1080, fullscreen=True, screen=screens[0], caption="Beer pong"))
 window2 = (
     pyglet.window.Window(width=1, height=1, fullscreen=False, screen=screens[0], caption="Image pro", visible=False))
 circle_white = pyglet.image.load('images/tableImages/circle_white.png')
@@ -114,6 +114,8 @@ def on_draw():
 # draw window for displaying the cv2 video
 @window2.event
 def on_draw():
+    print("hello")
+
     while cap.isOpened():
         _, frame = cap.read()
         cv2.imshow('frame', frame)
