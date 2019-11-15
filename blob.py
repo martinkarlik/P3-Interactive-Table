@@ -5,20 +5,11 @@ class Blob:
         self.area = len(pixels)
         self.compactness = 0
         self.circular = 0
-        self.marker = False
-        self.beer = False
-        self.coloured = False
         self.bounding_box = self.findBoundingBox()
         self.center = self.findCenter()
 
     def calcCompactness(self, area):
         return area / ((self.max_x - self.min_x + 1) * (self.max_y - self.min_y + 1))
-
-    def isBeer(self, threshold):
-        return self.circular > threshold
-
-    def isMarker(self, threshold):
-        return self.compactness >= threshold
 
     def findBoundingBox(self):
         min_y = self.pixels[0][0]
