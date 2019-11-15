@@ -1,5 +1,4 @@
 import cv2
-import random
 from blob import Blob
 from beer import Beer
 import numpy as np
@@ -83,19 +82,27 @@ def extractBlobs(binary_image):
     return blobs
 
 
-def extractBeers(source, templates, target_color=None, locked_position=False):
-    beers_likelihood_samples = []
-    for template in templates:
-        beers_likelihood_samples.append(matchTemplate(source, template))
+def extractBeers(source, templates, target_color=None):
 
-    beers_binary_samples = []
-    for sample in beers_likelihood_samples:
-        beers_binary_samples = threshold(sample, 0.4, 1)
+    beers_binary = np.zeros([source.shape[0], source.shape[1]])
 
-    beers_binary = beers_binary_samples[0]
-    for i in range(1, len(beers_binary_samples)):
-        beers_binary = beers_binary & beers_binary_samples[
-            i]  # logical AND operation performed on every binary image received from every passed template
+    if len(templates) > 0:
+        beers_likelihood_samples = []
+        for template in templates:
+            beers_likelihood_samples.append(matchTemplate(source, template))
+
+        beers_binary_samples = []
+        for sample in beers_likelihood_samples:
+            beers_binary_samples.append(threshold(sample, 0.4, 1))
+
+        beers_binary = beers_binary_samples[0]
+
+        for i in range(1, len(beers_binary_samples)):
+            beers_binary = beers_binary & beers_binary_samples[i]
+            # logical AND operation performed on every binary image received from every passed template
+
+    elif target_color:
+        beers_binary = colorThreshold(source, target_color[0], target_color[1])
 
     blobs = extractBlobs(beers_binary)
     # filterBlobs(blobs)
@@ -107,27 +114,26 @@ def extractBeers(source, templates, target_color=None, locked_position=False):
     return beers
 
 
-def informBeers(beers, blobs, beer_area):
-    for beer in beers:
-        beer.is_present = False
-
-        for blob in blobs:
-
-            if blob.area > 0:  # some threshold to eliminate noise
-                distance = abs(blob.center[0] - beer.center[0]) + abs(blob.center[1] - beer.center[1])
-
-                if distance < 30:  # some other threshold
-                    beer.is_present = True
-
-                    end_point_y = beer.center[0] + 40 if beer.center[0] + 40 < beer_area.shape[0] else beer_area.shape[
-                        0]
-                    end_point_x = beer.center[1] + 40 if beer.center[1] + 40 < beer_area.shape[1] else beer_area.shape[
-                        1]
-
-                    current_beer_area = beer_area[beer.center[0]:end_point_y, beer.center[1]:end_point_x]
-
-                    beer.green_ball = checkColor(current_beer_area, (120, 0.7, 0.5), (10, 0.3, 0.5))
-                    beer.red_ball = checkColor(current_beer_area, (350, 0.9, 0.5), (10, 0.3, 0.5))
+# def informBeers(beers, blobs,  beer_area):
+#
+#     for beer in beers:
+#         beer.is_present = False
+#
+#         for blob in blobs:
+#
+#             if blob.area > 0:  # some threshold to eliminate noise
+#                 distance = abs(blob.center[0] - beer.center[0]) + abs(blob.center[1] - beer.center[1])
+#
+#                 if distance < 30:  # some other threshold
+#                     beer.is_present = True
+#
+#                     end_point_y = beer.center[0] + 40 if beer.center[0] + 40 < beer_area.shape[0] else beer_area.shape[0]
+#                     end_point_x = beer.center[1] + 40 if beer.center[1] + 40 < beer_area.shape[1] else beer_area.shape[1]
+#
+#                     current_beer_area = beer_area[beer.center[0]:end_point_y, beer.center[1]:end_point_x]
+#
+#                     beer.green_ball = checkColor(current_beer_area, (120, 0.7, 0.5), (10, 0.3, 0.5))
+#                     beer.red_ball = checkColor(current_beer_area, (350, 0.9, 0.5), (10, 0.3, 0.5))
 
 
 def checkColor(source, target_color, target_offset):
@@ -141,14 +147,6 @@ def checkColor(source, target_color, target_offset):
     # it might look confusing but these element-wise matrix operations are necessary for our code to run in real time
 
     result = hue_match & saturation_match & intensity_match
-    # example: [False, True] & [True, False] -> [False, False]
-
-    # ... the above does the same as the below, just faster
-    # ...
-    # for y in range(0, hsv.shape[0]):
-    #     for x in range(0, hsv.shape[1]):
-    #         if abs(hsv[y, x][0] - target_color[0]) < 10 and abs(hsv[y, x][1] - target_color[1]) < 0.3 and abs(hsv[y, x][2] - target_color[2]) < 0.5:
-    #             return True
 
     return result.any()
 
@@ -163,13 +161,7 @@ def colorThreshold(source, target_color, target_offset):
     match = hue_match & saturation_match & intensity_match
 
     result = np.zeros([source.shape[0], source.shape[1]])
-    result[match] = 255
-
-    # ... the above does the same as the below, just faster
-    # for y in range(0, hsv.shape[0]):
-    #     for x in range(0, hsv.shape[1]):
-    #         if abs(hsv[y, x][0] - target_color[0]) < 10 and abs(hsv[y, x][1] - target_color[1]) < 0.3 and abs(hsv[y, x][2] - target_color[2]) < 0.5:
-    #             return True
+    result[match] = 1
 
     return result
 
@@ -228,5 +220,5 @@ def findCrop(source):
     start_x = markers[0].bounding_box[1]
     end_y = markers[1].bounding_box[2]
     end_x = markers[1].bounding_box[3]
-    print(start_y, end_y, start_x, end_x)
+
     return [start_y, end_y, start_x, end_x]

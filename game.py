@@ -1,11 +1,18 @@
 import pygame
+import cv2
+import algorithms
+
 
 if __name__ == '__main__':
+
+    cap = cv2.VideoCapture("recordings/test2_gameplay2.mp4")
+    beer_template_left = cv2.imread("images/testImages/templates/beer_reg_left.jpg")
+    beer_template_right = cv2.imread("images/testImages/templates/beer_reg_right.jpg")
 
     pygame.init()
 
     # Create the screen
-    screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((640, 480))  # just so that the whole screen isnt covered every time its run
 
     # Setup the frame
     pygame.display.set_caption("BeerPong")
@@ -15,21 +22,22 @@ if __name__ == '__main__':
     tableimg1 = pygame.image.load("images/tableImages/PlaceCups.png")
     circle_white = pygame.image.load("images//tableImages/circle_white.png")
 
-
-    def showTable(image, x, y):
-        screen.blit(image, (x, y))
-
-
-    def addCircle(x, y, identifier):
-        screen.blit(circle_white, (x, y))
-
-
     app_running = True
-    while app_running:
-        # Background
-        screen.fill((0, 0, 0))
-        showTable(tableimg1, 0, 0)
 
+    #cropped_dimensions = algorithms.findCrop()
+
+    while app_running and cap.isOpened():
+        _, frame = cap.read()
+
+        beer_area_left = frame[130:350, 0:220]
+        templates = [beer_template_left]
+        beers_left = algorithms.extractBeers(beer_area_left, templates)
+
+        beer_area_right = frame[130:350, 420:640]
+        templates = [beer_template_right]
+        beers_right = algorithms.extractBeers(beer_area_right, templates)
+
+        # The exit conditions, both pressing x and esc works so far
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 app_running = False
@@ -38,8 +46,15 @@ if __name__ == '__main__':
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
 
-        # call this to display the circles
-        # for beer in beerArray:
-        #     addCircle(1920/2, 1080/2, 1)
+        screen.fill(0)
 
-    pygame.display.update()
+        for beer in beers_left:
+            pygame.draw.circle(screen, (255, 255, 255), (beer.center[1], beer.center[0]), 5)
+
+        for beer in beers_right:
+            pygame.draw.circle(screen, (255, 255, 255), (300 + beer.center[1], beer.center[0]), 5)
+
+        pygame.display.update()
+
+    cap.release()
+    cv2.destroyAllWindows()

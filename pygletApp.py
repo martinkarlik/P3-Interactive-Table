@@ -23,7 +23,7 @@ def create_label(text, x, y, player):
     if player == 1:
         return pyglet.text.Label(text + ": 0",
                                  font_name='Times New Roman',
-                                 font_size=30,
+                                 font_size=15,
                                  x=x, y=y,
                                  anchor_x='center',
                                  anchor_y='center',
@@ -32,7 +32,7 @@ def create_label(text, x, y, player):
     if player == 2:
         return pyglet.text.Label(text + ": 0",
                                  font_name='Times New Roman',
-                                 font_size=30,
+                                 font_size=15,
                                  x=x, y=y,
                                  anchor_x='center',
                                  anchor_y='center',
@@ -97,11 +97,12 @@ def on_draw():
         window.clear()
         label = pyglet.text.Label('Error, no screen like that',
                                   font_name='Castellar',
-                                  font_size=70,
+                                  font_size=20,
                                   x=window.width // 2, y=window.height // 2,
                                   anchor_x='center', anchor_y='center',
                                   color=(255, 255, 0, 255))
         label.draw()
+        print("hello")
 
     # TODO find a way to make this function call work
     # for beer in beers_left:
