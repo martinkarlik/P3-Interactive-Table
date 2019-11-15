@@ -79,13 +79,6 @@ def on_key_pressed(symbol, modifiers):
 # Main draw window for displaying the UI
 @window.event
 def on_draw():
-    # beer_area_left = frame[130:350, 0:220]
-    # templates = [beer_template_left]
-    # beers_left = algorithms.extractBeers(beer_area_left, templates)
-    #
-    # beer_area_right = frame[130:350, 420:640]
-    # templates = [beer_template_right]
-    # beers_right = algorithms.extractBeers(beer_area_right, templates)
 
     if screen == 1:
         first_screen(pyglet.image.load('images/tableImages/PlaceCups.png'))
@@ -102,8 +95,7 @@ def on_draw():
                                   anchor_x='center', anchor_y='center',
                                   color=(255, 255, 0, 255))
         label.draw()
-        print("hello")
-
+    print("hello")
     # TODO find a way to make this function call work
     # for beer in beers_left:
     #     place_circle(beer.center[0], beer.center[1])
@@ -118,6 +110,13 @@ def on_draw():
 
     while cap.isOpened():
         _, frame = cap.read()
+        beer_area_left = frame[130:350, 0:220]
+        templates = [beer_template_left]
+        beers_left = algorithms.extractBeers(beer_area_left, templates)
+
+        beer_area_right = frame[130:350, 420:640]
+        templates = [beer_template_right]
+        beers_right = algorithms.extractBeers(beer_area_right, templates)
         cv2.imshow('frame', frame)
         if cv2.waitKey(50) & 0xff == ord('q'):
             break
@@ -127,7 +126,7 @@ def on_draw():
 
 if __name__ == '__main__':
     cap = cv2.VideoCapture(0)
-    # beer_template_left = cv2.imread("images/beer_reg_left.jpg")
-    # beer_template_right = cv2.imread("images/beer_reg_right.jpg")
+    beer_template_left = cv2.imread("images/testImages/templates/beer_reg_left.jpg")
+    beer_template_right = cv2.imread("images/testImages/templates/beer_reg_right.jpg")
 
     pyglet.app.run()
