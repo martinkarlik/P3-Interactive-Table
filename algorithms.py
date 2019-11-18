@@ -4,8 +4,11 @@ from beer import Beer
 import numpy as np
 from scipy import signal
 
+LEFT = 0
+RIGHT = 1
 
-def matchTemplate(source, template):
+
+def match_template(source, template):
     return cv2.matchTemplate(source, template, cv2.TM_CCOEFF_NORMED)
 
 
@@ -50,7 +53,7 @@ def threshold(source, threshold_value, max_value):
     return thresh
 
 
-def extractBlobs(binary_image):
+def extract_blobs(binary_image):
     blobs = []
     for y in range(0, binary_image.shape[0]):
         for x in range(0, binary_image.shape[1]):
@@ -82,14 +85,14 @@ def extractBlobs(binary_image):
     return blobs
 
 
-def extractBeers(source, templates, target_color=None):
+def extract_beers(table_side, source, templates, target_color=None):
 
     beers_binary = np.zeros([source.shape[0], source.shape[1]])
 
     if len(templates) > 0:
         beers_likelihood_samples = []
         for template in templates:
-            beers_likelihood_samples.append(matchTemplate(source, template))
+            beers_likelihood_samples.append(match_template(source, template))
 
         beers_binary_samples = []
         for sample in beers_likelihood_samples:
@@ -104,19 +107,23 @@ def extractBeers(source, templates, target_color=None):
             # logical AND operation performed on every binary image received from every passed template
 
     elif target_color:
-        beers_binary = colorThreshold(source, target_color[0], target_color[1])
+        beers_binary = color_threshold(source, target_color[0], target_color[1])
 
-    blobs = extractBlobs(beers_binary)
+    blobs = extract_blobs(beers_binary)
     # filterBlobs(blobs)
 
     beers = []
     for blob in blobs:
-        beers.append(Beer(blob.center))
+        if table_side == LEFT:
+            beer_center = [blob.center[0] / source.shape[0], 0.4 * blob.center[1] / source.shape[1]]
+        else:
+            beer_center = [blob.center[0] / source.shape[0], 0.6 + 0.4 * blob.center[1] / source.shape[1]]
+        beers.append(Beer(beer_center))
 
     return beers
 
 
-# def informBeers(beers, blobs,  beer_area):
+# def inform_beers(beers, blobs,  beer_area):
 #
 #     for beer in beers:
 #         beer.is_present = False
@@ -134,12 +141,19 @@ def extractBeers(source, templates, target_color=None):
 #
 #                     current_beer_area = beer_area[beer.center[0]:end_point_y, beer.center[1]:end_point_x]
 #
-#                     beer.green_ball = checkColor(current_beer_area, (120, 0.7, 0.5), (10, 0.3, 0.5))
-#                     beer.red_ball = checkColor(current_beer_area, (350, 0.9, 0.5), (10, 0.3, 0.5))
+#                     beer.green_ball = color_check(current_beer_area, (120, 0.7, 0.5), (10, 0.3, 0.5))
+#                     beer.red_ball = color_check(current_beer_area, (350, 0.9, 0.5), (10, 0.3, 0.5))
 
 
-def checkColor(source, target_color, target_offset):
-    hsv = bgrToHsi(source)
+def check_for_balls(beers, colors, source):
+
+    for beer in beers:
+        for color in colors:
+            pass
+
+
+def color_check(source, target_color, target_offset):
+    hsv = bgr_to_hsi(source)
 
     hue_match = abs(hsv[:, :, 0] - target_color[0]) < target_offset[0]
     saturation_match = abs(hsv[:, :, 1] - target_color[1]) < target_offset[1]
@@ -153,8 +167,8 @@ def checkColor(source, target_color, target_offset):
     return result.any()
 
 
-def colorThreshold(source, target_color, target_offset):
-    hsi = bgrToHsi(source)
+def color_threshold(source, target_color, target_offset):
+    hsi = bgr_to_hsi(source)
 
     hue_match = abs(hsi[:, :, 0] - target_color[0]) < target_offset[0]
     saturation_match = abs(hsi[:, :, 1] - target_color[1]) < target_offset[1]
@@ -168,12 +182,12 @@ def colorThreshold(source, target_color, target_offset):
     return result
 
 
-def detectBalls(source):
-    return [checkColor(source, (105, 0.13, 0.58), (10, 0.07, 0.07)),
-            checkColor(source, (0, 0.13, 0.58), (10, 0.08, 0.08))]
+def detect_balls(source):
+    return [color_check(source, (105, 0.13, 0.58), (10, 0.07, 0.07)),
+            color_check(source, (0, 0.13, 0.58), (10, 0.08, 0.08))]
 
 
-def bgrToHsi(image_bgr):
+def bgr_to_hsi(image_bgr):
     blue = image_bgr[:, :, 0] / 255
     green = image_bgr[:, :, 1] / 255
     red = image_bgr[:, :, 2] / 255
@@ -209,10 +223,10 @@ def bgrToHsi(image_bgr):
     return image_hsi
 
 
-def findCrop(source):
-    markers_binary = colorThreshold(source, (331, 0.5, 0.5), (10, 0.2, 0.5))
+def find_crop(source):
+    markers_binary = color_threshold(source, (331, 0.5, 0.5), (10, 0.2, 0.5))
 
-    markers = extractBlobs(markers_binary)
+    markers = extract_blobs(markers_binary)
 
     # right now taking only the two markers in two opposing the corners.. cropping based on that
     # would not work if you angle the camera or the table
