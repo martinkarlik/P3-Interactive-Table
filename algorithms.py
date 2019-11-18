@@ -224,7 +224,7 @@ def bgr_to_hsi(image_bgr):
 
 
 def find_crop(source):
-    markers_binary = color_threshold(source, (331, 0.5, 0.5), (10, 0.2, 0.5))
+    markers_binary = color_threshold(source, (331, 0.5, 0.5), (30, 0.3, 0.5))
 
     markers = extract_blobs(markers_binary)
 
