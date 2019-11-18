@@ -4,6 +4,7 @@ import algorithms
 
 table_img = ""
 
+
 def display_text(player_name, score, player):
     if player == 1:
         score = font.render(str(player_name) + ": " + str(score), True, (242, 81, 87))
@@ -77,7 +78,6 @@ if __name__ == '__main__':
 
         screen.fill(0)
 
-
         if not players:
             change_table_img("images/tableImages/PlaceCups.png")
 
@@ -94,13 +94,14 @@ if __name__ == '__main__':
             screen.blit(pygame.transform.rotate(display_text(players[2], playersScore[2], 1), 90), (1725, 160))
             screen.blit(pygame.transform.rotate(display_text(players[3], playersScore[3], 2), 90), (1725, 870))
 
-
         for beer in beers_left:
-            pygame.draw.circle(screen, (255, 255, 255), (int(beer.center[1] * 1270/640), int((beer.center[0] + 130) * 680/480)), 40)
+            pygame.draw.circle(screen, (255, 255, 255),
+                               (int(beer.center[1] * 1270 / 640), int((beer.center[0] + 130) * 680 / 480)), 40)
 
         for beer in beers_right:
             pass
-            pygame.draw.circle(screen, (255, 255, 255), (int((beer.center[1] + 420) * 1270/640), int((beer.center[0] + 130) * 680/480)), 40)
+            pygame.draw.circle(screen, (255, 255, 255),
+                               (int((beer.center[1] + 420) * 1270 / 640), int((beer.center[0] + 130) * 680 / 480)), 40)
 
         pygame.display.update()
 

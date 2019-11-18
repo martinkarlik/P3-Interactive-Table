@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="Probably fixed some stuff, idk. Made it possible to display cv2 video while the ui is being run.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pygletApp.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygletApp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -52,7 +51,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.game">
+  <component name="RunManager" selected="Python.main">
     <configuration name="GUI" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -160,9 +159,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.game" />
         <item itemvalue="Python.pygletApp" />
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.game" />
         <item itemvalue="Python.algorithms" />
       </list>
