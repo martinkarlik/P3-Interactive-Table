@@ -1,16 +1,17 @@
 import pygame
 import cv2
 import algorithms
+import constants
 
 table_img = ""
 
 
 def display_text(player_name, score, player):
     if player == 1:
-        score = font.render(str(player_name) + ": " + str(score), True, (242, 81, 87))
+        score = font.render(str(player_name) + ": " + str(score), True, constants.red_display_color)
         return score
     if player == 2:
-        score = font.render(str(player_name) + ": " + str(score), True, (7, 129, 30))
+        score = font.render(str(player_name) + ": " + str(score), True, constants.green_display_color)
         return score
 
 
@@ -75,6 +76,9 @@ if __name__ == '__main__':
 
         cv2.imshow("table", table_roi)
 
+        if cv2.waitKey(50) & 0xff == ord('q'):
+            break
+
         # turns = algorithms.detectTurns()
 
         # The exit conditions, both pressing x and esc works so far
@@ -104,11 +108,27 @@ if __name__ == '__main__':
             screen.blit(pygame.transform.rotate(display_text(players[2], players_scores[2], 1), 90), (1725, 160))
             screen.blit(pygame.transform.rotate(display_text(players[3], players_scores[3], 2), 90), (1725, 870))
 
-        for beer in beers_left:
-            pygame.draw.circle(screen, (255, 255, 255), (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+            for beer in beers_left:
+                if beer.green_ball:
+                    pygame.draw.circle(screen, constants.green_display_color,
+                                       (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+                elif beer.red_ball:
+                    pygame.draw.circle(screen, constants.red_display_color,
+                                       (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+                else:
+                    pygame.draw.circle(screen, constants.white_display_color,
+                                       (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
 
-        for beer in beers_right:
-            pygame.draw.circle(screen, (255, 255, 255), (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+            for beer in beers_right:
+                if beer.green_ball:
+                    pygame.draw.circle(screen, constants.green_display_color,
+                                       (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+                elif beer.red_ball:
+                    pygame.draw.circle(screen, constants.red_display_color,
+                                       (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+                else:
+                    pygame.draw.circle(screen, constants.white_display_color,
+                                       (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
 
         pygame.display.update()
 

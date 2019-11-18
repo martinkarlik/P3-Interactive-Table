@@ -1,4 +1,6 @@
 import cv2
+
+import constants
 from blob import Blob
 from beer import Beer
 import numpy as np
@@ -148,22 +150,53 @@ def extract_beers(table_side, source, templates, target_color=None):
 def check_for_balls(beers_left, beers_right, source):
 
     for beer in beers_left:
-        end_point_y = beer.center[0] + 40 if beer.center[0] + 40 < source.shape[0] else source.shape[0]
-        end_point_x = beer.center[1] + 40 if beer.center[1] + 40 < source.shape[1] else source.shape[1]
+        start_point_x = int(source.shape[1] * beer.center[1])
+        start_point_y = int(source.shape[0] * beer.center[0])
+        end_point_y = int(start_point_y + 40) if start_point_y + 40 < source.shape[0] else source.shape[0]
+        end_point_x = int(start_point_x + 40) if start_point_x + 40 < source.shape[1] else source.shape[1]
 
-        current_beer_area = source[beer.center[0]:end_point_y, beer.center[1]:end_point_x]
+        current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
 
-        beer.green_ball = color_check(current_beer_area, (120, 0.7, 0.5), (10, 0.3, 0.5))
-        beer.red_ball = color_check(current_beer_area, (350, 0.9, 0.5), (10, 0.3, 0.5))
+        if len(beer.green_buffer) < 10:
+            beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
+        else:
+            beer.green_buffer.pop(0)
+            beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
+        np_green_buffer = np.array(beer.green_buffer)
+        beer.green_ball = np_green_buffer.all()
+
+        if len(beer.red_buffer) < 10:
+            beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
+        else:
+            beer.red_buffer.pop(0)
+            beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
+        np_red_buffer = np.array(beer.red_buffer)
+        beer.red_ball = np_red_buffer.all()
 
     for beer in beers_right:
-        end_point_y = beer.center[0] + 40 if beer.center[0] + 40 < source.shape[0] else source.shape[0]
-        end_point_x = beer.center[1] + 40 if beer.center[1] + 40 < source.shape[1] else source.shape[1]
+        start_point_x = int(source.shape[1] * beer.center[1])
+        start_point_y = int(source.shape[0] * beer.center[0])
+        end_point_y = int(start_point_y + 40) if start_point_y + 40 < source.shape[0] else source.shape[0]
+        end_point_x = int(start_point_x + 40) if start_point_x + 40 < source.shape[1] else source.shape[1]
 
-        current_beer_area = source[beer.center[0]:end_point_y, beer.center[1]:end_point_x]
+        current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
 
-        beer.green_ball = color_check(current_beer_area, (120, 0.7, 0.5), (10, 0.3, 0.5))
-        beer.red_ball = color_check(current_beer_area, (350, 0.9, 0.5), (10, 0.3, 0.5))
+        # check if the ball has been spotted for more than 10 frames
+        if len(beer.green_buffer) < 10:
+            beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
+        else:
+            beer.green_buffer.pop(0)
+            beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
+        np_green_buffer = np.array(beer.green_buffer)
+        beer.green_ball = np_green_buffer.all()
+
+        if len(beer.red_buffer) < 10:
+            beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
+        else:
+            beer.red_buffer.pop(0)
+            beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
+        np_red_buffer = np.array(beer.red_buffer)
+        beer.red_ball = np_red_buffer.all()
 
 
 def color_check(source, target_color, target_offset):
