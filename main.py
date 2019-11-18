@@ -4,6 +4,7 @@ import algorithms
 
 table_img = ""
 
+
 def display_text(player_name, score, player):
     if player == 1:
         score = font.render(str(player_name) + ": " + str(score), True, (242, 81, 87))
@@ -25,14 +26,20 @@ def display_table_img():
 
 if __name__ == '__main__':
 
-    cap = cv2.VideoCapture("recordings/black1.avi")
+    cap = cv2.VideoCapture("recordings/test2_gameplay2.mp4")
     beer_template_left = cv2.imread("images/testImages/templates/beer_reg_left.jpg")
     beer_template_right = cv2.imread("images/testImages/templates/beer_reg_right.jpg")
 
     pygame.init()
 
+    # DISPLAY_WIDTH = 1920
+    # DISPLAY_HEIGHT = 1080
+
+    DISPLAY_WIDTH = 960
+    DISPLAY_HEIGHT = 540
+
     # Create the screen
-    screen = pygame.display.set_mode((1280, 720))  # just so that the whole screen isnt covered every time its run
+    screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 
     # Setup the frame
     pygame.display.set_caption("BeerPong")
@@ -40,29 +47,33 @@ if __name__ == '__main__':
     pygame.display.set_icon(icon)
 
     # change_table_img(("images/tableImages/GameStarted.png"))
-    circle_white = pygame.image.load("images//tableImages/circle_white.png")
+    circle_white = pygame.image.load("images/tableImages/circle_white.png")
 
     # Setup general things
     font = pygame.font.Font('freesansbold.ttf', 30)
 
     # player variables
     players = ['Joe', 'Jim', 'Caren', 'Ginger']
-    playersScore = [0, 0, 0, 0]
+    players_scores = [0, 0, 0, 0]
+
+    _, frame = cap.read()
+    cropped_dimensions = algorithms.find_crop(frame)
 
     app_running = True
-
-    # cropped_dimensions = algorithms.findCrop()
-
     while app_running and cap.isOpened():
         _, frame = cap.read()
+        table_roi = frame[cropped_dimensions[0]:cropped_dimensions[1], cropped_dimensions[2]:cropped_dimensions[3]]
 
-        beer_area_left = frame[130:350, 0:220]
-        templates = [beer_template_left]
-        beers_left = algorithms.extractBeers(beer_area_left, templates)
+        beer_area_left = table_roi[0:table_roi.shape[0], 0:int(table_roi.shape[1] * 0.4)]
+        beers_left = algorithms.extract_beers(algorithms.LEFT, beer_area_left, [beer_template_left])
 
-        beer_area_right = frame[130:350, 420:640]
-        templates = [beer_template_right]
-        beers_right = algorithms.extractBeers(beer_area_right, templates)
+        beer_area_right = table_roi[0:table_roi.shape[0], int(table_roi.shape[1] * 0.6):table_roi.shape[1]]
+        beers_right = algorithms.extract_beers(algorithms.RIGHT, beer_area_right, [beer_template_right])
+
+        # algorithms.checkForBalls(beers_left, beers_right, color, table_roi)
+
+
+        cv2.imshow("table", table_roi)
 
         # turns = algorithms.detectTurns()
 
@@ -77,7 +88,6 @@ if __name__ == '__main__':
 
         screen.fill(0)
 
-
         if not players:
             change_table_img("images/tableImages/PlaceCups.png")
 
@@ -89,18 +99,16 @@ if __name__ == '__main__':
 
         # Display the player score and names
         if players:
-            screen.blit(pygame.transform.rotate(display_text(players[0], playersScore[0], 1), -90), (92, 160))
-            screen.blit(pygame.transform.rotate(display_text(players[1], playersScore[1], 2), -90), (92, 870))
-            screen.blit(pygame.transform.rotate(display_text(players[2], playersScore[2], 1), 90), (1725, 160))
-            screen.blit(pygame.transform.rotate(display_text(players[3], playersScore[3], 2), 90), (1725, 870))
-
+            screen.blit(pygame.transform.rotate(display_text(players[0], players_scores[0], 1), -90), (92, 160))
+            screen.blit(pygame.transform.rotate(display_text(players[1], players_scores[1], 2), -90), (92, 870))
+            screen.blit(pygame.transform.rotate(display_text(players[2], players_scores[2], 1), 90), (1725, 160))
+            screen.blit(pygame.transform.rotate(display_text(players[3], players_scores[3], 2), 90), (1725, 870))
 
         for beer in beers_left:
-            pygame.draw.circle(screen, (255, 255, 255), (int(beer.center[1] * 1270/640), int((beer.center[0] + 130) * 680/480)), 40)
+            pygame.draw.circle(screen, (255, 255, 255), (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
 
         for beer in beers_right:
-            pass
-            pygame.draw.circle(screen, (255, 255, 255), (int((beer.center[1] + 420) * 1270/640), int((beer.center[0] + 130) * 680/480)), 40)
+            pygame.draw.circle(screen, (255, 255, 255), (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
 
         pygame.display.update()
 

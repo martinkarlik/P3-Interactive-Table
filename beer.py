@@ -4,7 +4,7 @@ class Beer:
         self.center = center
         self.is_present = False
         self.highlighted = False
-        self.green_ball = False
+        self.green_ball = True
         self.red_ball = False
 
 
