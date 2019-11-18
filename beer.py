@@ -6,6 +6,5 @@ class Beer:
         self.highlighted = False
         self.green_ball = True
         self.red_ball = False
-
-
-
+        self.green_buffer = []
+        self.red_buffer = []
