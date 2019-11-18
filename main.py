@@ -27,20 +27,18 @@ def display_table_img():
 
 if __name__ == '__main__':
 
-    cap = cv2.VideoCapture("recordings/test2_gameplay2.mp4")
+    # cap = cv2.VideoCapture("recordings/test2_gameplay2.mp4")
+    cap = cv2.VideoCapture(0)
     beer_template_left = cv2.imread("images/testImages/templates/beer_reg_left.jpg")
     beer_template_right = cv2.imread("images/testImages/templates/beer_reg_right.jpg")
 
     pygame.init()
 
-    # DISPLAY_WIDTH = 1920
-    # DISPLAY_HEIGHT = 1080
-
-    DISPLAY_WIDTH = 960
-    DISPLAY_HEIGHT = 540
+    DISPLAY_WIDTH = 1920
+    DISPLAY_HEIGHT = 1080
 
     # Create the screen
-    screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
+    screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT), pygame.FULLSCREEN)
 
     # Setup the frame
     pygame.display.set_caption("BeerPong")
@@ -60,10 +58,14 @@ if __name__ == '__main__':
     _, frame = cap.read()
     cropped_dimensions = algorithms.find_crop(frame)
 
+    # cropped_dimensions = [0, frame.shape[0], 0, frame.shape[1]]
+
     app_running = True
     while app_running and cap.isOpened():
         _, frame = cap.read()
+
         table_roi = frame[cropped_dimensions[0]:cropped_dimensions[1], cropped_dimensions[2]:cropped_dimensions[3]]
+        cv2.imshow("table", table_roi)
 
         beer_area_left = table_roi[0:table_roi.shape[0], 0:int(table_roi.shape[1] * 0.4)]
         beers_left = algorithms.extract_beers(algorithms.LEFT, beer_area_left, [beer_template_left])
@@ -76,6 +78,8 @@ if __name__ == '__main__':
 
         cv2.imshow("table", table_roi)
 
+
+    
         # turns = algorithms.detectTurns()
 
         # The exit conditions, both pressing x and esc works so far
@@ -128,6 +132,8 @@ if __name__ == '__main__':
                                        (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
 
         pygame.display.update()
+
+        cv2.waitKey(1)
 
     cap.release()
     cv2.destroyAllWindows()
