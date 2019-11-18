@@ -145,11 +145,25 @@ def extract_beers(table_side, source, templates, target_color=None):
 #                     beer.red_ball = color_check(current_beer_area, (350, 0.9, 0.5), (10, 0.3, 0.5))
 
 
-def check_for_balls(beers, colors, source):
+def check_for_balls(beers_left, beers_right, source):
 
-    for beer in beers:
-        for color in colors:
-            pass
+    for beer in beers_left:
+        end_point_y = beer.center[0] + 40 if beer.center[0] + 40 < source.shape[0] else source.shape[0]
+        end_point_x = beer.center[1] + 40 if beer.center[1] + 40 < source.shape[1] else source.shape[1]
+
+        current_beer_area = source[beer.center[0]:end_point_y, beer.center[1]:end_point_x]
+
+        beer.green_ball = color_check(current_beer_area, (120, 0.7, 0.5), (10, 0.3, 0.5))
+        beer.red_ball = color_check(current_beer_area, (350, 0.9, 0.5), (10, 0.3, 0.5))
+
+    for beer in beers_right:
+        end_point_y = beer.center[0] + 40 if beer.center[0] + 40 < source.shape[0] else source.shape[0]
+        end_point_x = beer.center[1] + 40 if beer.center[1] + 40 < source.shape[1] else source.shape[1]
+
+        current_beer_area = source[beer.center[0]:end_point_y, beer.center[1]:end_point_x]
+
+        beer.green_ball = color_check(current_beer_area, (120, 0.7, 0.5), (10, 0.3, 0.5))
+        beer.red_ball = color_check(current_beer_area, (350, 0.9, 0.5), (10, 0.3, 0.5))
 
 
 def color_check(source, target_color, target_offset):

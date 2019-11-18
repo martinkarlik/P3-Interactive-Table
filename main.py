@@ -70,7 +70,7 @@ if __name__ == '__main__':
         beer_area_right = table_roi[0:table_roi.shape[0], int(table_roi.shape[1] * 0.6):table_roi.shape[1]]
         beers_right = algorithms.extract_beers(algorithms.RIGHT, beer_area_right, [beer_template_right])
 
-        # algorithms.checkForBalls(beers_left, beers_right, color, table_roi)
+        algorithms.check_for_balls(beers_left, beers_right, table_roi)
 
 
         cv2.imshow("table", table_roi)
