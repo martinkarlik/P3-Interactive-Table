@@ -76,9 +76,6 @@ if __name__ == '__main__':
 
         cv2.imshow("table", table_roi)
 
-        if cv2.waitKey(50) & 0xff == ord('q'):
-            break
-
         # turns = algorithms.detectTurns()
 
         # The exit conditions, both pressing x and esc works so far
@@ -101,7 +98,7 @@ if __name__ == '__main__':
         # displays that current path to the image, change image with change_table_img()
         display_table_img()
 
-        # Display the player score and names
+        # Everything that needs to run after names are input
         if players:
             screen.blit(pygame.transform.rotate(display_text(players[0], players_scores[0], 1), -90), (92, 160))
             screen.blit(pygame.transform.rotate(display_text(players[1], players_scores[1], 2), -90), (92, 870))
