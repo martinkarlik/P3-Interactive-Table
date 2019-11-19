@@ -14,7 +14,6 @@ class Beer:
         self.red_ball = False
         self.green_buffer = []
         self.red_buffer = []
-        print("new beer created")
 
     def update_history(self, beer_present):
 

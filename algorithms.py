@@ -239,14 +239,15 @@ def bgr_to_hsi(image_bgr):
 
 
 def find_crop(source):
-    markers_binary = color_threshold(source, (331, 0.5, 0.5), (30, 0.3, 0.5))
+    markers_binary = color_threshold(source, (328, 0.6, 0.5), (30, 0.3, 0.5))
+    # return markers_binary
 
     markers = extract_blobs(markers_binary)
-
-    # right now taking only the two markers in two opposing the corners.. cropping based on that
-    # would not work if you angle the camera or the table
-    # need to look into camera calibration, extrinsic parameters
-
+    #
+    # # right now taking only the two markers in two opposing the corners.. cropping based on that
+    # # would not work if you angle the camera or the table
+    # # need to look into camera calibration, extrinsic parameters
+    #
     start_y = markers[0].bounding_box[0]
     start_x = markers[0].bounding_box[1]
     end_y = markers[1].bounding_box[2]
