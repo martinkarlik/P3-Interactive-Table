@@ -53,5 +53,35 @@ white_display_color = 255, 255, 255
 #
 #     return tempImg
 
+# for beer in beers_left:
+#     if beer.red_ball and not left_drinks:
+#         left_drinks = True
+#         drink_color_left = turn_to_drink_right()
+#         players_scores[0] += 1
+#     elif beer.green_ball and left_drinks:
+#         left_drinks = True
+#         drink_color_left = turn_to_drink_right()
+#         players_scores[1] += 1
+#     else:
+#         left_drinks = False
+#         drink_color_left = constants.white_display_color
+#     pygame.draw.circle(screen, drink_color_left,
+#                        (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+#
+# for beer in beers_right:
+#     if beer.red_ball and not right_drinks:
+#         right_drinks = True
+#         drink_color_right = turn_to_drink_right()
+#         players_scores[2] += 1
+#     elif beer.green_ball and right_drinks:
+#         right_drinks = True
+#         drink_color_right = turn_to_drink_right()
+#         players_scores[3] += 1
+#     else:
+#         right_drinks = False
+#         drink_color_right = constants.white_display_color
+#     pygame.draw.circle(screen, drink_color_right,
+#                        (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+
 golden_jingle = 'sound/hit_the_golden_cup_jingle.mp3'
 sudden_death_jingle = 'sound/sudden_death_jingle.mp3'
