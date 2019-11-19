@@ -13,8 +13,6 @@ class Blob:
         self.is_beer = self.is_beer()
         self.is_marker = self.is_marker()
 
-
-
     def find_bounding_box(self):
         min_y = self.pixels[0][0]
         min_x = self.pixels[0][1]

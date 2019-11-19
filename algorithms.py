@@ -8,7 +8,7 @@ from scipy import signal
 
 TABLE_SIDE_LEFT = 0
 TABLE_SIDE_RIGHT = 1
-MOVED_BEER_THRESHOLD = 200
+MOVED_BEER_THRESHOLD = 0.1
 
 
 def match_template(source, template):
@@ -53,6 +53,13 @@ def extract_blobs(binary_image):
     return blobs
 
 
+
+
+
+
+
+
+
 def inform_beers(beers, source, templates, target_color, table_side):
 
     beers_binary = np.zeros([source.shape[0], source.shape[1]])
@@ -79,31 +86,31 @@ def inform_beers(beers, source, templates, target_color, table_side):
         kernel = np.ones((10, 10), np.uint8)
         beers_binary = cv2.morphologyEx(beers_binary, cv2.MORPH_CLOSE, kernel)
 
-
-
     blobs = extract_blobs(beers_binary)
+
+
 
     for beer in beers:
         beer.is_present_current_frame = False
 
     for blob in blobs:
         if blob.is_beer:
+            blob_relative_center = [blob.center[0] / source.shape[0], table_side * 0.6 + 0.4 * blob.center[1] / source.shape[1]]
             existing_beer_found = False
 
             for beer in beers:
-                distance = abs(blob.center[0] - beer.center[0]) + abs(blob.center[1] - beer.center[1])
+                distance = abs(blob_relative_center[0] - beer.center[0]) + abs(blob_relative_center[1] - beer.center[1])
+                print(distance)
+                print(blob_relative_center, beer.center)
                 if distance < MOVED_BEER_THRESHOLD:
                     beer.is_present_current_frame = True
                     existing_beer_found = True
                     break
 
             if not existing_beer_found:
-                if table_side == TABLE_SIDE_LEFT:
-                    beer_center = [blob.center[0] / source.shape[0], 0.4 * blob.center[1] / source.shape[1]]
-                else:
-                    beer_center = [blob.center[0] / source.shape[0], 0.6 + 0.4 * blob.center[1] / source.shape[1]]
-
+                beer_center = [blob.center[0] / source.shape[0], table_side * 0.6 + 0.4 * blob.center[1] / source.shape[1]]
                 beers.append(Beer(beer_center))
+
 
     for beer in beers:
         beer.update_history(beer.is_present_current_frame)
@@ -113,6 +120,20 @@ def inform_beers(beers, source, templates, target_color, table_side):
     for i in range(0, beer_len):
         if not all(beers[beer_len - i - 1].presence_history):
             beers.pop(beer_len - i - 1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def check_for_balls(beers_left, beers_right, source):

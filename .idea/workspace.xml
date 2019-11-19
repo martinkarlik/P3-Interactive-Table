@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="" />
+    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="beer detection with color threshold&#10;many false positives removed">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/beer.py" beforeDir="false" afterPath="$PROJECT_DIR$/beer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blob.py" beforeDir="false" afterPath="$PROJECT_DIR$/blob.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -308,7 +313,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574164425382</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="beer detection with color threshold&#10;many false positives removed">
+      <created>1574164463215</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1574164463215</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
