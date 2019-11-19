@@ -87,10 +87,14 @@ if __name__ == '__main__':
     beer_template_left = cv2.imread("images/testImages/templates/beer_reg_left.jpg")
     beer_template_right = cv2.imread("images/testImages/templates/beer_reg_right.jpg")
 
+
     pygame.init()
 
     DISPLAY_WIDTH = 854
     DISPLAY_HEIGHT = 480
+
+    # DISPLAY_WIDTH = 960
+    # DISPLAY_HEIGHT = 540
 
     # Create the screen
     screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
@@ -101,7 +105,7 @@ if __name__ == '__main__':
     pygame.display.set_icon(icon)
 
     # change_table_img(("images/tableImages/GameStarted.png"))
-    circle_white = pygame.image.load("images/tableImages/circle_white.png")
+    # circle_white = pygame.image.load("images/tableImages/circle_white.png")
 
     # Setup general things
     font = pygame.font.Font('freesansbold.ttf', 15)
@@ -110,27 +114,29 @@ if __name__ == '__main__':
     players = ['joe', 'pe', 'e', 'e']
     players_scores = np.zeros(4)
 
+    beers_left = []
+    beers_right = []
+
     _, frame = cap.read()
     cropped_dimensions = algorithms.find_crop(frame)
-
-    # cropped_dimensions = [0, frame.shape[0], 0, frame.shape[1]]
 
     app_running = True
     while app_running and cap.isOpened():
         _, frame = cap.read()
 
+
         table_roi = frame[cropped_dimensions[0]:cropped_dimensions[1], cropped_dimensions[2]:cropped_dimensions[3]]
-        cv2.imshow("table", table_roi)
 
         beer_area_left = table_roi[0:table_roi.shape[0], 0:int(table_roi.shape[1] * 0.4)]
-        beers_left = algorithms.extract_beers(algorithms.LEFT, beer_area_left, [beer_template_left])
+        algorithms.inform_beers(beers_left, beer_area_left, None, [(50, 0.6, 0.5), (15, 0.3, 0.5)], algorithms.TABLE_SIDE_LEFT)
 
         beer_area_right = table_roi[0:table_roi.shape[0], int(table_roi.shape[1] * 0.6):table_roi.shape[1]]
-        beers_right = algorithms.extract_beers(algorithms.RIGHT, beer_area_right, [beer_template_right])
+        algorithms.inform_beers(beers_right, beer_area_right, None, [(50, 0.6, 0.5), (15, 0.3, 0.5)], algorithms.TABLE_SIDE_RIGHT)
 
-        algorithms.check_for_balls(beers_left, beers_right, table_roi)
+        # algorithms.check_for_balls(beers_left, beers_right, table_roi)\
 
         cv2.imshow("table", table_roi)
+
 
         # turns = algorithms.detectTurns()
 

@@ -49,7 +49,7 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.main">
-    <configuration name="GUI" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="constants" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -61,7 +61,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GUI.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/constants.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -158,9 +158,9 @@
       <list>
         <item itemvalue="Python.main" />
         <item itemvalue="Python.saving_videos" />
+        <item itemvalue="Python.constants" />
         <item itemvalue="Python.game" />
         <item itemvalue="Python.pygletApp" />
-        <item itemvalue="Python.game" />
       </list>
     </recent_temporary>
   </component>
@@ -294,12 +294,19 @@
       <option name="project" value="LOCAL" />
       <updated>1574078960706</updated>
     </task>
-    <task id="LOCAL-00022" summary="Added sound">
-      <created>1574151242913</created>
+    <task id="LOCAL-00022" summary="something with cropping">
+      <created>1574085642217</created>
       <option name="number" value="00022" />
       <option name="presentableId" value="LOCAL-00022" />
       <option name="project" value="LOCAL" />
-      <updated>1574151242913</updated>
+      <updated>1574085642217</updated>
+    </task>
+    <task id="LOCAL-00023" summary="beer detection with color threshold&#10;many false positives removed">
+      <created>1574164425381</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1574164425382</updated>
     </task>
     <task id="LOCAL-00023" summary="Added sound">
       <created>1574164381485</created>
@@ -342,7 +349,8 @@
     <MESSAGE value="did nothing" />
     <MESSAGE value="beer positions relative to display" />
     <MESSAGE value="added recordings" />
-    <MESSAGE value="Added sound" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added sound" />
+    <MESSAGE value="something with cropping" />
+    <MESSAGE value="beer detection with color threshold&#10;many false positives removed" />
+    <option name="LAST_COMMIT_MESSAGE" value="beer detection with color threshold&#10;many false positives removed" />
   </component>
 </project>

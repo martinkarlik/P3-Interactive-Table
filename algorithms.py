@@ -6,48 +6,14 @@ from beer import Beer
 import numpy as np
 from scipy import signal
 
-LEFT = 0
-RIGHT = 1
+TABLE_SIDE_LEFT = 0
+TABLE_SIDE_RIGHT = 1
+MOVED_BEER_THRESHOLD = 200
 
 
 def match_template(source, template):
     return cv2.matchTemplate(source, template, cv2.TM_CCOEFF_NORMED)
 
-
-# TODO doesn't work, fix
-# def getImgKernel(x, y):
-#     imgKernel = np.array([
-#         [x - 1, y - 1, x, y - 1, x + 1, y - 1],
-#         [x - 1, y, x, y, x + 1, y],
-#         [x - 1, y + 1, x, y + 1, x + 1, y + 1]])
-#     return imgKernel
-
-# def matchTemplateSelf(source, template):
-#     tempImg = np.copy(source)
-#     templateArray = [[]]
-#     templateBlue = template[:, :, 0]
-#     templateGreen = template[:, :, 1]
-#     templateRed = template[:, :, 2]
-#
-#     height = template.shape[1]
-#     width = template.shape[0]
-#     for x in range(0, width):
-#         for y in range(0, height):
-#             templateArray = x, y
-#
-#     for x in range(0, source.shape[0]):
-#         for y in range(0, source.shape[1]):
-#             sourceBlueKernel = getImgKernel(x, y)
-#             sourceGreenKernel = getImgKernel(x, y)
-#             sourceRedKernel = getImgKernel(x, y)
-#
-#             corrBlue = signal.correlate2d(sourceBlueKernel, templateBlue, boundary='symm', mode='same')
-#             corrGreen = signal.correlate2d(sourceGreenKernel, templateGreen, boundary='symm', mode='same')
-#             corrRed = signal.correlate2d(sourceRedKernel, templateRed, boundary='symm', mode='same')
-#             i, j = np.unravel_index(np.argmax(corrBlue), corrBlue.shape)
-#             tempImg = corrBlue
-#
-#     return tempImg
 
 def threshold(source, threshold_value, max_value):
     thresh = np.zeros([source.shape[0], source.shape[1]])
@@ -87,11 +53,11 @@ def extract_blobs(binary_image):
     return blobs
 
 
-def extract_beers(table_side, source, templates, target_color=None):
+def inform_beers(beers, source, templates, target_color, table_side):
 
     beers_binary = np.zeros([source.shape[0], source.shape[1]])
 
-    if len(templates) > 0:
+    if templates:
         beers_likelihood_samples = []
         for template in templates:
             beers_likelihood_samples.append(match_template(source, template))
@@ -110,41 +76,43 @@ def extract_beers(table_side, source, templates, target_color=None):
 
     elif target_color:
         beers_binary = color_threshold(source, target_color[0], target_color[1])
+        kernel = np.ones((10, 10), np.uint8)
+        beers_binary = cv2.morphologyEx(beers_binary, cv2.MORPH_CLOSE, kernel)
+
+
 
     blobs = extract_blobs(beers_binary)
-    # filterBlobs(blobs)
 
-    beers = []
+    for beer in beers:
+        beer.is_present_current_frame = False
+
     for blob in blobs:
-        if table_side == LEFT:
-            beer_center = [blob.center[0] / source.shape[0], 0.4 * blob.center[1] / source.shape[1]]
-        else:
-            beer_center = [blob.center[0] / source.shape[0], 0.6 + 0.4 * blob.center[1] / source.shape[1]]
-        beers.append(Beer(beer_center))
+        if blob.is_beer:
+            existing_beer_found = False
 
-    return beers
+            for beer in beers:
+                distance = abs(blob.center[0] - beer.center[0]) + abs(blob.center[1] - beer.center[1])
+                if distance < MOVED_BEER_THRESHOLD:
+                    beer.is_present_current_frame = True
+                    existing_beer_found = True
+                    break
 
+            if not existing_beer_found:
+                if table_side == TABLE_SIDE_LEFT:
+                    beer_center = [blob.center[0] / source.shape[0], 0.4 * blob.center[1] / source.shape[1]]
+                else:
+                    beer_center = [blob.center[0] / source.shape[0], 0.6 + 0.4 * blob.center[1] / source.shape[1]]
 
-# def inform_beers(beers, blobs,  beer_area):
-#
-#     for beer in beers:
-#         beer.is_present = False
-#
-#         for blob in blobs:
-#
-#             if blob.area > 0:  # some threshold to eliminate noise
-#                 distance = abs(blob.center[0] - beer.center[0]) + abs(blob.center[1] - beer.center[1])
-#
-#                 if distance < 30:  # some other threshold
-#                     beer.is_present = True
-#
-#                     end_point_y = beer.center[0] + 40 if beer.center[0] + 40 < beer_area.shape[0] else beer_area.shape[0]
-#                     end_point_x = beer.center[1] + 40 if beer.center[1] + 40 < beer_area.shape[1] else beer_area.shape[1]
-#
-#                     current_beer_area = beer_area[beer.center[0]:end_point_y, beer.center[1]:end_point_x]
-#
-#                     beer.green_ball = color_check(current_beer_area, (120, 0.7, 0.5), (10, 0.3, 0.5))
-#                     beer.red_ball = color_check(current_beer_area, (350, 0.9, 0.5), (10, 0.3, 0.5))
+                beers.append(Beer(beer_center))
+
+    for beer in beers:
+        beer.update_history(beer.is_present_current_frame)
+
+    beer_len = len(beers)
+
+    for i in range(0, beer_len):
+        if not all(beers[beer_len - i - 1].presence_history):
+            beers.pop(beer_len - i - 1)
 
 
 def check_for_balls(beers_left, beers_right, source):

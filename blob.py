@@ -5,14 +5,15 @@ class Blob:
     def __init__(self, pixels):
         self.pixels = pixels
         self.area = len(pixels)
-        self.compactness = 0
-        self.circular = 0
+
         self.bounding_box = self.find_bounding_box()
         self.center = self.find_center()
         self.mean = self.find_mean()
 
-    def calcCompactness(self, area):
-        return area / ((self.max_x - self.min_x + 1) * (self.max_y - self.min_y + 1))
+        self.is_beer = self.is_beer()
+        self.is_marker = self.is_marker()
+
+
 
     def find_bounding_box(self):
         min_y = self.pixels[0][0]
@@ -45,9 +46,14 @@ class Blob:
 
         return [int(sum_y / self.area), int(sum_x / self.area)]
 
-    @staticmethod
-    def iAmStatic():
-        print("no you aint ya bitch")
+    def get_compactness(self):
+        return self.area / (self.bounding_box[3] - self.bounding_box[1] + 1) * (self.bounding_box[2] - self.bounding_box[0] + 1)
 
+    def get_circularity(self):
+        return 1
 
+    def is_beer(self):
+        return self.area > 10 and self.get_circularity() > 0.7
 
+    def is_marker(self):
+        return self.area > 100 and self.get_compactness() > 0.7

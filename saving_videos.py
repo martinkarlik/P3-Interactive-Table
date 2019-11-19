@@ -18,13 +18,7 @@
 # out.release()
 # cv2.destroyAllWindows()
 
-import numpy
+tem = None
 
-a = numpy.zeros([181, 181])
-b = numpy.ones([181, 181])
-
-c = numpy.zeros([181, 181])
-
-c[a == b] = 1
-
-print(c)
+if tem:
+    print("yep")
