@@ -14,9 +14,12 @@ class Beer:
         self.red_ball = False
         self.green_buffer = []
         self.red_buffer = []
+        # print("new beer created")
 
     def update_history(self, beer_present):
 
         self.presence_history.append(beer_present)
         if len(self.presence_history) < HISTORY_RING:
             self.presence_history.pop(0)
+
+        print(self.presence_history)

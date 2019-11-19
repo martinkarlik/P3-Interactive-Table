@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
+    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="beer detection with color threshold&#10;many false positives removed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/beer.py" beforeDir="false" afterPath="$PROJECT_DIR$/beer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blob.py" beforeDir="false" afterPath="$PROJECT_DIR$/blob.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,7 +30,6 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -314,12 +313,12 @@
       <option name="project" value="LOCAL" />
       <updated>1574164381485</updated>
     </task>
-    <task id="LOCAL-00024" summary="Thanks">
-      <created>1574170661732</created>
+    <task id="LOCAL-00024" summary="beer detection with color threshold&#10;many false positives removed">
+      <created>1574164463215</created>
       <option name="number" value="00024" />
       <option name="presentableId" value="LOCAL-00024" />
       <option name="project" value="LOCAL" />
-      <updated>1574170661732</updated>
+      <updated>1574164463215</updated>
     </task>
     <option name="localTasksCounter" value="25" />
     <servers />
@@ -357,7 +356,6 @@
     <MESSAGE value="added recordings" />
     <MESSAGE value="something with cropping" />
     <MESSAGE value="beer detection with color threshold&#10;many false positives removed" />
-    <MESSAGE value="Thanks" />
-    <option name="LAST_COMMIT_MESSAGE" value="Thanks" />
+    <option name="LAST_COMMIT_MESSAGE" value="beer detection with color threshold&#10;many false positives removed" />
   </component>
 </project>
