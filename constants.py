@@ -53,4 +53,5 @@ white_display_color = 255, 255, 255
 #
 #     return tempImg
 
-
+golden_jingle = 'sound/hit_the_golden_cup_jingle.mp3'
+sudden_death_jingle = 'sound/sudden_death_jingle.mp3'
