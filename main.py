@@ -2,6 +2,7 @@ import pygame
 import cv2
 import algorithms
 import constants
+import numpy as np
 
 table_img = ""
 
@@ -15,30 +16,39 @@ def display_text(player_name, score, player):
         return score
 
 
+# the function that is responsible for changing the table image
 def change_table_img(path):
     global table_img
-    table_img = path
+    table_img = "images/tableImages/" + path
 
 
+# The function that shows the current table image
 def display_table_img():
     global table_img
     screen.blit(pygame.image.load(table_img), (0, 0))
+    
+
+def play_audio(audio):
+    pygame.mixer.music.load(audio)
+    pygame.mixer.music.queue(audio)
+
+    pygame.mixer.music.play()
 
 
 if __name__ == '__main__':
 
-    # cap = cv2.VideoCapture("recordings/test2_gameplay2.mp4")
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture("recordings/test2_gameplay2.mp4")
+    # cap = cv2.VideoCapture(0)
     beer_template_left = cv2.imread("images/testImages/templates/beer_reg_left.jpg")
     beer_template_right = cv2.imread("images/testImages/templates/beer_reg_right.jpg")
 
     pygame.init()
 
-    DISPLAY_WIDTH = 1920
-    DISPLAY_HEIGHT = 1080
+    DISPLAY_WIDTH = 680
+    DISPLAY_HEIGHT = 420
 
     # Create the screen
-    screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 
     # Setup the frame
     pygame.display.set_caption("BeerPong")
@@ -49,11 +59,11 @@ if __name__ == '__main__':
     circle_white = pygame.image.load("images/tableImages/circle_white.png")
 
     # Setup general things
-    font = pygame.font.Font('freesansbold.ttf', 30)
+    font = pygame.font.Font('freesansbold.ttf', 15)
 
     # player variables
-    players = ['Joe', 'Jim', 'Caren', 'Ginger']
-    players_scores = [0, 0, 0, 0]
+    players = ['Red1', 'Green1', 'Red2', 'Green2']
+    players_scores = np.zeros(4)
 
     _, frame = cap.read()
     cropped_dimensions = algorithms.find_crop(frame)
@@ -75,11 +85,8 @@ if __name__ == '__main__':
 
         algorithms.check_for_balls(beers_left, beers_right, table_roi)
 
-
         cv2.imshow("table", table_roi)
 
-
-    
         # turns = algorithms.detectTurns()
 
         # The exit conditions, both pressing x and esc works so far
@@ -94,46 +101,65 @@ if __name__ == '__main__':
         screen.fill(0)
 
         if not players:
-            change_table_img("images/tableImages/PlaceCups.png")
+            change_table_img("PlaceCups.png")
 
         elif beers_left != 10 and beers_right != 10:
-            change_table_img("images/tableImages/GameStarted.png")
+            change_table_img("GameStarted.png")
 
         # displays that current path to the image, change image with change_table_img()
         display_table_img()
 
         # Everything that needs to run after names are input
         if players:
-            screen.blit(pygame.transform.rotate(display_text(players[0], players_scores[0], 1), -90), (92, 160))
-            screen.blit(pygame.transform.rotate(display_text(players[1], players_scores[1], 2), -90), (92, 870))
-            screen.blit(pygame.transform.rotate(display_text(players[2], players_scores[2], 1), 90), (1725, 160))
-            screen.blit(pygame.transform.rotate(display_text(players[3], players_scores[3], 2), 90), (1725, 870))
+            screen.blit(pygame.transform.rotate(display_text(players[0], int(players_scores[0]), 1), -90),
+                        (92/1920*DISPLAY_WIDTH, 160/1080*DISPLAY_HEIGHT))
+            screen.blit(pygame.transform.rotate(display_text(players[1], int(players_scores[1]), 2), -90),
+                        (92/1920*DISPLAY_WIDTH, 870/1080*DISPLAY_HEIGHT))
+            screen.blit(pygame.transform.rotate(display_text(players[2], int(players_scores[2]), 1), 90),
+                        (1725/1920*DISPLAY_WIDTH, 160/1080*DISPLAY_HEIGHT))
+            screen.blit(pygame.transform.rotate(display_text(players[3], int(players_scores[3]), 2), 90),
+                        (1725/1920*DISPLAY_WIDTH, 870/1080*DISPLAY_HEIGHT))
 
             for beer in beers_left:
-                if beer.green_ball:
-                    pygame.draw.circle(screen, constants.green_display_color,
-                                       (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
-                elif beer.red_ball:
+                score_update = False
+                if beer.red_ball:
                     pygame.draw.circle(screen, constants.red_display_color,
                                        (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+                    play_audio(constants.golden_jingle)
+                    if not score_update:
+                        score_update = True
+                        players_scores[2] += 1
+                elif beer.green_ball:
+                    pygame.draw.circle(screen, constants.green_display_color,
+                                       (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+                    if not score_update:
+                        score_update = True
+                        players_scores[3] += 1
                 else:
                     pygame.draw.circle(screen, constants.white_display_color,
                                        (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+                    score_update = False
 
             for beer in beers_right:
-                if beer.green_ball:
-                    pygame.draw.circle(screen, constants.green_display_color,
-                                       (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
-                elif beer.red_ball:
+                score_update = False
+                if beer.red_ball:
                     pygame.draw.circle(screen, constants.red_display_color,
                                        (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+                    if not score_update:
+                        score_update = True
+                        players_scores[0] += 1
+                elif beer.green_ball:
+                    pygame.draw.circle(screen, constants.green_display_color,
+                                       (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+                    if not score_update:
+                        score_update = True
+                        players_scores[1] += 1
                 else:
                     pygame.draw.circle(screen, constants.white_display_color,
                                        (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+                    score_update = False
 
         pygame.display.update()
-
-        cv2.waitKey(1)
 
     cap.release()
     cv2.destroyAllWindows()

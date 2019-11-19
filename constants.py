@@ -13,3 +13,6 @@ color_offset = (10, 0.3, 0.5)
 green_display_color = 7, 129, 30
 red_display_color = 242, 81, 87
 white_display_color = 255, 255, 255
+
+golden_jingle = 'sound/hit_the_golden_cup_jingle.mp3'
+sudden_death_jingle = 'sound/sudden_death_jingle.mp3'
