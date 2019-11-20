@@ -91,18 +91,19 @@ def play_audio(audio):
 
 if __name__ == '__main__':
 
-    # cap = cv2.VideoCapture("recordings/green_ball.mp4")
-    cap = cv2.VideoCapture(1)
+    # cap = cv2.VideoCapture("recordings/test2_gameplay2.mp4")
+    cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_EXPOSURE, -5)
     beer_template_left = cv2.imread("images/testImages/templates/beer_reg_left.jpg")
     beer_template_right = cv2.imread("images/testImages/templates/beer_reg_right.jpg")
 
     pygame.init()
 
-    # DISPLAY_WIDTH = 1920
-    # DISPLAY_HEIGHT = 1080
+    DISPLAY_WIDTH = 960
+    DISPLAY_HEIGHT = 540
 
-    DISPLAY_WIDTH = 1280
-    DISPLAY_HEIGHT = 720
+    # DISPLAY_WIDTH = 1280
+    # DISPLAY_HEIGHT = 720
 
     # Create the screen
     screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT), pygame.FULLSCREEN)
@@ -141,7 +142,7 @@ if __name__ == '__main__':
         algorithms.inform_beers(beers_right, beer_area_right, None, [(50, 0.6, 0.5), (15, 0.3, 0.5)],
                                 algorithms.TABLE_SIDE_RIGHT)
 
-        # algorithms.check_for_balls(beers_left, beers_right, table_roi)\
+        algorithms.check_for_balls(beers_left, beers_right, table_roi)
 
         cv2.imshow("table", table_roi)
 
@@ -161,7 +162,7 @@ if __name__ == '__main__':
         # Conditionals controlling the projected table image
         if not game_mode_chosen:
             change_table_img("choose_game_mode.png")
-            if not algorithms.color_check(frame, (172, 0.68, 0.5), constants.color_offset):
+            if not algorithms.color_check(table_roi, (172, 0.68, 0.5), constants.color_offset):
                 frame_count = 0
             # Casual
             if algorithms.color_check(projection_to_camera_pos(320, 540, 125, 785), (172, 0.68, 0.5), constants.color_offset):
@@ -234,6 +235,7 @@ if __name__ == '__main__':
                 else:
                     left_drinks = False
                     drink_color_left = constants.white_display_color
+
                 pygame.draw.circle(screen, drink_color_left,
                                    (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
 

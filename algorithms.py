@@ -8,7 +8,7 @@ from scipy import signal
 
 TABLE_SIDE_LEFT = 0
 TABLE_SIDE_RIGHT = 1
-MOVED_BEER_THRESHOLD = 0.1
+MOVED_BEER_THRESHOLD = 0.05
 
 
 def match_template(source, template):
@@ -88,10 +88,8 @@ def inform_beers(beers, source, templates, target_color, table_side):
 
     blobs = extract_blobs(beers_binary)
 
-
-
     for beer in beers:
-        beer.is_present_current_frame = False
+        beer.is_present = False
 
     for blob in blobs:
         if blob.is_beer:
@@ -100,10 +98,9 @@ def inform_beers(beers, source, templates, target_color, table_side):
 
             for beer in beers:
                 distance = abs(blob_relative_center[0] - beer.center[0]) + abs(blob_relative_center[1] - beer.center[1])
-                print(distance)
-                print(blob_relative_center, beer.center)
+
                 if distance < MOVED_BEER_THRESHOLD:
-                    beer.is_present_current_frame = True
+                    beer.is_present = True
                     existing_beer_found = True
                     break
 
@@ -111,56 +108,39 @@ def inform_beers(beers, source, templates, target_color, table_side):
                 beer_center = [blob.center[0] / source.shape[0], table_side * 0.6 + 0.4 * blob.center[1] / source.shape[1]]
                 beers.append(Beer(beer_center))
 
-
-    for beer in beers:
-        beer.update_history(beer.is_present_current_frame)
-
-    beer_len = len(beers)
-
-    for i in range(0, beer_len):
-        if not all(beers[beer_len - i - 1].presence_history):
-            beers.pop(beer_len - i - 1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    beers_len_init = len(beers)
+    for i in range(0, beers_len_init):
+        if not beers[beers_len_init - i - 1].is_present:
+            beers.pop(beers_len_init - i - 1)
 
 
 def check_for_balls(beers_left, beers_right, source):
 
     for beer in beers_left:
-        start_point_x = int(source.shape[1] * beer.center[1])
-        start_point_y = int(source.shape[0] * beer.center[0])
+        start_point_y = int(source.shape[0] * beer.center[0] - 20) if int(source.shape[0] * beer.center[0] - 20) > 0 else 0
+        start_point_x = int(source.shape[1] * beer.center[1] - 20) if int(source.shape[1] * beer.center[1] - 20) > 0 else 0
         end_point_y = int(start_point_y + 40) if start_point_y + 40 < source.shape[0] else source.shape[0]
         end_point_x = int(start_point_x + 40) if start_point_x + 40 < source.shape[1] else source.shape[1]
 
         current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
 
-        if len(beer.green_buffer) < 10:
-            beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
-        else:
-            beer.green_buffer.pop(0)
-            beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
-        np_green_buffer = np.array(beer.green_buffer)
-        beer.green_ball = np_green_buffer.all()
+        beer.green_ball = color_check(current_beer_area, constants.red_color, constants.color_offset)
+        beer.green_ball = color_check(current_beer_area, constants.green_color, constants.color_offset)
 
-        if len(beer.red_buffer) < 10:
-            beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
-        else:
-            beer.red_buffer.pop(0)
-            beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
-        np_red_buffer = np.array(beer.red_buffer)
-        beer.red_ball = np_red_buffer.all()
+        # if len(beer.green_buffer) < 10:
+        #     beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
+        # else:
+        #     beer.green_buffer.pop(0)
+        # np_green_buffer = np.array(beer.green_buffer)
+        # beer.green_ball = np_green_buffer.all()
+        #
+        # if len(beer.red_buffer) < 10:
+        #     beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
+        # else:
+        #     beer.red_buffer.pop(0)
+        #     beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
+        # np_red_buffer = np.array(beer.red_buffer)
+        # beer.red_ball = np_red_buffer.all()
 
     for beer in beers_right:
         start_point_x = int(source.shape[1] * beer.center[1])
@@ -169,31 +149,33 @@ def check_for_balls(beers_left, beers_right, source):
         end_point_x = int(start_point_x + 40) if start_point_x + 40 < source.shape[1] else source.shape[1]
 
         current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
+        beer.green_ball = color_check(current_beer_area, constants.red_color, constants.color_offset)
+        beer.green_ball = color_check(current_beer_area, constants.green_color, constants.color_offset)
 
-        # check if the ball has been spotted for more than 10 frames
-        if len(beer.green_buffer) < 10:
-            beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
-        else:
-            beer.green_buffer.pop(0)
-            beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
-        np_green_buffer = np.array(beer.green_buffer)
-        beer.green_ball = np_green_buffer.all()
-
-        if len(beer.red_buffer) < 10:
-            beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
-        else:
-            beer.red_buffer.pop(0)
-            beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
-        np_red_buffer = np.array(beer.red_buffer)
-        beer.red_ball = np_red_buffer.all()
+        # # check if the ball has been spotted for more than 10 frames
+        # if len(beer.green_buffer) < 10:
+        #     beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
+        # else:
+        #     beer.green_buffer.pop(0)
+        #     beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
+        # np_green_buffer = np.array(beer.green_buffer)
+        # beer.green_ball = np_green_buffer.all()
+        #
+        # if len(beer.red_buffer) < 10:
+        #     beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
+        # else:
+        #     beer.red_buffer.pop(0)
+        #     beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
+        # np_red_buffer = np.array(beer.red_buffer)
+        # beer.red_ball = np_red_buffer.all()
 
 
 def color_check(source, target_color, target_offset):
-    hsv = bgr_to_hsi(source)
+    hsi = bgr_to_hsi(source)
 
-    hue_match = abs(hsv[:, :, 0] - target_color[0]) < target_offset[0]
-    saturation_match = abs(hsv[:, :, 1] - target_color[1]) < target_offset[1]
-    intensity_match = abs(hsv[:, :, 2] - target_color[2]) < target_offset[2]
+    hue_match = abs(hsi[:, :, 0] - target_color[0]) < target_offset[0]
+    saturation_match = abs(hsi[:, :, 1] - target_color[1]) < target_offset[1]
+    intensity_match = abs(hsi[:, :, 2] - target_color[2]) < target_offset[2]
 
     #  abs([7, 4, 1] - 3) results into [3, 1, -2].. [3, 1, -2] > 0 results into [True, True, False]
     # it might look confusing but these element-wise matrix operations are necessary for our code to run in real time
@@ -260,9 +242,12 @@ def bgr_to_hsi(image_bgr):
 
 
 def find_crop(source):
-    markers_binary = color_threshold(source, (331, 0.5, 0.5), (30, 0.3, 0.5))
+    markers_binary = color_threshold(source, (331, 0.5, 0.5), (30, 0.4, 0.5))
+    kernel = np.ones((10, 10), np.uint8)
+    markers_binary = cv2.morphologyEx(markers_binary, cv2.MORPH_CLOSE, kernel)
 
     markers = extract_blobs(markers_binary)
+    print(len(markers))
 
     # right now taking only the two markers in two opposing the corners.. cropping based on that
     # would not work if you angle the camera or the table
