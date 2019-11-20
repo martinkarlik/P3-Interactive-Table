@@ -19,7 +19,7 @@ frame_count = 0
 
 def projection_to_camera_pos(y1, y2, x1, x2):
     return table_roi[int((y1 / 1080) * table_roi.shape[0]): int((y2 / 1080) * table_roi.shape[0]),
-           int((x1 / 1920) * table_roi.shape[1]): int(x2 / 1920 * table_roi.shape[1])]
+           int((x1 / 1920) * table_roi.shape[1]): int((x2 / 1920) * table_roi.shape[1])]
 
 
 def display_text(score, player):
@@ -102,11 +102,11 @@ if __name__ == '__main__':
     DISPLAY_WIDTH = 960
     DISPLAY_HEIGHT = 540
 
-    # DISPLAY_WIDTH = 1280
-    # DISPLAY_HEIGHT = 720
+    DISPLAY_WIDTH = 1920
+    DISPLAY_HEIGHT = 1080
 
     # Create the screen
-    screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 
     # Setup the frame
     pygame.display.set_caption("BeerPong")
@@ -162,34 +162,36 @@ if __name__ == '__main__':
         # Conditionals controlling the projected table image
         if not game_mode_chosen:
             change_table_img("choose_game_mode.png")
-            if not algorithms.color_check(table_roi, (172, 0.68, 0.5), constants.color_offset):
+            if not algorithms.color_check(table_roi, (168, 0.68, 0.5), constants.color_offset):
                 frame_count = 0
             # Casual
-            if algorithms.color_check(projection_to_camera_pos(320, 540, 125, 785), (172, 0.68, 0.5), constants.color_offset):
+            if algorithms.color_check(projection_to_camera_pos(320, 540, 125, 785), (168, 0.6, 0.5), constants.color_offset):
                 frame_count += 1
-                print(frame_count)
-                if frame_count == 5:
-                    print("Casual chosen")
+                print(frame_count, "Custom")
+                if frame_count == 10:
+                    print("Custom chosen")
                     game_mode_chosen = True
             # HardCore
-            if algorithms.color_check(projection_to_camera_pos(320, 540, 1140, 1800), (172, 0.68, 0.5), constants.color_offset):
+            if algorithms.color_check(projection_to_camera_pos(320, 540, 1140, 1800), (168, 0.6, 0.5), constants.color_offset):
                 frame_count += 1
-                print(frame_count)
-                if frame_count == 5:
-                    print("Hardcore chosen")
+                print(frame_count, "competitive")
+                if frame_count == 10:
+                    print("Competitive chosen")
                     game_mode_chosen = True
             # Competitive
-            if algorithms.color_check(projection_to_camera_pos(710, 930, 125, 785), (172, 0.68, 0.5), constants.color_offset):
+            if algorithms.color_check(projection_to_camera_pos(710, 930, 125, 785), (168, 0.6, 0.5), constants.color_offset):
                 frame_count += 1
-                print(frame_count)
-                if frame_count == 5:
-                    print("Competitive chosen")
+                print(frame_count, "Hardcore")
+                if frame_count == 10:
+                    print("HardCore chosen")
+                    game_mode_chosen = True
             # Custom
-            if algorithms.color_check(projection_to_camera_pos(710, 930, 1140, 1800), (172, 0.68, 0.5), constants.color_offset):
+            if algorithms.color_check(projection_to_camera_pos(710, 930, 1140, 1800), (168, 0.6, 0.5), constants.color_offset):
                 frame_count += 1
-                print(frame_count)
-                if frame_count == 5:
-                    print("Custom chosen")
+                print(frame_count, "Casual")
+                if frame_count == 10:
+                    print("Casual chosen")
+                    game_mode_chosen = True
 
         elif game_mode_chosen:
             change_table_img("PlaceCups.png")
@@ -256,7 +258,14 @@ if __name__ == '__main__':
 
             # display_circle(beers_left, left_drinks, players_scores[0], players_scores[1])
             # display_circle(beers_right, right_drinks, players_scores[2], players_scores[3])
-
+        pygame.draw.rect(screen, (255, 255, 0),
+                         (125-7*table_roi.shape[1]/1920*3, 320-7*table_roi.shape[0]/1080*3, 670, 230))
+        pygame.draw.rect(screen, (255, 255, 0),
+                         (1140 - 7 * table_roi.shape[1] / 1920 * 3, 320 - 7 * table_roi.shape[0] / 1080 * 3, 670, 230))
+        pygame.draw.rect(screen, (255, 255, 0),
+                         (125 - 7 * table_roi.shape[1] / 1920 * 3, 710 - 7 * table_roi.shape[0] / 1080 * 3, 670, 230))
+        pygame.draw.rect(screen, (255, 255, 0),
+                         (1140 - 7 * table_roi.shape[1] / 1920 * 3, 710 - 7 * table_roi.shape[0] / 1080 * 3, 670, 230))
         pygame.display.update()
 
     cap.release()
