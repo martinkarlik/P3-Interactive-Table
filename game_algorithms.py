@@ -27,58 +27,82 @@ class Beer:
         self.red_buffer = []
 
 
-def inform_beers(beers, source, templates, target_color, table_side):
+def inform_beers(beers, source):
+    gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
+    (ret, thresh) = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    for contour in contours:
+        area = cv2.contourArea(contour)
+        arclength = cv2.arcLength(contour, True)
+        circularity = 4 * np.pi * area / (arclength * arclength) if arclength != 0 else 0
+        # print('c: ', circularity)
+        # print('a: ', area)
+        if circularity > 0.83 and area > 1000:
+            # print(circularity)
+            # print(area)
+            beers.append(contour)
+            beers.Beer.area = area
+            beers.Beer.circular = circularity
+            M = cv2.moments(contour)
+            if M["m00"] != 0:
+                cX = int((M["m10"] / M["m00"]))
+                cY = int((M["m01"] / M["m00"]))
+                print(cX, cY)
+                beers.Beer.position = cX, cY
+            cv2.drawContours(source, contour, -1, (0, 255, 0), 3)
 
-    beers_binary = np.zeros([source.shape[0], source.shape[1]])
-
-    if templates:
-        beers_likelihood_samples = []
-        for template in templates:
-            beers_likelihood_samples.append(match_template(source, template))
-
-        beers_binary_samples = []
-        for sample in beers_likelihood_samples:
-            beers_binary_samples.append(threshold(sample, 0.4, 1))
-
-        beers_binary = beers_binary_samples[0]
-
-        for i in range(1, len(beers_binary_samples)):
-            temp = np.zeros([beers_binary.shape[0], beers_binary.shape[1]])
-            temp[beers_binary == beers_binary_samples[i]] = 1
-            beers_binary = temp
-            # logical AND operation performed on every binary image received from every passed template
-
-    elif target_color:
-        beers_binary = color_threshold(source, target_color[0], target_color[1])
-        kernel = np.ones((10, 10), np.uint8)
-        beers_binary = cv2.morphologyEx(beers_binary, cv2.MORPH_CLOSE, kernel)
-
-    blobs = extract_blobs(beers_binary)
-
-    for beer in beers:
-        beer.is_present = False
-
-    for blob in blobs:
-        if blob.is_beer:
-            blob_relative_center = [blob.center[0] / source.shape[0], table_side * 0.6 + 0.4 * blob.center[1] / source.shape[1]]
-            existing_beer_found = False
-
-            for beer in beers:
-                distance = abs(blob_relative_center[0] - beer.center[0]) + abs(blob_relative_center[1] - beer.center[1])
-
-                if distance < MOVED_BEER_THRESHOLD:
-                    beer.is_present = True
-                    existing_beer_found = True
-                    break
-
-            if not existing_beer_found:
-                beer_center = [blob.center[0] / source.shape[0], table_side * 0.6 + 0.4 * blob.center[1] / source.shape[1]]
-                beers.append(Beer(beer_center))
-
-    beers_len_init = len(beers)
-    for i in range(0, beers_len_init):
-        if not beers[beers_len_init - i - 1].is_present:
-            beers.pop(beers_len_init - i - 1)
+# def inform_beers(beers, source, templates, target_color, table_side):
+#
+#     beers_binary = np.zeros([source.shape[0], source.shape[1]])
+#
+#     if templates:
+#         beers_likelihood_samples = []
+#         for template in templates:
+#             beers_likelihood_samples.append(match_template(source, template))
+#
+#         beers_binary_samples = []
+#         for sample in beers_likelihood_samples:
+#             beers_binary_samples.append(threshold(sample, 0.4, 1))
+#
+#         beers_binary = beers_binary_samples[0]
+#
+#         for i in range(1, len(beers_binary_samples)):
+#             temp = np.zeros([beers_binary.shape[0], beers_binary.shape[1]])
+#             temp[beers_binary == beers_binary_samples[i]] = 1
+#             beers_binary = temp
+#             # logical AND operation performed on every binary image received from every passed template
+#
+#     elif target_color:
+#         beers_binary = color_threshold(source, target_color[0], target_color[1])
+#         kernel = np.ones((10, 10), np.uint8)
+#         beers_binary = cv2.morphologyEx(beers_binary, cv2.MORPH_CLOSE, kernel)
+#
+#     blobs = extract_blobs(beers_binary)
+#
+#     for beer in beers:
+#         beer.is_present = False
+#
+#     for blob in blobs:
+#         if blob.is_beer:
+#             blob_relative_center = [blob.center[0] / source.shape[0], table_side * 0.6 + 0.4 * blob.center[1] / source.shape[1]]
+#             existing_beer_found = False
+#
+#             for beer in beers:
+#                 distance = abs(blob_relative_center[0] - beer.center[0]) + abs(blob_relative_center[1] - beer.center[1])
+#
+#                 if distance < MOVED_BEER_THRESHOLD:
+#                     beer.is_present = True
+#                     existing_beer_found = True
+#                     break
+#
+#             if not existing_beer_found:
+#                 beer_center = [blob.center[0] / source.shape[0], table_side * 0.6 + 0.4 * blob.center[1] / source.shape[1]]
+#                 beers.append(Beer(beer_center))
+#
+#     beers_len_init = len(beers)
+#     for i in range(0, beers_len_init):
+#         if not beers[beers_len_init - i - 1].is_present:
+#             beers.pop(beers_len_init - i - 1)
 
 
 def check_for_balls(beers_left, beers_right, source):
