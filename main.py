@@ -1,33 +1,21 @@
 import pygame
 import cv2
-import algorithms
-import constants
+import game_algorithms
 import numpy as np
 
 table_img = ""
 
-left_drinks = False
-player_1_drinks = True
-right_drinks = False
-player_3_drinks = True
-
-drink_color_left = constants.white_display_color
-
-game_mode_chosen = False
-frame_count = 0
-
-
-def projection_to_camera_pos(y1, y2, x1, x2):
-    return table_roi[int((y1 / 1080) * table_roi.shape[0]): int((y2 / 1080) * table_roi.shape[0]),
-           int((x1 / 1920) * table_roi.shape[1]): int((x2 / 1920) * table_roi.shape[1])]
+GREEN_DISPLAY_COLOR = 7, 129, 30
+RED_DISPLAY_COLOR = 242, 81, 87
+WHITE_DISPLAY_COLOR = 255, 255, 255
 
 
 def display_text(score, player):
     if player == 1:
-        score = font.render(str(score), True, constants.red_display_color)
+        score = font.render(str(score), True, RED_DISPLAY_COLOR)
         return score
     if player == 2:
-        score = font.render(str(score), True, constants.green_display_color)
+        score = font.render(str(score), True, GREEN_DISPLAY_COLOR)
         return score
 
 
@@ -89,66 +77,124 @@ def play_audio(audio):
 #         return constants.green_display_color
 
 
+DISPLAY_WIDTH = 1920
+DISPLAY_HEIGHT = 1080
+
 if __name__ == '__main__':
 
-    # cap = cv2.VideoCapture("recordings/test2_gameplay2.mp4")
+    # CAPTURE SETUP
     cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
     beer_template_left = cv2.imread("images/testImages/templates/beer_reg_left.jpg")
     beer_template_right = cv2.imread("images/testImages/templates/beer_reg_right.jpg")
 
+    # PYGAME SETUP
     pygame.init()
 
-    DISPLAY_WIDTH = 960
-    DISPLAY_HEIGHT = 540
-
-    DISPLAY_WIDTH = 1920
-    DISPLAY_HEIGHT = 1080
-
-    # Create the screen
-    screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
-
-    # Setup the frame
     pygame.display.set_caption("BeerPong")
     icon = pygame.image.load("images/cheers.png")
     pygame.display.set_icon(icon)
 
-    # change_table_img(("images/tableImages/GameStarted.png"))
-    # circle_white = pygame.image.load("images/tableImages/circle_white.png")
-
-    # Setup general things
+    screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
     font = pygame.font.Font('freesansbold.ttf', 15)
 
-    # player variables
+    # GAME SETUP
     players_scores = np.zeros(4)
+    game_phase = "game_play"
 
     beers_left = []
     beers_right = []
 
+    drink_color_left = WHITE_DISPLAY_COLOR
+
+    left_drinks = False
+    player_1_drinks = True
+    right_drinks = False
+    player_3_drinks = True
+    game_mode_chosen = False
+
     _, frame = cap.read()
-    cropped_dimensions = algorithms.find_crop(frame)
+    # cropped_dimensions = game_algorithms.find_crop(frame)
+    # TODO cropping, camera calibration (extrinsic parameters)
+    cropped_dimensions = [65, 378, 21, 620]
+
+
 
     app_running = True
     while app_running and cap.isOpened():
-        _, frame = cap.read()
 
+        _, frame = cap.read()
         table_roi = frame[cropped_dimensions[0]:cropped_dimensions[1], cropped_dimensions[2]:cropped_dimensions[3]]
 
-        beer_area_left = table_roi[0:table_roi.shape[0], 0:int(table_roi.shape[1] * 0.4)]
-        algorithms.inform_beers(beers_left, beer_area_left, None, [(50, 0.6, 0.5), (15, 0.3, 0.5)],
-                                algorithms.TABLE_SIDE_LEFT)
+        cv2.imshow("frame", frame)
 
-        beer_area_right = table_roi[0:table_roi.shape[0], int(table_roi.shape[1] * 0.6):table_roi.shape[1]]
-        algorithms.inform_beers(beers_right, beer_area_right, None, [(50, 0.6, 0.5), (15, 0.3, 0.5)],
-                                algorithms.TABLE_SIDE_RIGHT)
+        # IMAGE PROCESSING
 
-        algorithms.check_for_balls(beers_left, beers_right, table_roi)
+        if game_phase == "game_mode":
 
-        cv2.imshow("table", table_roi)
+            mode = 0
+            if not game_algorithms.choose_mode(table_roi):
+                frame_count = 0
+                # Casual
 
-        # turns = algorithms.detectTurns()
+            if game_algorithms.choose_mode(game_algorithms.get_roi(table_roi, 0.49, 0.71, 0.56, 0.9)):
+                frame_count += 1
+                mode = 1
+                print(frame_count, "Custom")
+                if frame_count == 10:
+                    print("Custom chosen")
+                    game_phase = "game_play"
+                # HardCore
+            if game_algorithms.choose_mode(game_algorithms.get_roi(table_roi, 0.5, 0.72, 0.06, 0.4)):
+                frame_count += 1
+                print(frame_count, "competitive")
+                mode = 2
+                if frame_count == 10:
+                    print("Competitive chosen")
+                    game_phase = "game_play"
+                # Competitive
+            if game_algorithms.choose_mode(game_algorithms.get_roi(table_roi, 0.14, 0.36, 0.56, 0.9)):
+                frame_count += 1
+                mode = 3
+                print(frame_count, "Hardcore")
+                if frame_count == 10:
+                    print("HardCore chosen")
+                    game_phase = "game_play"
+                # Custom
+            if game_algorithms.choose_mode(game_algorithms.get_roi(table_roi, 0.14, 0.36, 0.06, 0.4)):
+                frame_count += 1
+                mode = 4
+                print(frame_count, "Casual")
+                if frame_count == 10:
+                    print("Casual chosen")
+                    game_phase = "game_play"
 
-        # The exit conditions, both pressing x and esc works so far
+        elif game_phase == "game_play":
+            table_roi = frame[cropped_dimensions[0]:cropped_dimensions[1], cropped_dimensions[2]:cropped_dimensions[3]]
+
+            beer_area_left = table_roi[0:table_roi.shape[0], 0:int(table_roi.shape[1] * 0.4)]
+            game_algorithms.inform_beers(beers_left, beer_area_left, None, [(50, 0.6, 0.5), (20, 0.4, 0.5)], game_algorithms.TABLE_SIDE_LEFT)
+
+            beer_area_right = table_roi[0:table_roi.shape[0], int(table_roi.shape[1] * 0.6):table_roi.shape[1]]
+            game_algorithms.inform_beers(beers_right, beer_area_right, None, [(50, 0.6, 0.5), (20, 0.4, 0.5)], game_algorithms.TABLE_SIDE_RIGHT)
+            # TODO inform_beers with marked cups
+
+            # game_algorithms.check_for_balls(beers_left, beers_right, table_roi)
+            # turns = algorithms.detectTurns()
+
+        elif game_phase == "game_over":
+            # if there are more screens, different IP stuff on each
+            pass
+
+
+        # GAME LOGIC
+        # any game logic and game mechanics related stuff here, also whos turns is it to drink etc.
+
+
+
+
+        # KEYBOARD INPUT
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 app_running = False
@@ -157,53 +203,18 @@ if __name__ == '__main__':
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
 
+
+
+        # PROJECTION
+
         screen.fill(0)
 
         # Conditionals controlling the projected table image
-        if not game_mode_chosen:
+        if game_phase == "game_mode":
             change_table_img("choose_game_mode.png")
-            if not algorithms.color_check(table_roi, (168, 0.68, 0.5), constants.color_offset):
-                frame_count = 0
-            # Casual
-            if algorithms.color_check(projection_to_camera_pos(320, 540, 125, 785), (168, 0.6, 0.5), constants.color_offset):
-                frame_count += 1
-                print(frame_count, "Custom")
-                if frame_count == 10:
-                    print("Custom chosen")
-                    game_mode_chosen = True
-            # HardCore
-            if algorithms.color_check(projection_to_camera_pos(320, 540, 1140, 1800), (168, 0.6, 0.5), constants.color_offset):
-                frame_count += 1
-                print(frame_count, "competitive")
-                if frame_count == 10:
-                    print("Competitive chosen")
-                    game_mode_chosen = True
-            # Competitive
-            if algorithms.color_check(projection_to_camera_pos(710, 930, 125, 785), (168, 0.6, 0.5), constants.color_offset):
-                frame_count += 1
-                print(frame_count, "Hardcore")
-                if frame_count == 10:
-                    print("HardCore chosen")
-                    game_mode_chosen = True
-            # Custom
-            if algorithms.color_check(projection_to_camera_pos(710, 930, 1140, 1800), (168, 0.6, 0.5), constants.color_offset):
-                frame_count += 1
-                print(frame_count, "Casual")
-                if frame_count == 10:
-                    print("Casual chosen")
-                    game_mode_chosen = True
 
-        elif game_mode_chosen:
+        elif game_phase == "game_play":
             change_table_img("PlaceCups.png")
-
-        elif beers_left != 10 and beers_right != 10:
-            change_table_img("GameStarted.png")
-
-        # displays that current path to the image, change image with change_table_img()
-        display_table_img()
-
-        # Everything that needs to run after names are input
-        if game_mode_chosen:
             screen.blit(pygame.transform.rotate(display_text(int(players_scores[0]), 1), -90),
                         (92 / 1920 * DISPLAY_WIDTH, 160 / 1080 * DISPLAY_HEIGHT))
             screen.blit(pygame.transform.rotate(display_text(int(players_scores[1]), 2), -90),
@@ -219,27 +230,30 @@ if __name__ == '__main__':
                         left_drinks = True
                         players_scores[0] += 1
                         if left_drinks and player_1_drinks:
-                            drink_color_left = constants.red_display_color
+                            drink_color_left = RED_DISPLAY_COLOR
                             player_1_drinks = False
                         elif left_drinks and not player_1_drinks:
-                            drink_color_left = constants.green_display_color
+                            drink_color_left = GREEN_DISPLAY_COLOR
                             player_1_drinks = True
                 elif beer.green_ball:
                     if not left_drinks:
                         left_drinks = True
                         players_scores[1] += 1
                         if left_drinks and player_1_drinks:
-                            drink_color_left = constants.red_display_color
+                            drink_color_left = RED_DISPLAY_COLOR
                             player_1_drinks = False
                         elif left_drinks and not player_1_drinks:
-                            drink_color_left = constants.green_display_color
+                            drink_color_left = GREEN_DISPLAY_COLOR
                             player_1_drinks = True
                 else:
                     left_drinks = False
-                    drink_color_left = constants.white_display_color
+                    drink_color_left = WHITE_DISPLAY_COLOR
 
                 pygame.draw.circle(screen, drink_color_left,
-                                   (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+                                   (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 40)
+
+            # if beers_left != 10 and beers_right != 10:
+            #     change_table_img("GameStarted.png")
 
             for beer in beers_right:
                 # if beer.red_ball and not right_drinks:
@@ -252,20 +266,14 @@ if __name__ == '__main__':
                 #     players_scores[3] += 1
                 # else:
                 right_drinks = False
-                drink_color_right = constants.white_display_color
-                pygame.draw.circle(screen, drink_color_right,
-                                   (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 20)
+                drink_color_right = WHITE_DISPLAY_COLOR
 
-            # display_circle(beers_left, left_drinks, players_scores[0], players_scores[1])
-            # display_circle(beers_right, right_drinks, players_scores[2], players_scores[3])
-        pygame.draw.rect(screen, (255, 255, 0),
-                         (125-7*table_roi.shape[1]/1920*3, 320-7*table_roi.shape[0]/1080*3, 670, 230))
-        pygame.draw.rect(screen, (255, 255, 0),
-                         (1140 - 7 * table_roi.shape[1] / 1920 * 3, 320 - 7 * table_roi.shape[0] / 1080 * 3, 670, 230))
-        pygame.draw.rect(screen, (255, 255, 0),
-                         (125 - 7 * table_roi.shape[1] / 1920 * 3, 710 - 7 * table_roi.shape[0] / 1080 * 3, 670, 230))
-        pygame.draw.rect(screen, (255, 255, 0),
-                         (1140 - 7 * table_roi.shape[1] / 1920 * 3, 710 - 7 * table_roi.shape[0] / 1080 * 3, 670, 230))
+                pygame.draw.circle(screen, drink_color_right,
+                                   (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 40)
+
+        # displays that current path to the image, change image with change_table_img()
+        display_table_img()
+
         pygame.display.update()
 
     cap.release()

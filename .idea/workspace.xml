@@ -2,10 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/_ip_algorithms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/beer.py" beforeDir="false" afterPath="$PROJECT_DIR$/beer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/algorithms.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/blob.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygletApp.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saving_videos.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,12 +39,13 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\karli\PycharmProjects\p3\images" />
-      <recent name="C:\Users\karli\PycharmProjects\p3\recordings" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\karli\PycharmProjects\p3" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\karli\PycharmProjects\p3" />
+      <recent name="C:\Users\karli\PycharmProjects\p3\images" />
+      <recent name="C:\Users\karli\PycharmProjects\p3\recordings" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -97,6 +103,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="ip_algorithms" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="p3" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\karli\PycharmProjects\p3\_ip_algorithms.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -110,27 +137,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="pygletApp" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="p3" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pygletApp.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -163,10 +169,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.ip_algorithms" />
         <item itemvalue="Python.saving_videos" />
         <item itemvalue="Python.constants" />
         <item itemvalue="Python.game" />
-        <item itemvalue="Python.pygletApp" />
       </list>
     </recent_temporary>
   </component>
@@ -321,7 +327,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574164463215</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="yeah">
+      <created>1574238520230</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1574238520230</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -358,6 +371,7 @@
     <MESSAGE value="something with cropping" />
     <MESSAGE value="beer detection with color threshold&#10;many false positives removed" />
     <MESSAGE value="im pushing cause victor bitch" />
-    <option name="LAST_COMMIT_MESSAGE" value="im pushing cause victor bitch" />
+    <MESSAGE value="yeah" />
+    <option name="LAST_COMMIT_MESSAGE" value="yeah" />
   </component>
 </project>
