@@ -2,32 +2,71 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-cap = cv2.VideoCapture(0)
+
+def nothing(x):
+    pass
+
+
+cap = cv2.VideoCapture(1)
 cap.set(cv2.CAP_PROP_EXPOSURE, -5)
 
-template = cv2.imread('images/testImages/templates/red_cup.jpg', 1)
+cv2.namedWindow('mask')
 
-while True:
+cv2.createTrackbar('L - H', 'mask', 0, 179, nothing)
+cv2.createTrackbar('L - S', 'mask', 0, 255, nothing)
+cv2.createTrackbar('L - V', 'mask', 0, 255, nothing)
+cv2.createTrackbar('U - H', 'mask', 179, 179, nothing)
+cv2.createTrackbar('U - S', 'mask', 255, 255, nothing)
+cv2.createTrackbar('U - V', 'mask', 255, 255, nothing)
+
+# template = cv2.imread('images/testImages/templates/red_cup.jpg', 1)
+running = True
+while running:
     _, frame = cap.read()
-    blurred_frame = cv2.GaussianBlur(frame, (9, 9), 0)
-    hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    (ret, thresh) = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    # blurred_frame = cv2.GaussianBlur(frame, (3, 3), 0)
+    # hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
 
-    lower_red = np.array([20, 80, 30])
-    upper_red = np.array([0, 255, 255])
-    mask = cv2.inRange(hsv, lower_red, upper_red)
+    l_h = cv2.getTrackbarPos('L - H', 'mask')
+    l_S = cv2.getTrackbarPos('L - S', 'mask')
+    l_V = cv2.getTrackbarPos('L - V', 'mask')
+    u_h = cv2.getTrackbarPos('U - H', 'mask')
+    u_s = cv2.getTrackbarPos('U - S', 'mask')
+    u_v = cv2.getTrackbarPos('U - V', 'mask')
 
-    contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    # lower_color = np.array([l_h, l_S, l_V])
+    # upper_color = np.array([u_h, u_s, u_v])
+    # mask = cv2.inRange(hsv, lower_color, upper_color)
+    #
+    # result = cv2.bitwise_and(frame, frame, mask=mask)
+    #
+    # kernel = np.ones((5, 5), np.uint8)
+    # closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
+    # opening = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel, iterations=2)
+
+    contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
     for contour in contours:
         area = cv2.contourArea(contour)
-
-        if area > 2000:
+        arclength = cv2.arcLength(contour, True)
+        circularity = 4 * np.pi * area / (arclength * arclength) if arclength != 0 else 0
+        # print('c: ', circularity)
+        # print('a: ', area)
+        if circularity > 0.83 and area > 1000:
+            # print(circularity)
+            # print(area)
+            M = cv2.moments(contour)
+            if M["m00"] != 0:
+                cX = int((M["m10"] / M["m00"]))
+                cY = int((M["m01"] / M["m00"]))
+                print (cX,cY)
             cv2.drawContours(frame, contour, -1, (0, 255, 0), 3)
+    # cv2.imshow('mask', mask)
+    # cv2.imshow('Opening', opening)
+    # cv2.imshow('Closing', closing)
 
-
-
+    cv2.imshow('thresh', thresh)
     cv2.imshow('frame', frame)
-    cv2.imshow('mask', mask)
-
 
     # Feature matching
     # grey_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

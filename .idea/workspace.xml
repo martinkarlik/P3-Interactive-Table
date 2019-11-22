@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cupDetect.py" beforeDir="false" afterPath="$PROJECT_DIR$/cupDetect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_algorithms.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -335,7 +333,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574325870806</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Cup Detection now spits out the x and y coordinates">
+      <created>1574346549175</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1574346549175</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -374,6 +379,7 @@
     <MESSAGE value="im pushing cause victor bitch" />
     <MESSAGE value="yeah" />
     <MESSAGE value="refactoring" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactoring" />
+    <MESSAGE value="Cup Detection now spits out the x and y coordinates" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cup Detection now spits out the x and y coordinates" />
   </component>
 </project>
