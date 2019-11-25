@@ -7,7 +7,7 @@ def nothing(x):
     pass
 
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_EXPOSURE, -5)
 
 cv2.namedWindow('mask')
@@ -24,7 +24,7 @@ running = True
 while running:
     _, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    (ret, thresh) = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    # (ret, thresh) = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
     # blurred_frame = cv2.GaussianBlur(frame, (3, 3), 0)
     # hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
 
@@ -45,28 +45,28 @@ while running:
     # closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
     # opening = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel, iterations=2)
 
-    contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-    for contour in contours:
-        area = cv2.contourArea(contour)
-        arclength = cv2.arcLength(contour, True)
-        circularity = 4 * np.pi * area / (arclength * arclength) if arclength != 0 else 0
-        # print('c: ', circularity)
-        # print('a: ', area)
-        if circularity > 0.83 and area > 1000:
-            # print(circularity)
-            # print(area)
-            M = cv2.moments(contour)
-            if M["m00"] != 0:
-                cX = int((M["m10"] / M["m00"]))
-                cY = int((M["m01"] / M["m00"]))
-                print (cX,cY)
-            cv2.drawContours(frame, contour, -1, (0, 255, 0), 3)
+    # contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    # for contour in contours:
+    #     area = cv2.contourArea(contour)
+    #     arclength = cv2.arcLength(contour, True)
+    #     circularity = 4 * np.pi * area / (arclength * arclength) if arclength != 0 else 0
+    #     # print('c: ', circularity)
+    #     # print('a: ', area)
+    #     if circularity > 0.83 and area > 1000:
+    #         # print(circularity)
+    #         # print(area)
+    #         M = cv2.moments(contour)
+    #         if M["m00"] != 0:
+    #             cX = int((M["m10"] / M["m00"]))
+    #             cY = int((M["m01"] / M["m00"]))
+    #             print (cX,cY)
+    #         cv2.drawContours(frame, contour, -1, (0, 255, 0), 3)
     # cv2.imshow('mask', mask)
     # cv2.imshow('Opening', opening)
     # cv2.imshow('Closing', closing)
 
-    cv2.imshow('thresh', thresh)
-    cv2.imshow('frame', frame)
+    # cv2.imshow('thresh', thresh)
+    # cv2.imshow('frame', frame)
 
     # Feature matching
     # grey_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -81,21 +81,21 @@ while running:
     # plt.show()
 
     # Background removal!!
-    # mask = np.zeros(frame.shape[:2], np.uint8)
-    #
-    # bgModel = np.zeros((1,65), np.float64)
-    # fgModel = np.zeros((1, 65), np.float64)
-    #
-    # rect = (50, 100, frame.shape[1]-100, frame.shape[0]-200)
-    #
-    # cv2.grabCut(frame, mask, rect, bgModel, fgModel, 5, cv2.GC_INIT_WITH_RECT)
-    # mask2 = np.where((mask == 2) | (mask==0), 0, 1).astype('uint8')
-    # frame = frame*mask2[:,:,np.newaxis]
+    mask = np.zeros(frame.shape[:2], np.uint8)
+
+    bgModel = np.zeros((1,65), np.float64)
+    fgModel = np.zeros((1, 65), np.float64)
+
+    rect = (100, 100, frame.shape[1]-100, frame.shape[0]-200)
+
+    cv2.grabCut(frame, mask, rect, bgModel, fgModel, 5, cv2.GC_INIT_WITH_RECT)
+    mask2 = np.where((mask == 2) | (mask==0), 0, 1).astype('uint8')
+    frame = frame*mask2[:,:,np.newaxis]
     # plt.imshow(frame)
     # plt.colorbar()
     # plt.show()
 
-    # cv2.imshow('frame', frame)
+    cv2.imshow('frame', frame)
 
     if cv2.waitKey(1) & 0xff == ord('q'):
         break
