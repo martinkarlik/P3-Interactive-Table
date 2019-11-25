@@ -2,26 +2,30 @@ import pygame
 import cv2
 from src import game_algorithms
 from src import game_interface
+
 if __name__ == '__main__':
     # CAPTURE SETUP
     cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
+
     # PYGAME SETUP
     pygame.init()
     pygame.display.set_caption("BeerPong")
     icon = pygame.image.load("../images/cheers.png")
     pygame.display.set_icon(icon)
+
     screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(game_interface.FONT_SANS_BOLD, 15)
     table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
+
     # GAME LOGIC SETUP
     game_phase = "game_mode"
-    MODES_POS = [[0.3, 0.5, 0.6, 0.9], [0.7, 0.9, 0.6, 0.9], [0.3, 0.5, 0.1, 0.4], [0.7, 0.9, 0.1, 0.4]]
     modes = [game_interface.Mode("CASUAL", [0.3, 0.5, 0.1, 0.4]),
              game_interface.Mode("COMPETITIVE", [0.3, 0.5, 0.6, 0.9]),
              game_interface.Mode("CUSTOM", [0.7, 0.9, 0.1, 0.4]),
              game_interface.Mode("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9])]
     scores = [0 for i in range(0, 4)]
+
     beers_left = []
     beers_right = []
     drink_color_left = game_interface.WHITE_DISPLAY_COLOR
@@ -29,9 +33,11 @@ if __name__ == '__main__':
     player_1_drinks = True
     right_drinks = False
     player_3_drinks = True
+
     _, frame = cap.read()
     # cropped_dimensions = game_algorithms.find_crop(frame)
     cropped_dimensions = [65, 378, 21, 620]
+    
     app_running = True
     while app_running and cap.isOpened():
         _, frame = cap.read()
