@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c9ffb9a5-996a-4c62-bc47-2e7394453229" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/p3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/p3.iml" afterDir="false" />
+    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Test files/hand_detect.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Test files/new_hand_detect.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/algorithms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cupDetect.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test files/cupDetect.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,10 +30,13 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Victor\PycharmProjects\p3\Test files" />
+      <recent name="C:\Users\karli\PycharmProjects\p3" />
       <recent name="C:\Users\karli\PycharmProjects\p3\images" />
       <recent name="C:\Users\karli\PycharmProjects\p3\recordings" />
     </key>
@@ -54,8 +56,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main">
-    <configuration name="GUI" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.new_hand_detect">
+    <configuration name="cupDetect (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -63,11 +65,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Test files" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GUI.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/cupDetect.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -76,7 +78,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="UI" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="cupDetect" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -88,7 +90,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\karli\PycharmProjects\p3\UI.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\Victor\PycharmProjects\p3\Test files\cupDetect.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -97,7 +99,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="hand_detect" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -105,11 +107,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Test files" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -118,7 +120,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="new_hand_detect" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -126,11 +128,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Test files" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Test files/new_hand_detect.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -139,7 +141,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="saving_videos" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -151,7 +153,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/saving_videos.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -162,11 +164,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main" />
-        <item itemvalue="Python.GUI" />
-        <item itemvalue="Python.main (1)" />
-        <item itemvalue="Python.saving_videos" />
-        <item itemvalue="Python.UI" />
+        <item itemvalue="Python.new_hand_detect" />
+        <item itemvalue="Python.hand_detect" />
+        <item itemvalue="Python.cupDetect (1)" />
+        <item itemvalue="Python.cupDetect" />
+        <item itemvalue="Python.test" />
       </list>
     </recent_temporary>
   </component>
@@ -175,7 +177,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="c9ffb9a5-996a-4c62-bc47-2e7394453229" name="Default Changelist" comment="" />
+      <changelist id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="" />
       <created>1571054264001</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -244,7 +246,105 @@
       <option name="project" value="LOCAL" />
       <updated>1573421147518</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="added colorThreshold optimized non cv func">
+      <created>1573665030751</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1573665030751</updated>
+    </task>
+    <task id="LOCAL-00015" summary="did nothing">
+      <created>1573719971476</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1573719971476</updated>
+    </task>
+    <task id="LOCAL-00016" summary="image processing live on pygame window">
+      <created>1573762299019</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1573762299019</updated>
+    </task>
+    <task id="LOCAL-00017" summary="added templates">
+      <created>1573763211557</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1573763211557</updated>
+    </task>
+    <task id="LOCAL-00018" summary="some refactoring">
+      <created>1573811451834</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1573811451834</updated>
+    </task>
+    <task id="LOCAL-00019" summary="did nothing">
+      <created>1573811930924</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1573811930924</updated>
+    </task>
+    <task id="LOCAL-00020" summary="beer positions relative to display">
+      <created>1574077821577</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1574077821578</updated>
+    </task>
+    <task id="LOCAL-00021" summary="added recordings">
+      <created>1574078960706</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1574078960706</updated>
+    </task>
+    <task id="LOCAL-00022" summary="something with cropping">
+      <created>1574085642217</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1574085642217</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Added sound">
+      <created>1574164381485</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1574164381485</updated>
+    </task>
+    <task id="LOCAL-00024" summary="beer detection with color threshold&#10;many false positives removed">
+      <created>1574164463215</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1574164463215</updated>
+    </task>
+    <task id="LOCAL-00025" summary="yeah">
+      <created>1574238520230</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1574238520230</updated>
+    </task>
+    <task id="LOCAL-00026" summary="refactoring">
+      <created>1574325870806</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1574325870806</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Cup Detection now spits out the x and y coordinates">
+      <created>1574346549175</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1574346549175</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -270,6 +370,20 @@
     <MESSAGE value="Workspace to gitignore" />
     <MESSAGE value="beer association (in progress)&#10;connecting computer vision with ui" />
     <MESSAGE value="individual beers association&#10;red and red ball in the cup recognition" />
-    <option name="LAST_COMMIT_MESSAGE" value="individual beers association&#10;red and red ball in the cup recognition" />
+    <MESSAGE value="pipeline" />
+    <MESSAGE value="added colorThreshold optimized non cv func" />
+    <MESSAGE value="image processing live on pygame window" />
+    <MESSAGE value="added templates" />
+    <MESSAGE value="some refactoring" />
+    <MESSAGE value="did nothing" />
+    <MESSAGE value="beer positions relative to display" />
+    <MESSAGE value="added recordings" />
+    <MESSAGE value="something with cropping" />
+    <MESSAGE value="beer detection with color threshold&#10;many false positives removed" />
+    <MESSAGE value="im pushing cause victor bitch" />
+    <MESSAGE value="yeah" />
+    <MESSAGE value="refactoring" />
+    <MESSAGE value="Cup Detection now spits out the x and y coordinates" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cup Detection now spits out the x and y coordinates" />
   </component>
 </project>
