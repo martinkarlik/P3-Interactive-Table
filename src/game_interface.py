@@ -5,6 +5,7 @@ DISPLAY_HEIGHT = 540
 
 FONT_SANS_BOLD = ['freesansbold.ttf', 20]
 TABLE_IMG1 = "../images/tableImages/choose_game_mode.png"
+TABLE_IMG2 = "../images/tableImages/PlaceCups.png"
 
 GREEN_DISPLAY_COLOR = 7, 129, 30
 RED_DISPLAY_COLOR = 242, 81, 87
@@ -88,10 +89,18 @@ def display_score(target, scores):
 
 def display_beers(target, beers_left, beers_right):
     for beer in beers_left:
-        pygame.draw.circle(target, (255, 255, 255), (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 40)
+        if beer.green_ball or beer.red_ball:
+            pygame.draw.circle(target, (0, 255 * int(beer.green_ball), 255 * int(beer.red_ball)), (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+        else:
+            pygame.draw.circle(target, (255, 255, 255), (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
 
     for beer in beers_right:
-        pygame.draw.circle(target, (255, 255, 255), (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 40)
+        if beer.green_ball or beer.red_ball:
+            pygame.draw.circle(target, (0, 255 * int(beer.green_ball), 255 * int(beer.red_ball)),
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+        else:
+            pygame.draw.circle(target, (255, 255, 255),
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
 
 
 

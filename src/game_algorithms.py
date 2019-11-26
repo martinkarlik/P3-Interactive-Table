@@ -5,9 +5,11 @@ MOVED_BEER_THRESHOLD = 0.05
 GREEN_COLOR = (120, 0.7, 0.5)
 RED_COLOR = (350, 0.9, 0.5)
 BEER_COLOR = (50, 0.6, 0.6)
-WAND_COLOR = (168, 0.68, 0.5)
+# WAND_COLOR = (168, 0.68, 0.5)
+WAND_COLOR = (240, 0.6, 0.5)
 FINGER_COLOR = (37, 0.9, 0.5)
-COLOR_OFFSET = (10, 0.3, 0.5)
+
+COLOR_OFFSET = (30, 0.4, 0.5)
 
 
 class Beer:
@@ -24,24 +26,21 @@ class Beer:
 def inform_beers(source, beers_left, beers_right):
 
     gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
+
     # (ret, thresh) = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-    ret, thresh = cv2.threshold(gray, 100, 255, 1)
 
     thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, \
                                    cv2.THRESH_BINARY_INV, 11, 2)
 
-    kernel = np.ones((4, 4), np.uint8)
-    # closing = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
-    median = cv2.medianBlur(thresh, 5)
 
-    kernel = np.zeros((60, 60), np.ubyte)
-
+    # kernel = np.ones((4, 4), np.uint8)
+    # # closing = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+    # median = cv2.medianBlur(thresh, 5)
 
 
     cv2.imshow("thresh", thresh)
     cv2.imshow("orig", gray)
-    cv2.imshow("cup", source[195:255, 195:255])
-    cv2.imshow("median", median)
+    # cv2.imshow("median", median)
 
     cv2.waitKey(1)
 
@@ -115,53 +114,28 @@ def inform_beers(source, beers_left, beers_right):
 #     for i in range(0, beers_len_init):
 #         if not beers[beers_len_init - i - 1].is_present:
 #             beers.pop(beers_len_init - i - 1)
-def check_for_balls(beers_left, beers_right, source):
+def check_for_balls(source, beers_left, beers_right):
     for beer in beers_left:
+
         start_point_y = int(source.shape[0] * beer.center[0] - 20) if int(source.shape[0] * beer.center[0] - 20) > 0 else 0
         start_point_x = int(source.shape[1] * beer.center[1] - 20) if int(source.shape[1] * beer.center[1] - 20) > 0 else 0
         end_point_y = int(start_point_y + 40) if start_point_y + 40 < source.shape[0] else source.shape[0]
         end_point_x = int(start_point_x + 40) if start_point_x + 40 < source.shape[1] else source.shape[1]
+
         current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
         beer.green_ball = color_check_presence(current_beer_area, RED_COLOR, COLOR_OFFSET)
         beer.green_ball = color_check_presence(current_beer_area, GREEN_COLOR, COLOR_OFFSET)
-        # if len(beer.green_buffer) < 10:
-        #     beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
-        # else:
-        #     beer.green_buffer.pop(0)
-        # np_green_buffer = np.array(beer.green_buffer)
-        # beer.green_ball = np_green_buffer.all()
-        #
-        # if len(beer.red_buffer) < 10:
-        #     beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
-        # else:
-        #     beer.red_buffer.pop(0)
-        #     beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
-        # np_red_buffer = np.array(beer.red_buffer)
-        # beer.red_ball = np_red_buffer.all()
+
     for beer in beers_right:
-        start_point_x = int(source.shape[1] * beer.center[1])
-        start_point_y = int(source.shape[0] * beer.center[0])
+
+        start_point_y = int(source.shape[0] * beer.center[0] - 20) if int(source.shape[0] * beer.center[0] - 20) > 0 else 0
+        start_point_x = int(source.shape[1] * beer.center[1] - 20) if int(source.shape[1] * beer.center[1] - 20) > 0 else 0
         end_point_y = int(start_point_y + 40) if start_point_y + 40 < source.shape[0] else source.shape[0]
         end_point_x = int(start_point_x + 40) if start_point_x + 40 < source.shape[1] else source.shape[1]
+
         current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
         beer.green_ball = color_check_presence(current_beer_area, RED_COLOR, COLOR_OFFSET)
         beer.green_ball = color_check_presence(current_beer_area, GREEN_COLOR, COLOR_OFFSET)
-        # # check if the ball has been spotted for more than 10 frames
-        # if len(beer.green_buffer) < 10:
-        #     beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
-        # else:
-        #     beer.green_buffer.pop(0)
-        #     beer.green_buffer.append(color_check(current_beer_area, constants.green_color, constants.color_offset))
-        # np_green_buffer = np.array(beer.green_buffer)
-        # beer.green_ball = np_green_buffer.all()
-        #
-        # if len(beer.red_buffer) < 10:
-        #     beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
-        # else:
-        #     beer.red_buffer.pop(0)
-        #     beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
-        # np_red_buffer = np.array(beer.red_buffer)
-        # beer.red_ball = np_red_buffer.all()
 
 
 def find_crop(source):
@@ -193,6 +167,8 @@ def choose_mode(source, modes):
 
 def get_roi(source, pos):
     return source[int(pos[0]*source.shape[0]):int(pos[1]*source.shape[0]), int(pos[2]*source.shape[1]):int(pos[3]*source.shape[1])]
+
+
 # def turn_to_drink_left():
 #     global player_1_drinks
 #     if player_1_drinks:

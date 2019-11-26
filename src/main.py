@@ -6,7 +6,7 @@ from src import game_interface
 if __name__ == '__main__':
     # CAPTURE SETUP
     cap = cv2.VideoCapture(0)
-    cap.set(cv2.CAP_PROP_EXPOSURE, -5)
+    cap.set(cv2.CAP_PROP_EXPOSURE, 3)
     # cap = cv2.VideoCapture("../recordings/cups.avi")
 
     # PYGAME SETUP
@@ -15,7 +15,7 @@ if __name__ == '__main__':
     icon = pygame.image.load("../images/cheers.png")
     pygame.display.set_icon(icon)
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(game_interface.FONT_SANS_BOLD[0], game_interface.FONT_SANS_BOLD[1])
     table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
 
@@ -52,9 +52,13 @@ if __name__ == '__main__':
 
             for mode in modes:
                 if mode.chosen:
-                    mode.meter = min(mode.meter + 2, 100)
+                    mode.meter += 2
                 else:
                     mode.meter = max(mode.meter - 8, 0)
+
+                if mode.meter >= 100:
+                    game_phase = "game_play"
+                    table_img = game_interface.set_table_img(game_interface.TABLE_IMG2)
 
             # -------------------------
             game_interface.display_table_img(screen, table_img)
@@ -64,8 +68,9 @@ if __name__ == '__main__':
 
             beers_left = []
             beers_right = []
+
             game_algorithms.inform_beers(table_roi, beers_left, beers_right)
-            # game_algorithms.check_for_balls(beers_left, beers_right, table_roi)
+            game_algorithms.check_for_balls(table_roi, beers_left, beers_right)
             # turns = algorithms.detectTurns()
             # -------------------------
             for beer in beers_left:
@@ -104,11 +109,12 @@ if __name__ == '__main__':
                 # else:
                 right_drinks = False
                 drink_color_right = game_interface.WHITE_DISPLAY_COLOR
+
             # -------------------------
-            # game_interface.display_table_img(screen, table_img)
+            game_interface.display_table_img(screen, table_img)
             # game_interface.display_score(screen)
-            screen.fill(0)
             game_interface.display_beers(screen, beers_left, beers_right)
+
         elif game_phase == "game_over":
             # if there are more screens, different IP stuff on each
             pass
@@ -121,7 +127,7 @@ if __name__ == '__main__':
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
 
-        # cv2.imshow("table", table_roi)
+
         pygame.display.update()
 
         cv2.imshow("table", table_roi)
