@@ -159,3 +159,16 @@ def bgr_to_hsi(image_bgr):
 
     return image_hsi
 
+
+def edge_detection_sobel_hv(source):
+    sobel_h = np.array([-1, 0, 1, -2, 0, 2, -1, 0, 1])
+    sobel_v = np.array([1, 2, 1, 0, 0, 0, -1, -2, -1])
+    new_image = np.zeros([source.shape[0], source.shape[1]])
+
+    for y in range(1, source.shape[0] - 1):
+        for x in range(1, source.shape[1] - 1):
+            image_patch = np.array(source[y - 1:y + 2, x - 1:x + 2]).flatten()
+            gradient_x = int(np.dot(sobel_h, image_patch) / 4)
+            gradient_y = int(np.dot(sobel_v, image_patch) / 4)
+            new_image[y, x] = (abs(gradient_x) + abs(gradient_y)) / 2
+    return new_image

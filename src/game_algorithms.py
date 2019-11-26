@@ -8,6 +8,8 @@ BEER_COLOR = (50, 0.6, 0.6)
 WAND_COLOR = (168, 0.68, 0.5)
 FINGER_COLOR = (37, 0.9, 0.5)
 COLOR_OFFSET = (10, 0.3, 0.5)
+
+
 class Beer:
     def __init__(self, center):
         self.center = center
@@ -17,25 +19,32 @@ class Beer:
         self.red_ball = False
         self.green_buffer = []
         self.red_buffer = []
+
+
 def inform_beers(source, beers_left, beers_right):
-    def nothing(x):
-        pass
-    cv2.namedWindow('mask')
-    cv2.createTrackbar('L - H', 'mask', 0, 179, nothing)
-    cv2.createTrackbar('L - S', 'mask', 0, 255, nothing)
-    cv2.createTrackbar('L - V', 'mask', 0, 255, nothing)
-    cv2.createTrackbar('U - H', 'mask', 179, 179, nothing)
-    cv2.createTrackbar('U - S', 'mask', 255, 255, nothing)
-    cv2.createTrackbar('U - V', 'mask', 255, 255, nothing)
+
     gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
-    (ret, thresh) = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-    # l_h = cv2.getTrackbarPos('L - H', 'mask')
-    # l_S = cv2.getTrackbarPos('L - S', 'mask')
-    # l_V = cv2.getTrackbarPos('L - V', 'mask')
-    # u_h = cv2.getTrackbarPos('U - H', 'mask')
-    # u_s = cv2.getTrackbarPos('U - S', 'mask')
-    # u_v = cv2.getTrackbarPos('U - V', 'mask')
+    # (ret, thresh) = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    ret, thresh = cv2.threshold(gray, 100, 255, 1)
+
+    thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, \
+                                   cv2.THRESH_BINARY_INV, 11, 2)
+
+    kernel = np.ones((4, 4), np.uint8)
+    closing = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+    median = cv2.medianBlur(thresh, 5)
+
+    cv2.imshow("thresh", thresh)
+    cv2.imshow("orig", gray)
+    cv2.imshow("close", closing)
+    cv2.imshow("median", median)
+
+    cv2.waitKey(1)
+
+
+
     contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
     for contour in contours:
         area = cv2.contourArea(contour)
         arclength = cv2.arcLength(contour, True)
@@ -50,6 +59,8 @@ def inform_beers(source, beers_left, beers_right):
                     beers_left.append(Beer(relative_center))
                 else:
                     beers_right.append(Beer(relative_center))
+
+
 # def inform_beers(beers, source, templates, target_color, table_side):
 #
 #     beers_binary = np.zeros([source.shape[0], source.shape[1]])
@@ -149,6 +160,8 @@ def check_for_balls(beers_left, beers_right, source):
         #     beer.red_buffer.append(color_check(current_beer_area, constants.red_color, constants.color_offset))
         # np_red_buffer = np.array(beer.red_buffer)
         # beer.red_ball = np_red_buffer.all()
+
+
 def find_crop(source):
     markers_binary = color_threshold(source, (331, 0.5, 0.5), (30, 0.4, 0.5))
     kernel = np.ones((10, 10), np.uint8)
@@ -163,13 +176,18 @@ def find_crop(source):
     end_y = markers[1].bounding_box[2]
     end_x = markers[1].bounding_box[3]
     return [start_y, end_y, start_x, end_x]
+
+
 def detect_balls(source):
     return [color_check_presence(source, (105, 0.13, 0.58), (10, 0.07, 0.07)),
             color_check_presence(source, (0, 0.13, 0.58), (10, 0.08, 0.08))]
+
+
 def choose_mode(source, modes):
     for i in range(0, len(modes)):
-        if color_check_presence(get_roi(source, modes[i].pos), WAND_COLOR, COLOR_OFFSET):
-            modes[i].chosen += 1
+        modes[i].chosen = color_check_presence(get_roi(source, modes[i].pos), WAND_COLOR, COLOR_OFFSET)
+
+
 def get_roi(source, pos):
     return source[int(pos[0]*source.shape[0]):int(pos[1]*source.shape[0]), int(pos[2]*source.shape[1]):int(pos[3]*source.shape[1])]
 # def turn_to_drink_left():
