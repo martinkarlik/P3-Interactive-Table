@@ -31,17 +31,19 @@ def inform_beers(source, beers_left, beers_right):
                                    cv2.THRESH_BINARY_INV, 11, 2)
 
     kernel = np.ones((4, 4), np.uint8)
-    closing = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+    # closing = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
     median = cv2.medianBlur(thresh, 5)
+
+    kernel = np.zeros((60, 60), np.ubyte)
+
+
 
     cv2.imshow("thresh", thresh)
     cv2.imshow("orig", gray)
-    cv2.imshow("close", closing)
+    cv2.imshow("cup", source[195:255, 195:255])
     cv2.imshow("median", median)
 
     cv2.waitKey(1)
-
-
 
     contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
@@ -168,6 +170,7 @@ def find_crop(source):
     markers_binary = cv2.morphologyEx(markers_binary, cv2.MORPH_CLOSE, kernel)
     markers = extract_blobs(markers_binary)
     print(len(markers))
+
     # right now taking only the two markers in two opposing the corners.. cropping based on that
     # would not work if you angle the camera or the table
     # need to look into camera calibration, extrinsic parameters

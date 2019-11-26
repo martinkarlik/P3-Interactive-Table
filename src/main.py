@@ -15,7 +15,7 @@ if __name__ == '__main__':
     icon = pygame.image.load("../images/cheers.png")
     pygame.display.set_icon(icon)
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
     font = pygame.font.Font(game_interface.FONT_SANS_BOLD[0], game_interface.FONT_SANS_BOLD[1])
     table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
 
@@ -130,3 +130,15 @@ if __name__ == '__main__':
 
     cap.release()
     cv2.destroyAllWindows()
+
+
+
+# TODO Live beer detection, make accurate, make not detect highlighted circles
+# TODO Live game mode choosing reliable, doesnt go crazy, detect only the wand or the finger
+# TODO Detect balls in the cups
+# TODO Classify liquids in the cups
+# TODO Detect turns
+
+
+
+

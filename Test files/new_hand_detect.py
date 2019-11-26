@@ -71,9 +71,8 @@ def draw_rect(frame):
     y1 = [0, 30, 60]
     y2 = [240, 270, 300]
     frame_division = 0
-    global total_rectangle, hand_rect_one_x, hand_rect_one_y, hand_rect_two_x, hand_rect_two_y, \
-        hand_rect_three_x, hand_rect_three_y, hand_rect_four_x, hand_rect_four_y, hand_rect_five_x, hand_rect_five_y, \
-        hand_rect_six_x, hand_rect_six_y, hand_rect_seven_x, hand_rect_seven_y, hand_rect_eight_x, hand_rect_eight_y
+
+    global total_rectangle, hand_rect_one_x, hand_rect_one_y, hand_rect_two_x, hand_rect_two_y
 
     hand_rect_one_x = np.array(
         [x1[0], x1[0], x1[0], x1[1], x1[1], x1[1], x1[2],
@@ -91,58 +90,58 @@ def draw_rect(frame):
                       (hand_rect_two_x[i], hand_rect_two_y[i]),
                       (0, 255, 0), 1)
 
-    # ///////////////////////////////////////////////////////////////
-
-    hand_rect_three_x = np.array(
-        [x2[0], x2[0], x2[0], x2[1], x2[1], x2[1], x2[2],
-         x2[2], x2[2]], dtype=np.uint32)
-
-    hand_rect_three_y = np.array(
-        [y1[0], y1[1], y1[2], y1[0], y1[1], y1[2], y1[0],
-         y1[1], y1[2]], dtype=np.uint32)
-
-    hand_rect_four_x = hand_rect_three_x + 10
-    hand_rect_four_y = hand_rect_three_y + 10
-
-    for i in range(total_rectangle):
-        cv2.rectangle(frame, (hand_rect_three_x[i], hand_rect_three_y[i]),
-                      (hand_rect_four_x[i], hand_rect_four_y[i]),
-                      (0, 255, 0), 1)
-    # //////////////////////////////////////////////////////////////
-
-    hand_rect_five_x = np.array(
-        [x1[0], x1[0], x1[0], x1[1], x1[1], x1[1], x1[2],
-         x1[2], x1[2]], dtype=np.uint32)
-
-    hand_rect_five_y = np.array(
-        [y2[0], y2[1], y2[2], y2[0], y2[1], y2[2], y2[0],
-         y2[1], y2[2]], dtype=np.uint32)
-
-    hand_rect_six_x = hand_rect_five_x + 10
-    hand_rect_six_y = hand_rect_five_y + 10
-
-    for i in range(total_rectangle):
-        cv2.rectangle(frame, (hand_rect_five_x[i], hand_rect_five_y[i]),
-                      (hand_rect_six_x[i], hand_rect_six_y[i]),
-                      (0, 255, 0), 1)
-    # ///////////////////////////////////////////////////////////////////////////////////////////
-
-    hand_rect_seven_x = np.array(
-        [x2[0], x2[0], x2[0], x2[1], x2[1], x2[1], x2[2],
-         x2[2], x2[2]], dtype=np.uint32)
-
-    hand_rect_seven_y = np.array(
-        [y2[0], y2[1], y2[2], y2[0], y2[1], y2[2],
-         y2[0],
-         y2[1], y2[2]], dtype=np.uint32)
-
-    hand_rect_eight_x = hand_rect_seven_x + 10
-    hand_rect_eight_y = hand_rect_seven_y + 10
-
-    for i in range(total_rectangle):
-        cv2.rectangle(frame, (hand_rect_seven_x[i], hand_rect_seven_y[i]),
-                      (hand_rect_eight_x[i], hand_rect_eight_y[i]),
-                      (0, 255, 0), 1)
+    # # ///////////////////////////////////////////////////////////////
+    #
+    # hand_rect_three_x = np.array(
+    #     [x2[0], x2[0], x2[0], x2[1], x2[1], x2[1], x2[2],
+    #      x2[2], x2[2]], dtype=np.uint32)
+    #
+    # hand_rect_three_y = np.array(
+    #     [y1[0], y1[1], y1[2], y1[0], y1[1], y1[2], y1[0],
+    #      y1[1], y1[2]], dtype=np.uint32)
+    #
+    # hand_rect_four_x = hand_rect_three_x + 10
+    # hand_rect_four_y = hand_rect_three_y + 10
+    #
+    # for i in range(total_rectangle):
+    #     cv2.rectangle(frame, (hand_rect_three_x[i], hand_rect_three_y[i]),
+    #                   (hand_rect_four_x[i], hand_rect_four_y[i]),
+    #                   (0, 255, 0), 1)
+    # # //////////////////////////////////////////////////////////////
+    #
+    # hand_rect_five_x = np.array(
+    #     [x1[0], x1[0], x1[0], x1[1], x1[1], x1[1], x1[2],
+    #      x1[2], x1[2]], dtype=np.uint32)
+    #
+    # hand_rect_five_y = np.array(
+    #     [y2[0], y2[1], y2[2], y2[0], y2[1], y2[2], y2[0],
+    #      y2[1], y2[2]], dtype=np.uint32)
+    #
+    # hand_rect_six_x = hand_rect_five_x + 10
+    # hand_rect_six_y = hand_rect_five_y + 10
+    #
+    # for i in range(total_rectangle):
+    #     cv2.rectangle(frame, (hand_rect_five_x[i], hand_rect_five_y[i]),
+    #                   (hand_rect_six_x[i], hand_rect_six_y[i]),
+    #                   (0, 255, 0), 1)
+    # # ///////////////////////////////////////////////////////////////////////////////////////////
+    #
+    # hand_rect_seven_x = np.array(
+    #     [x2[0], x2[0], x2[0], x2[1], x2[1], x2[1], x2[2],
+    #      x2[2], x2[2]], dtype=np.uint32)
+    #
+    # hand_rect_seven_y = np.array(
+    #     [y2[0], y2[1], y2[2], y2[0], y2[1], y2[2],
+    #      y2[0],
+    #      y2[1], y2[2]], dtype=np.uint32)
+    #
+    # hand_rect_eight_x = hand_rect_seven_x + 10
+    # hand_rect_eight_y = hand_rect_seven_y + 10
+    #
+    # for i in range(total_rectangle):
+    #     cv2.rectangle(frame, (hand_rect_seven_x[i], hand_rect_seven_y[i]),
+    #                   (hand_rect_eight_x[i], hand_rect_eight_y[i]),
+    #                   (0, 255, 0), 1)
 
     return frame
 
@@ -160,19 +159,19 @@ def hand_histogram(frame, hand):
                                               hand_rect_one_y[i]:hand_rect_one_y[i] + 10]
 
         hand_hist = cv2.calcHist([roi], [0, 1], None, [180, 256], [0, 180, 0, 256])
-    if hand == 2:
+    elif hand == 2:
         for i in range(total_rectangle):
             roi[i * 10: i * 10 + 10, 0: 10] = hsv_frame[hand_rect_three_x[i]:hand_rect_three_x[i] + 10,
                                               hand_rect_three_y[i]:hand_rect_three_y[i] + 10]
 
         hand_hist = cv2.calcHist([roi], [0, 1], None, [180, 256], [0, 180, 0, 256])
-    if hand == 3:
+    elif hand == 3:
         for i in range(total_rectangle):
             roi[i * 10: i * 10 + 10, 0: 10] = hsv_frame[hand_rect_five_x[i]:hand_rect_five_x[i] + 10,
                                               hand_rect_five_y[i]:hand_rect_five_y[i] + 10]
 
         hand_hist = cv2.calcHist([roi], [0, 1], None, [180, 256], [0, 180, 0, 256])
-    if hand == 4:
+    elif hand == 4:
         for i in range(total_rectangle):
             roi[i * 10: i * 10 + 10, 0: 10] = hsv_frame[hand_rect_seven_x[i]:hand_rect_seven_x[i] + 10,
                                               hand_rect_seven_y[i]:hand_rect_seven_y[i] + 10]
@@ -266,21 +265,22 @@ def main():
 
     while capture.isOpened():
         pressed_key = cv2.waitKey(1)
+
         _, frame = capture.read()
         cropped_frame = frame[cropped_dimensions[0]:cropped_dimensions[1], cropped_dimensions[2]:cropped_dimensions[3]]
 
         if pressed_key & 0xFF == ord('z'):
-            is_hand_hist_created = True
             hand_hist = hand_histogram(cropped_frame, 1)
-            hand_hist2 = hand_histogram(cropped_frame, 2)
-            hand_hist3 = hand_histogram(cropped_frame, 3)
-            hand_hist4 = hand_histogram(cropped_frame, 4)
+            # hand_hist2 = hand_histogram(cropped_frame, 2)
+            # hand_hist3 = hand_histogram(cropped_frame, 3)
+            # hand_hist4 = hand_histogram(cropped_frame, 4)
+            is_hand_hist_created = True
 
         if is_hand_hist_created:
             manage_image_opr(cropped_frame, hand_hist)
-            manage_image_opr(cropped_frame, hand_hist2)
-            manage_image_opr(cropped_frame, hand_hist3)
-            manage_image_opr(cropped_frame, hand_hist4)
+            # manage_image_opr(cropped_frame, hand_hist2)
+            # manage_image_opr(cropped_frame, hand_hist3)
+            # manage_image_opr(cropped_frame, hand_hist4)
 
         else:
             cropped_frame = draw_rect(cropped_frame)
