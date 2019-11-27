@@ -4,6 +4,7 @@
 
 # organize imports
 import cv2
+import subprocess
 import imutils
 import numpy as np
 from sklearn.metrics import pairwise
@@ -37,7 +38,7 @@ def segment(image, threshold=20):
     # threshold the diff image so that we get the foreground
     thresholded = cv2.threshold(diff, threshold, 255, cv2.THRESH_BINARY)[1]
     kernel = np.ones((5, 5), np.uint8)
-    closing = cv2.morphologyEx(thresholded, cv2.MORPH_CLOSEq, kernel)
+    closing = cv2.morphologyEx(thresholded, cv2.MORPH_CLOSE, kernel)
 
     # get the contours in the thresholded image
     cnts = cv2.findContours(closing.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
@@ -119,7 +120,10 @@ if __name__ == "__main__":
     accumWeight = 0.5
 
     # get the reference to the webcam
-    camera = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0)
+    cap.set(cv2.CAP_PROP_EXPOSURE, -7.0)
+    print(cap.get(cv2.CAP_PROP_EXPOSURE))
 
     # region of interest (ROI) coordinates
     top, right, bottom, left = 50, 50, 350, 350
@@ -133,7 +137,7 @@ if __name__ == "__main__":
     # keep looping, until interrupted
     while True:
         # get the current frame
-        (grabbed, frame) = camera.read()
+        (grabbed, frame) = cap.read()
 
         # resize the frame
         frame = imutils.resize(frame, width=700)
@@ -200,5 +204,5 @@ if __name__ == "__main__":
             break
 
     # free up memory
-    camera.release()
+    cap.release()
     cv2.destroyAllWindows()
