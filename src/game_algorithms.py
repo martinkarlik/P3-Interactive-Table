@@ -1,15 +1,21 @@
 from src._ip_algorithms import *
+
 TABLE_SIDE_LEFT = 0
 TABLE_SIDE_RIGHT = 1
 MOVED_BEER_THRESHOLD = 0.05
 GREEN_COLOR = (120, 0.7, 0.5)
 RED_COLOR = (350, 0.9, 0.5)
+BLUE_COLOR = (350, 0.9, 0.5)
+
 BEER_COLOR = (50, 0.6, 0.6)
 # WAND_COLOR = (168, 0.68, 0.5)
-WAND_COLOR = (240, 0.6, 0.5)
+WAND_COLOR = (216, 0.6, 0.5)
 FINGER_COLOR = (37, 0.9, 0.5)
 
-COLOR_OFFSET = (30, 0.4, 0.5)
+BALL_COLOR_OFFSET = (10, 0.2, 0.3)
+WAND_COLOR_OFFSET = (20, 0.3, 0.5)
+
+BALL_COLORS = [RED_COLOR, GREEN_COLOR, BLUE_COLOR]
 
 
 class Beer:
@@ -17,10 +23,7 @@ class Beer:
         self.center = center
         self.is_present = True
         self.highlighted = False
-        self.green_ball = False
-        self.red_ball = False
-        self.green_buffer = []
-        self.red_buffer = []
+        self.balls = [False for i in range(0, 2)]
 
 
 def inform_beers(source, beers_left, beers_right):
@@ -38,11 +41,11 @@ def inform_beers(source, beers_left, beers_right):
     # median = cv2.medianBlur(thresh, 5)
 
 
-    cv2.imshow("thresh", thresh)
-    cv2.imshow("orig", gray)
-    # cv2.imshow("median", median)
-
-    cv2.waitKey(1)
+    # cv2.imshow("thresh", thresh)
+    # cv2.imshow("orig", gray)
+    # # cv2.imshow("median", median)
+    #
+    # cv2.waitKey(1)
 
     contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
@@ -123,8 +126,8 @@ def check_for_balls(source, beers_left, beers_right):
         end_point_x = int(start_point_x + 40) if start_point_x + 40 < source.shape[1] else source.shape[1]
 
         current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
-        beer.green_ball = color_check_presence(current_beer_area, RED_COLOR, COLOR_OFFSET)
-        beer.green_ball = color_check_presence(current_beer_area, GREEN_COLOR, COLOR_OFFSET)
+        for i in range(0, 2):
+            beer.balls[i] = color_check_presence(current_beer_area, BALL_COLORS[i], BALL_COLOR_OFFSET)
 
     for beer in beers_right:
 
@@ -134,8 +137,8 @@ def check_for_balls(source, beers_left, beers_right):
         end_point_x = int(start_point_x + 40) if start_point_x + 40 < source.shape[1] else source.shape[1]
 
         current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
-        beer.green_ball = color_check_presence(current_beer_area, RED_COLOR, COLOR_OFFSET)
-        beer.green_ball = color_check_presence(current_beer_area, GREEN_COLOR, COLOR_OFFSET)
+        for i in range(0, 2):
+            beer.balls[i] = color_check_presence(current_beer_area, BALL_COLORS[i], BALL_COLOR_OFFSET)
 
 
 def find_crop(source):
@@ -156,13 +159,12 @@ def find_crop(source):
 
 
 def detect_balls(source):
-    return [color_check_presence(source, (105, 0.13, 0.58), (10, 0.07, 0.07)),
-            color_check_presence(source, (0, 0.13, 0.58), (10, 0.08, 0.08))]
+    return [color_check_presence(source, BALL_COLORS[i], BALL_COLOR_OFFSET) for i in range(0, len(BALL_COLORS))]
 
 
 def choose_mode(source, modes):
     for i in range(0, len(modes)):
-        modes[i].chosen = color_check_presence(get_roi(source, modes[i].pos), WAND_COLOR, COLOR_OFFSET)
+        modes[i].chosen = color_check_presence(get_roi(source, modes[i].pos), WAND_COLOR, WAND_COLOR_OFFSET)
 
 
 def get_roi(source, pos):
