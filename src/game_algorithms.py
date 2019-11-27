@@ -13,7 +13,7 @@ WAND_COLOR = (216, 0.6, 0.5)
 FINGER_COLOR = (37, 0.9, 0.5)
 
 BALL_COLOR_OFFSET = (10, 0.2, 0.3)
-WAND_COLOR_OFFSET = (20, 0.3, 0.5)
+WAND_COLOR_OFFSET = (20, 0.2, 0.3)
 
 BALL_COLORS = [RED_COLOR, GREEN_COLOR, BLUE_COLOR]
 
@@ -156,10 +156,6 @@ def find_crop(source):
     end_y = markers[1].bounding_box[2]
     end_x = markers[1].bounding_box[3]
     return [start_y, end_y, start_x, end_x]
-
-
-def detect_balls(source):
-    return [color_check_presence(source, BALL_COLORS[i], BALL_COLOR_OFFSET) for i in range(0, len(BALL_COLORS))]
 
 
 def choose_mode(source, modes):
