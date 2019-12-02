@@ -17,7 +17,17 @@ if __name__ == '__main__':
     icon = pygame.image.load("../images/cheers.png")
     pygame.display.set_icon(icon)
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
+    # Songs and music
+    songs = [""]
+    # Select, Achievement, cursor
+    sounds = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav", "../sound/cuteguisoundsset/Wav/Cursor.wav"]
+    sound_fx = []
+    for sound in sounds:
+        sound_fx.append(pygame.mixer.Sound(sound))
+    SONG_END = pygame.USEREVENT + 1
+    pygame.mixer.music.set_endevent(SONG_END)
+
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
     font = pygame.font.Font(game_interface.FONT_SANS_BOLD[0], game_interface.FONT_SANS_BOLD[1])
     table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
 
@@ -55,9 +65,11 @@ if __name__ == '__main__':
                 if mode.chosen:
                     mode.meter = min(mode.meter + 2, 100)
                 else:
+                    pygame.mixer.stop()
                     mode.meter = max(mode.meter - 6, 0)
 
                 if mode.meter >= 100:
+                    sound_fx[0].play()
                     game_phase = "game_play"
                     table_img = game_interface.set_table_img(game_interface.TABLE_IMG2)
 
@@ -119,6 +131,9 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
+            if event.type == SONG_END:
+                print("the song ended!")
+                game_interface.play_song()
 
 
         pygame.display.update()
@@ -138,7 +153,3 @@ if __name__ == '__main__':
 
 # TODO Classify liquids in the cups
 # TODO Detect turns
-
-
-
-

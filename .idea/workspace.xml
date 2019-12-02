@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Test files/CameraFuckery.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test files/hand_detect.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test files/hand_detect.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/game_interface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jakubs_shitty_work.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test files/jakubs_shitty_work.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,14 +35,14 @@
     <property name="settings.editor.selected.configurable" value="preferences.pathVariables" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\karli\PycharmProjects\p3" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Victor\PycharmProjects\p3\Test files" />
       <recent name="C:\Users\karli\PycharmProjects\p3" />
       <recent name="C:\Users\karli\PycharmProjects\p3\images" />
       <recent name="C:\Users\karli\PycharmProjects\p3\recordings" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\karli\PycharmProjects\p3" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -55,7 +57,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.CameraFuckery">
+  <component name="RunManager" selected="Python.new_hand_detect">
     <configuration name="CameraFuckery" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="p3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -163,9 +165,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.new_hand_detect" />
         <item itemvalue="Python.CameraFuckery" />
         <item itemvalue="Python.hand_detect (1)" />
-        <item itemvalue="Python.new_hand_detect" />
         <item itemvalue="Python.hand_detect" />
         <item itemvalue="Python.cupDetect (1)" />
       </list>
