@@ -12,8 +12,8 @@ class Blob:
         self.center = self.find_center()
         self.mean = self.find_mean()
 
-        self.is_beer = self.is_beer()
-        self.is_marker = self.is_marker()
+        self.circularity = self.get_circularity()
+        self.compactness = self.get_compactness()
 
     def find_bounding_box(self):
         min_y = self.pixels[0][0]
@@ -47,7 +47,7 @@ class Blob:
         return [int(sum_y / self.area), int(sum_x / self.area)]
 
     def get_compactness(self):
-        return self.area / (self.bounding_box[3] - self.bounding_box[1] + 1) * (self.bounding_box[2] - self.bounding_box[0] + 1)
+        return self.area / ((self.bounding_box[3] - self.bounding_box[1] + 1) * (self.bounding_box[2] - self.bounding_box[0] + 1))
 
     def get_circularity(self):
         x = (self.bounding_box[3] - self.bounding_box[1]) * (self.bounding_box[3] - self.bounding_box[1])
@@ -55,11 +55,6 @@ class Blob:
         perimeter = np.sqrt(x + y)
         return perimeter / (2 * (np.sqrt(np.pi * self.area)))
 
-    def is_beer(self):
-        return self.area > 50 and self.get_circularity() > 0
-
-    def is_marker(self):
-        return self.area > 100 and self.get_compactness() > 0.7
 
 
 def match_template(source, template):
@@ -124,10 +119,20 @@ def color_check_presence(source, target_color, target_offset):
     return color_match.any()
 
 
-def bgr_to_hsi(image_bgr):
-    blue = image_bgr[:, :, 0] / 255
-    green = image_bgr[:, :, 1] / 255
-    red = image_bgr[:, :, 2] / 255
+def bgr_to_gray(source):
+    blue = source[:, :, 0] / 255
+    green = source[:, :, 1] / 255
+    red = source[:, :, 2] / 255
+
+    result = (blue + green + red) / 3
+    return result
+
+
+
+def bgr_to_hsi(source):
+    blue = source[:, :, 0] / 255
+    green = source[:, :, 1] / 255
+    red = source[:, :, 2] / 255
 
     # following code implements the formulas for calculating hue, saturation and intensity from a BGR image
     # since these are point processing operations, they can be implemented using element-wise matrix operations with numpy
@@ -135,29 +140,39 @@ def bgr_to_hsi(image_bgr):
     nominator = (red - green) + (red - blue)
     denominator = 2 * np.sqrt((red - green) * (red - green) + (red - blue) * (green - blue))
 
-    theta = np.zeros([image_bgr.shape[0], image_bgr.shape[1]])
+    theta = np.zeros([source.shape[0], source.shape[1]])
 
     # get indices where denominator is non-zero
     non_zeros = denominator > 0
     theta[non_zeros] = np.degrees(np.arccos(nominator[non_zeros] / denominator[non_zeros]))
 
-    hue = np.zeros([image_bgr.shape[0], image_bgr.shape[1]])
+    hue = np.zeros([source.shape[0], source.shape[1]])
     hue[blue <= green] = theta[blue <= green]
     hue[blue > green] = (360 - theta[blue > green])
 
-    saturation = np.zeros([image_bgr.shape[0], image_bgr.shape[1]])
+    saturation = np.zeros([source.shape[0], source.shape[1]])
     non_zeros = (red + green + blue) > 0
     saturation[non_zeros] = 1 - (3 / (red[non_zeros] + green[non_zeros] + blue[non_zeros]) *
                                  np.minimum(np.minimum(red[non_zeros], green[non_zeros]), blue[non_zeros]))
 
-    intensity = (red + green + blue) / 3
+    intensity = (blue + green + red) / 3
 
-    image_hsi = np.zeros([image_bgr.shape[0], image_bgr.shape[1], image_bgr.shape[2]])
-    image_hsi[:, :, 0] = hue
-    image_hsi[:, :, 1] = saturation
-    image_hsi[:, :, 2] = intensity
+    result = np.zeros([source.shape[0], source.shape[1], source.shape[2]])
+    result[:, :, 0] = hue
+    result[:, :, 1] = saturation
+    result[:, :, 2] = intensity
 
-    return image_hsi
+    return result
+
+
+def get_perspective_transform(source, destination):
+    return cv2.getPerspectiveTransform(source, destination)
+
+
+def warp_perspective(source, matrix, size):
+    return cv2.warpPerspective(source, matrix, size)
+
+
 
 
 def edge_detection_sobel_hv(source):

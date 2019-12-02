@@ -1,14 +1,14 @@
 from src._ip_algorithms import *
+import cv2
 
-TABLE_SIDE_LEFT = 0
-TABLE_SIDE_RIGHT = 1
-MOVED_BEER_THRESHOLD = 0.05
+
+TABLE_SHAPE = (800, 400)
+
 GREEN_COLOR = (120, 0.7, 0.5)
 RED_COLOR = (350, 0.9, 0.5)
 BLUE_COLOR = (350, 0.9, 0.5)
 
 BEER_COLOR = (50, 0.6, 0.6)
-# WAND_COLOR = (168, 0.68, 0.5)
 WAND_COLOR = (216, 0.6, 0.5)
 FINGER_COLOR = (37, 0.9, 0.5)
 
@@ -37,15 +37,7 @@ def inform_beers(source, beers_left, beers_right):
 
 
     # kernel = np.ones((4, 4), np.uint8)
-    # # closing = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
-    # median = cv2.medianBlur(thresh, 5)
-
-
-    # cv2.imshow("thresh", thresh)
-    # cv2.imshow("orig", gray)
-    # # cv2.imshow("median", median)
-    #
-    # cv2.waitKey(1)
+    # closing = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
 
     contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
@@ -158,30 +150,67 @@ def find_crop(source):
     return [start_y, end_y, start_x, end_x]
 
 
-def choose_mode(source, modes):
-    for i in range(0, len(modes)):
-        modes[i].chosen = color_check_presence(get_roi(source, modes[i].pos), WAND_COLOR, WAND_COLOR_OFFSET)
+def find_table_transform(source, dims):
+
+    def pop_closest(blobs, pos):
+        min_distance = abs(blobs[0].center[0] - pos[0]) + abs(blobs[0].center[1] - pos[1])
+        closest_index = 0
+        for i in range(1, len(blobs)):
+            distance = abs(blobs[i].center[0] - pos[0]) + abs(blobs[i].center[1] - pos[1])
+            if distance < min_distance:
+                min_distance = distance
+                closest_index = i
+
+        return blobs.pop(closest_index)
+
+    gray = bgr_to_gray(source)
+
+    binary_inv = 1 - threshold(gray, 0.03, 1)
+
+    blobs = extract_blobs(binary_inv)
+
+    markers = []
+    for blob in blobs:
+        if blob.area in range(200, 500) and blob.get_compactness() > 0.8:
+            markers.append(blob)
+
+    # if len(markers) != 4:
+    #     return None
+
+    ordered_markers = [pop_closest(markers, [0, 0]), pop_closest(markers, [0, source.shape[1]]),
+                       pop_closest(markers, [source.shape[0], source.shape[1]]), pop_closest(markers, [source.shape[0], 0])]
+
+    src_points = np.float32([(ordered_markers[0].bounding_box[1], ordered_markers[0].bounding_box[0]),
+                            (ordered_markers[1].bounding_box[3], ordered_markers[1].bounding_box[0]),
+                            (ordered_markers[2].bounding_box[3], ordered_markers[2].bounding_box[2]),
+                            (ordered_markers[3].bounding_box[1], ordered_markers[3].bounding_box[2])])
+
+    # src_points = np.float32([(ordered_markers[0].center[1], ordered_markers[0].center[0]),
+    #                          (ordered_markers[1].center[1], ordered_markers[1].center[0]),
+    #                          (ordered_markers[2].center[1], ordered_markers[2].center[0]),
+    #                          (ordered_markers[3].center[1], ordered_markers[3].center[0])])
+
+    # src_points = np.float32([(0, 0),
+    #                          (50, 0),
+    #                          (50, 50),
+    #                          (0, 50)])
+
+    dst_points = np.float32([(0, 0),
+                  (dims[0], 0),
+                  (dims[0], dims[1]),
+                  (0, dims[1])])
+
+    return get_perspective_transform(src_points, dst_points)
+
+
+def apply_transform(source, matrix, dims):
+    return warp_perspective(source, matrix, dims)
 
 
 def get_roi(source, pos):
     return source[int(pos[0]*source.shape[0]):int(pos[1]*source.shape[0]), int(pos[2]*source.shape[1]):int(pos[3]*source.shape[1])]
 
 
-# def turn_to_drink_left():
-#     global player_1_drinks
-#     if player_1_drinks:
-#         player_1_drinks = False
-#         return constants.red_display_color
-#     else:
-#         player_1_drinks = True
-#         return constants.green_display_color
-#
-#
-# def turn_to_drink_right():
-#     global player_3_drinks
-#     if player_3_drinks:
-#         player_3_drinks = False
-#         return constants.red_display_color
-#     else:
-#         player_3_drinks = True
-#         return constants.green_display_color
+def choose_option(source, modes):
+    for i in range(0, len(modes)):
+        modes[i].chosen = color_check_presence(get_roi(source, modes[i].pos), WAND_COLOR, WAND_COLOR_OFFSET)
