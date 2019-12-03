@@ -39,7 +39,10 @@ class Beer:
         self.is_present = True
         self.wand_here = False
         self.meter = 0
+        self.counter = 1200
         self.highlighted = False
+        self.yellow = False
+        self.red = False
         self.balls = [False for i in range(0, 2)]
 
 
@@ -509,7 +512,7 @@ def detect_liquid(source, cupNum):
 
 
 
-    if color_check_presence (source,DARK_BROWN_ALE, DARK_BROWN_ALE_OFFSET) == False and color_check_presence(source,BEER_COLOR, COLOR_OFFSET) == False and color_check_presence(source,MILK, MILK_OFFSET) == False and color_check_presence(source,COLA, COLA_OFFSET) == False :
+    if color_check_presence (source,DARK_BROWN_ALE, DARK_BROWN_ALE_OFFSET) == False and color_check_presence(source,BEER_COLOR, BEER_OFFSET) == False and color_check_presence(source,MILK, MILK_OFFSET) == False and color_check_presence(source,COLA, COLA_OFFSET) == False :
         print("There is neither Brown ale, Beer, Milk or Cola in the cup ")
 
 

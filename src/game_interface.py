@@ -21,6 +21,7 @@ class Player:
 
     team_colors = [RED_DISPLAY_COLOR, GREEN_DISPLAY_COLOR, BLUE_DISPLAY_COLOR]
     team_names = ["Red", "Green", "Blue"]
+    team_size = 2
 
     def __init__(self, name, color):
         self.name = name
@@ -107,6 +108,12 @@ def display_beers(target, beers_left, beers_right):
         if beer.balls[0] or beer.balls[1]:
             pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
                                (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+        elif beer.yellow:
+            pygame.draw.circle(target, (0, 255, 255,),
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+        elif beer.red:
+            pygame.draw.circle(target, (255, 0, 0,),
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
         else:
             pygame.draw.circle(target, (255, 255, 255),
                                (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
@@ -114,6 +121,12 @@ def display_beers(target, beers_left, beers_right):
     for beer in beers_right:
         if beer.balls[0] or beer.balls[1]:
             pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+        elif beer.yellow:
+            pygame.draw.circle(target, (0, 255, 255,),
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+        elif beer.red:
+            pygame.draw.circle(target, (255, 0, 0,),
                                (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
         else:
             pygame.draw.circle(target, (255, 255, 255),

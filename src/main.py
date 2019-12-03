@@ -11,7 +11,7 @@ songs = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]
 
 if __name__ == '__main__':
     # CAPTURE SETUP
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
     # cap = cv2.VideoCapture("../recordings/cups.avi")
 
@@ -43,11 +43,11 @@ if __name__ == '__main__':
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4]),
              game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9])]
 
-    team_a = [game_interface.Player(game_interface.Player.team_colors[i]) for i in
+    team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
               range(0, game_interface.Player.team_size)]
     team_a[random.randint(0, len(team_a) - 1)].drinks = True
 
-    team_b = [game_interface.Player(game_interface.Player.team_colors[i]) for i in
+    team_b = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
               range(0, game_interface.Player.team_size)]
     team_b[random.randint(0, len(team_b) - 1)].drinks = True
 
@@ -103,14 +103,19 @@ if __name__ == '__main__':
             game_algorithms.extract_beers(table, tpl, beers_left, beers_right)
             game_algorithms.check_for_balls(table, beers_left, beers_right)
 
-            game_algorithms.check_for_wand(table_roi, beers_left, beers_right)
+            game_algorithms.check_for_wand(table, beers_left, beers_right)
             for beer in beers_left:
                 if beer.wand_here:
                     beer.meter += 2
                 else:
                     beer.meter = max(beer.meter - 10, 0)
                 if beer.meter >= 100:
-                    beer.highlighted = True
+                    beer.yellow = True
+                if beer.yellow:
+                    beer.counter -= 1
+                    if beer.counter <= 0:
+                        beer.yellow = False
+                        beer.counter = 1200
 
             for beer in beers_right:
                 if beer.wand_here:
@@ -118,7 +123,46 @@ if __name__ == '__main__':
                 else:
                     beer.meter = max(beer.meter - 10, 0)
                 if beer.meter >= 100:
-                    beer.highlighted = True
+                    beer.yellow = True
+                if beer.yellow:
+                    beer.counter -= 1
+                    if beer.counter <= 0:
+                        beer.yellow = False
+                        beer.counter = 1200
+
+            for i in range(0, len(beers_left)):
+                if beers_left[i].yellow:
+                    min_dist = 1000
+                    red_index = 0
+                    for j in range(0, len(beers_left)):
+                        if j == i:
+                            continue
+                        else:
+                            distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(beers_left[i].center[1] - beers_left[j].center[1])
+                            if distance < min_dist:
+                                min_dist = distance
+                                red_index = j
+                    beers_left[red_index].red = True
+                    # This is extremely dumb, help me
+                    if not beers_left[i].yellow:
+                        beers_left[red_index].red = False
+
+            for i in range(0, len(beers_right)):
+                if beers_right[i].yellow:
+                    min_dist = 1000
+                    red_index = 0
+                    for j in range(0, len(beers_right)):
+                        if j == i:
+                            continue
+                        else:
+                            distance = abs(beers_right[i].center[0] - beers_right[j].center[0]) + abs(beers_right[i].center[1] - beers_right[j].center[1])
+                            if distance < min_dist:
+                                min_dist = distance
+                                red_index = j
+                    beers_right[red_index].red = True
+                    # This is extremely dumb, help me
+                    if not beers_right[i].yellow:
+                        beers_right[red_index].red = False
 
             # turns = algorithms.detectTurns()
 
