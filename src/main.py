@@ -4,9 +4,14 @@ import random
 from src import game_algorithms
 from src import game_interface
 
+selection_music_playing = False
+gameplay_music_playing = False
+songs = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
+
+
 if __name__ == '__main__':
     # CAPTURE SETUP
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
     # cap = cv2.VideoCapture("../recordings/cups.avi")
 
@@ -17,14 +22,13 @@ if __name__ == '__main__':
     pygame.display.set_icon(icon)
 
     # Songs and music
-    songs = [""]
+
     # Select, Achievement, cursor
-    sounds = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav", "../sound/cuteguisoundsset/Wav/Cursor.wav"]
+    sounds = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
+              "../sound/cuteguisoundsset/Wav/Cursor.wav"]
     sound_fx = []
     for sound in sounds:
         sound_fx.append(pygame.mixer.Sound(sound))
-    SONG_END = pygame.USEREVENT + 1
-    pygame.mixer.music.set_endevent(SONG_END)
 
     screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(game_interface.FONT_SANS_BOLD[0], game_interface.FONT_SANS_BOLD[1])
@@ -39,10 +43,12 @@ if __name__ == '__main__':
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4]),
              game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9])]
 
-    team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in range(0, game_interface.TEAM_SIZE)]
+    team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
+              range(0, game_interface.Player.team_size)]
     team_a[random.randint(0, len(team_a) - 1)].drinks = True
 
-    team_b = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in range(0, game_interface.TEAM_SIZE)]
+    team_b = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
+              range(0, game_interface.Player.team_size)]
     team_b[random.randint(0, len(team_b) - 1)].drinks = True
 
     beers_left = []
@@ -63,6 +69,12 @@ if __name__ == '__main__':
             game_algorithms.choose_option(table, modes)
             # -------------------------
 
+            if not selection_music_playing:
+                selection_music_playing = True
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load(songs[0])
+                pygame.mixer.music.play(-1)
+
             for mode in modes:
                 if mode.chosen:
                     mode.meter = min(mode.meter + 2, 100)
@@ -80,6 +92,13 @@ if __name__ == '__main__':
             game_interface.display_mode_selection(screen, font, modes)
 
         elif game_phase == "game_play":
+            if not gameplay_music_playing:
+                gameplay_music_playing = True
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load(songs[1])
+                pygame.mixer.music.play(-1)
+            beers_left = []
+            beers_right = []
 
             current_beers_left = []
             current_beers_right = []
@@ -88,7 +107,72 @@ if __name__ == '__main__':
 
             game_algorithms.inform_beers(table, beers_left, beers_right, current_beers_left, current_beers_right)
             game_algorithms.check_for_balls(table, beers_left, beers_right)
-            # turns = algorithms.detect_turns()
+
+            game_algorithms.check_for_wand(table, beers_left, beers_right)
+            for beer in beers_left:
+                if beer.wand_here:
+                    beer.meter += 2
+                else:
+                    beer.meter = max(beer.meter - 10, 0)
+                if beer.meter >= 100:
+                    beer.yellow = True
+                if beer.yellow:
+                    beer.counter -= 1
+                    if beer.counter <= 0:
+                        beer.yellow = False
+                        beer.counter = 1200
+
+            for beer in beers_right:
+                if beer.wand_here:
+                    beer.meter += 2
+                else:
+                    beer.meter = max(beer.meter - 10, 0)
+                if beer.meter >= 100:
+                    beer.yellow = True
+                if beer.yellow:
+                    beer.counter -= 1
+                    if beer.counter <= 0:
+                        beer.yellow = False
+                        beer.counter = 1200
+
+            for i in range(0, len(beers_left)):
+                if beers_left[i].yellow:
+                    min_dist = 1000
+                    red_index = 0
+                    for j in range(0, len(beers_left)):
+                        if j == i:
+                            continue
+                        else:
+                            distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(beers_left[i].center[1] - beers_left[j].center[1])
+                            if distance < min_dist:
+                                min_dist = distance
+                                red_index = j
+                    beers_left[red_index].red = True
+                    # This is extremely dumb, help me
+                    if not beers_left[i].yellow:
+                        beers_left[red_index].red = False
+
+            for i in range(0, len(beers_right)):
+                if beers_right[i].yellow:
+                    min_dist = 1000
+                    red_index = 0
+                    for j in range(0, len(beers_right)):
+                        if j == i:
+                            continue
+                        else:
+                            distance = abs(beers_right[i].center[0] - beers_right[j].center[0]) + abs(beers_right[i].center[1] - beers_right[j].center[1])
+                            if distance < min_dist:
+                                min_dist = distance
+                                red_index = j
+                    beers_right[red_index].red = True
+                    # This is extremely dumb, help me
+                    if not beers_right[i].yellow:
+                        beers_right[red_index].red = False
+
+            # turns = algorithms.detectTurns()
+
+
+
             # -------------------------
 
             for beer in beers_left:
@@ -134,20 +218,14 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
-            if event.type == SONG_END:
-                print("the song ended!")
-                game_interface.play_song()
 
         pygame.display.update()
 
         # cv2.imshow("table", table_roi)
         # cv2.waitKey(20)
 
-
     cap.release()
     cv2.destroyAllWindows()
-
-
 
 # TODO Live beer detection, make accurate, make not detect highlighted circles
 # TODO Live game mode choosing reliable, doesnt go crazy, detect only the wand or the finger
