@@ -4,75 +4,82 @@ import random
 from src import game_algorithms
 from src import game_interface
 
-selection_music_playing = False
-gameplay_music_playing = False
-songs = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
+FONT_SANS_BOLD = ['freesansbold.ttf', 40]
+TAPE_IMAGE = "../images/tableImages/tape.png"
+ICON = "../images/cheers.png"
+TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableImages/PlaceCups.png"]
 
+SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
+SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
+              "../sound/cuteguisoundsset/Wav/Cursor.wav"]
+
+# I just wanted to make all the constant things as constants, I dint delete anythin dont worry
 
 if __name__ == '__main__':
     # CAPTURE SETUP
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
-    # cap = cv2.VideoCapture("../recordings/cups.avi")
 
     # PYGAME SETUP
     pygame.init()
     pygame.display.set_caption("BeerPong")
-    icon = pygame.image.load("../images/cheers.png")
+    icon = pygame.image.load(ICON)
     pygame.display.set_icon(icon)
 
     # Songs and music
 
     # Select, Achievement, cursor
-    sounds = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
-              "../sound/cuteguisoundsset/Wav/Cursor.wav"]
+
     sound_fx = []
-    for sound in sounds:
+    for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
 
     screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
-    font = pygame.font.Font(game_interface.FONT_SANS_BOLD[0], game_interface.FONT_SANS_BOLD[1])
-    table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
-
-    tpl = cv2.imread("../images/testImages/beer.jpg", cv2.IMREAD_GRAYSCALE)
+    font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
+    table_img = game_interface.set_table_img(TABLE_IMAGES[0])
+    tape_img = pygame.image.load(TAPE_IMAGE)
+    tpl = cv2.imread("../images/testImages/beer.jpg", cv2.IMREAD_GRAYSCALE) # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
 
     # GAME LOGIC SETUP
-    game_phase = "game_play"
-    modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4]),
-             game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9]),
-             game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4]),
-             game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9])]
+    game_phase = "mode_selection"
+    modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4], True),
+             game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
+             game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
+             game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9], False)]
 
     team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
-              range(0, game_interface.Player.team_size)]
+              range(0, game_interface.Player.players_num)]
     team_a[random.randint(0, len(team_a) - 1)].drinks = True
 
     team_b = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
-              range(0, game_interface.Player.team_size)]
+              range(0, game_interface.Player.players_num)]
     team_b[random.randint(0, len(team_b) - 1)].drinks = True
 
     beers_left = []
     beers_right = []
 
+    selection_music_playing = False
+    gameplay_music_playing = False
+
     _, frame = cap.read()
     table_transform = game_algorithms.find_table_transform(frame, game_algorithms.TABLE_SHAPE)
-    table = game_algorithms.apply_transform(frame, table_transform, game_algorithms.TABLE_SHAPE)
 
     app_running = True
     while app_running and cap.isOpened():
 
         _, frame = cap.read()
         table = game_algorithms.apply_transform(frame, table_transform, game_algorithms.TABLE_SHAPE)
-        # table = frame[65:378, 21:620]
 
-        if game_phase == "game_mode":
+        cv2.imshow("table", table)
+        cv2.waitKey(1)
+
+        if game_phase == "mode_selection":
             game_algorithms.choose_option(table, modes)
-            # -------------------------
 
             if not selection_music_playing:
                 selection_music_playing = True
                 pygame.mixer.music.stop()
-                pygame.mixer.music.load(songs[0])
+                pygame.mixer.music.load(SONGS[0])
                 pygame.mixer.music.play(-1)
 
             for mode in modes:
@@ -85,32 +92,34 @@ if __name__ == '__main__':
                 if mode.meter >= 100:
                     sound_fx[0].play()
                     game_phase = "game_play"
-                    table_img = game_interface.set_table_img(game_interface.TABLE_IMG2)
+                    table_img = game_interface.set_table_img(TABLE_IMAGES[1])
 
-            # -------------------------
             game_interface.display_table_img(screen, table_img)
-            game_interface.display_mode_selection(screen, font, modes)
+            game_interface.display_mode_selection(screen, font, tape_img, modes)
 
         elif game_phase == "game_play":
+
             if not gameplay_music_playing:
                 gameplay_music_playing = True
                 pygame.mixer.music.stop()
-                pygame.mixer.music.load(songs[1])
+                pygame.mixer.music.load(SONGS[1])
                 pygame.mixer.music.play(-1)
-            beers_left = []
-            beers_right = []
 
             current_beers_left = []
             current_beers_right = []
 
             game_algorithms.extract_beers(table, tpl, current_beers_left, current_beers_right)
 
-            game_algorithms.inform_beers(table, beers_left, beers_right, current_beers_left, current_beers_right)
-            game_algorithms.check_for_balls(table, beers_left, beers_right)
+            game_algorithms.inform_beers(beers_left, beers_right, current_beers_left, current_beers_right)
 
+            game_algorithms.check_for_balls(table, beers_left, beers_right)
             game_algorithms.check_for_wand(table, beers_left, beers_right)
+
+            # -------------------------
+
             for beer in beers_left:
                 if beer.wand_here:
+                    print("Some beer has a wand in it!")
                     beer.meter += 2
                 else:
                     beer.meter = max(beer.meter - 10, 0)
@@ -140,13 +149,12 @@ if __name__ == '__main__':
                     min_dist = 1000
                     red_index = 0
                     for j in range(0, len(beers_left)):
-                        if j == i:
-                            continue
-                        else:
+                        if j != i:
                             distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(beers_left[i].center[1] - beers_left[j].center[1])
                             if distance < min_dist:
                                 min_dist = distance
                                 red_index = j
+
                     beers_left[red_index].red = True
                     # This is extremely dumb, help me
                     if not beers_left[i].yellow:
@@ -169,11 +177,7 @@ if __name__ == '__main__':
                     if not beers_right[i].yellow:
                         beers_right[red_index].red = False
 
-            # turns = algorithms.detectTurns()
 
-
-
-            # -------------------------
 
             for beer in beers_left:
                 for i in range(0, len(beer.balls)):
@@ -204,7 +208,7 @@ if __name__ == '__main__':
 
             # -------------------------
             game_interface.display_table_img(screen, table_img)
-            game_interface.display_score(screen, team_a, team_b)
+            # game_interface.display_score(screen, team_a, team_b)
             game_interface.display_beers(screen, beers_left, beers_right)
 
         elif game_phase == "game_over":
@@ -221,15 +225,6 @@ if __name__ == '__main__':
 
         pygame.display.update()
 
-        # cv2.imshow("table", table_roi)
-        # cv2.waitKey(20)
-
     cap.release()
     cv2.destroyAllWindows()
 
-# TODO Live beer detection, make accurate, make not detect highlighted circles
-# TODO Live game mode choosing reliable, doesnt go crazy, detect only the wand or the finger
-# TODO Detect balls in the cups
-
-# TODO Classify liquids in the cups
-# TODO Detect turns
