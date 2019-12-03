@@ -4,10 +4,23 @@ TABLE_SIDE_RIGHT = 1
 MOVED_BEER_THRESHOLD = 0.05
 GREEN_COLOR = (120, 0.7, 0.5)
 RED_COLOR = (350, 0.9, 0.5)
-BEER_COLOR = (50, 0.6, 0.6)
+
 WAND_COLOR = (168, 0.68, 0.5)
 FINGER_COLOR = (37, 0.9, 0.5)
 COLOR_OFFSET = (10, 0.3, 0.5)
+
+# Different liquid:
+BEER_COLOR = (50, 0.6, 0.6)
+BEER_OFFSET = (10, 0.3, 0.5)
+
+DARK_BROWN_ALE = (40, 0.37, 0.115)
+DARK_BROWN_ALE_OFFSET = (10, 0.11, 0.025)
+
+MILK = (49.5, 0.403, 0.6145)
+MILK_OFFSET = (0.5, 0.003, 0.0265)
+
+COLA = (10, 0.45, 0.06)
+COLA_OFFSET = (10, 0.45, 0.06)
 
 
 class Beer:
@@ -208,3 +221,260 @@ def get_roi(source, pos):
 #     else:
 #         player_3_drinks = True
 #         return constants.green_display_color
+
+def detect_liquid(source, cupNum):
+
+
+    if color_check_presence(source,DARK_BROWN_ALE, DARK_BROWN_ALE_OFFSET):
+
+        DarkBrownAleDetected = color_threshold(source, DARK_BROWN_ALE, DARK_BROWN_ALE_OFFSET)
+        kernelForClosingDarkAle = np.ones((9, 9), np.uint8)
+        kernelForOpenningDarkAle = np.ones((5, 5), np.uint8)
+
+        # opening = cv2.morphologyEx(BeerDetected, cv2.MORPH_OPEN, kernelForOpeningDarkAle)
+        # closing = cv2.morphologyEx(DarkBrownAleDetected, cv2.MORPH_CLOSE, kernelForClosingDarkAle)
+        closing = DarkBrownAleDetected
+
+        if cupNum == 0:
+            cv2.imshow("Cup 1 DA", closing)
+        elif cupNum == 1:
+            cv2.imshow("Cup 2 DA", closing)
+        elif cupNum == 2:
+            cv2.imshow("Cup 3 DA", closing)
+        elif cupNum == 3:
+            cv2.imshow("Cup 4 DA", closing)
+        elif cupNum == 4:
+            cv2.imshow("Cup 5 DA", closing)
+        elif cupNum == 5:
+            cv2.imshow("Cup 6 DA", closing)
+        elif cupNum == 6:
+            cv2.imshow("Cup 7 DA", closing)
+        elif cupNum == 7:
+            cv2.imshow("Cup 8 DA", closing)
+        elif cupNum == 8:
+            cv2.imshow("Cup 9 DA", closing)
+        elif cupNum == 9:
+            cv2.imshow("Cup 10 DA", closing)
+
+        numOfDarkBrownAle = extract_blobs(closing)
+
+
+
+        if len(numOfDarkBrownAle) > 0 and cupNum == 0:
+            print("This is a Dark Brown Ale",  len(numOfDarkBrownAle), "Cup 1")
+
+        elif len(numOfDarkBrownAle) > 0 and cupNum == 1:
+            print("This is a Dark Brown Ale", len(numOfDarkBrownAle), "Cup 2")
+
+        elif len(numOfDarkBrownAle) > 0 and cupNum == 2:
+            print("This is a Dark Brown Ale", len(numOfDarkBrownAle), "Cup 3")
+
+        elif len(numOfDarkBrownAle) > 0 and cupNum == 3:
+            print("This is a Dark Brown Ale", len(numOfDarkBrownAle), "Cup 4")
+
+        elif len(numOfDarkBrownAle) > 0 and cupNum == 4:
+            print("This is a Dark Brown Ale", len(numOfDarkBrownAle), "Cup 5")
+
+        elif len(numOfDarkBrownAle) > 0 and cupNum == 5:
+            print("This is a Dark Brown Ale", len(numOfDarkBrownAle), "Cup 6")
+
+        elif len(numOfDarkBrownAle) > 0 and cupNum == 6:
+            print("This is a Dark Brown Ale", len(numOfDarkBrownAle), "Cup 7")
+
+        elif len(numOfDarkBrownAle) > 0 and cupNum == 7:
+            print("This is a Dark Brown Ale", len(numOfDarkBrownAle), "Cup 8")
+
+        elif len(numOfDarkBrownAle) > 0 and cupNum == 8:
+            print("This is a Dark Brown Ale", len(numOfDarkBrownAle), "Cup 9")
+
+        elif len(numOfDarkBrownAle) > 0 and cupNum == 9:
+            print("This is a Dark Brown Ale", len(numOfDarkBrownAle), "Cup 10")
+
+    if color_check_presence(source, BEER_COLOR, BEER_OFFSET):
+
+        BeerDetected = color_threshold(source, BEER_COLOR, BEER_OFFSET)
+        kernel = np.ones((9, 9), np.uint8)
+        kernelOpening = np.ones((5, 5), np.uint8)
+
+        # opening = cv2.morphologyEx(BeerDetected, cv2.MORPH_OPEN, kernelOpening)
+        # closing = cv2.morphologyEx(BeerDetected, cv2.MORPH_CLOSE, kernel)
+        closing = BeerDetected
+        if cupNum == 0:
+            cv2.imshow("Cup 1 B", closing)
+        elif cupNum == 1:
+            cv2.imshow("Cup 2 B", closing)
+        elif cupNum == 2:
+            cv2.imshow("Cup 3 B", closing)
+        elif cupNum == 3:
+            cv2.imshow("Cup 4 B", closing)
+        elif cupNum == 4:
+            cv2.imshow("Cup 5 B", closing)
+        elif cupNum == 5:
+            cv2.imshow("Cup 6 B", closing)
+        elif cupNum == 6:
+            cv2.imshow("Cup 7 B", closing)
+        elif cupNum == 7:
+            cv2.imshow("Cup 8 B", closing)
+        elif cupNum == 8:
+            cv2.imshow("Cup 9 B", closing)
+        elif cupNum == 9:
+            cv2.imshow("Cup 10 B", closing)
+
+        numOfBeer = extract_blobs(closing)
+
+
+
+        if len(numOfBeer) > 0 and cupNum == 0:
+            print("This is a beer",  len(numOfBeer), "Cup 1")
+
+        elif len(numOfBeer) > 0 and cupNum == 1:
+            print("This is a beer", len(numOfBeer), "Cup 2")
+
+        elif len(numOfBeer) > 0 and cupNum == 2:
+            print("This is a beer", len(numOfBeer), "Cup 3")
+
+        elif len(numOfBeer) > 0 and cupNum == 3:
+            print("This is a beer", len(numOfBeer), "Cup 4")
+
+        elif len(numOfBeer) > 0 and cupNum == 4:
+            print("This is a beer", len(numOfBeer), "Cup 5")
+
+        elif len(numOfBeer) > 0 and cupNum == 5:
+            print("This is a beer", len(numOfBeer), "Cup 6")
+
+        elif len(numOfBeer) > 0 and cupNum == 6:
+            print("This is a beer", len(numOfBeer), "Cup 7")
+
+        elif len(numOfBeer) > 0 and cupNum == 7:
+            print("This is a beer", len(numOfBeer), "Cup 8")
+
+        elif len(numOfBeer) > 0 and cupNum == 8:
+            print("This is a beer", len(numOfBeer), "Cup 9")
+
+        elif len(numOfBeer) > 0 and cupNum == 9:
+            print("This is a beer", len(numOfBeer), "Cup 10")
+
+
+    if color_check_presence(source, MILK, MILK_OFFSET):
+        MilkDetected = color_threshold(source, MILK, MILK_OFFSET)
+        kernel = np.ones((7, 7), np.uint8)
+        kernelOpening = np.ones((5, 5), np.uint8)
+        kernelSmall = np.ones((10, 10), np.uint8)
+
+        # opening = cv2.morphologyEx(MilkDetected, cv2.MORPH_OPEN, kernelOpening)
+        # closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
+        closing = MilkDetected
+
+        if cupNum == 0:
+            cv2.imshow("Cup 1 Milk", closing)
+        elif cupNum == 1:
+            cv2.imshow("Cup 2 Milk", closing)
+        elif cupNum == 2:
+            cv2.imshow("Cup 3 Milk", closing)
+        elif cupNum == 3:
+            cv2.imshow("Cup 4 Milk", closing)
+        elif cupNum == 4:
+            cv2.imshow("Cup 5 Milk", closing)
+        elif cupNum == 5:
+            cv2.imshow("Cup 6 Milk", closing)
+        elif cupNum == 6:
+            cv2.imshow("Cup 7 Milk", closing)
+        elif cupNum == 7:
+            cv2.imshow("Cup 8 Milk", closing)
+        elif cupNum == 8:
+            cv2.imshow("Cup 9 Milk", closing)
+        elif cupNum == 9:
+            cv2.imshow("Cup 10 Milk", closing)
+
+        numOfMilk = extract_blobs(closing)
+
+        if len(numOfMilk) > 0 and cupNum == 0:
+            print("This is a milk",  len(numOfMilk), "Cup 1")
+        elif len(numOfMilk) > 0 and cupNum == 1:
+            print("This is a milk", len(numOfMilk), "Cup 2")
+        elif len(numOfMilk) > 0 and cupNum == 2:
+            print("This is a milk", len(numOfMilk), "Cup 3")
+        elif len(numOfMilk) > 0 and cupNum == 3:
+            print("This is a milk", len(numOfMilk), "Cup 4")
+        elif len(numOfMilk) > 0 and cupNum == 4:
+            print("This is a milk", len(numOfMilk), "Cup 5")
+        elif len(numOfMilk) > 0 and cupNum == 5:
+            print("This is a milk", len(numOfMilk), "Cup 6")
+        elif len(numOfMilk) > 0 and cupNum == 6:
+            print("This is a milk", len(numOfMilk), "Cup 7")
+        elif len(numOfMilk) > 0 and cupNum == 7:
+            print("This is a milk", len(numOfMilk), "Cup 8")
+        elif len(numOfMilk) > 0 and cupNum == 8:
+            print("This is a milk", len(numOfMilk), "Cup 9")
+        elif len(numOfMilk) > 0 and cupNum == 9:
+            print("This is a milk", len(numOfMilk), "Cup 10")
+
+
+    if color_check_presence(source, COLA, COLA_OFFSET):
+        ColaDetected = color_threshold(source, COLA, COLA_OFFSET)
+        kernelForClosingCola = np.ones((20, 20), np.uint8)
+        kernelForOpenningCola = np.ones((10, 10), np.uint8)
+
+        # opening = cv2.morphologyEx(ColaDetected, cv2.MORPH_OPEN, kernelForOpenningScotch)
+        # closing = cv2.morphologyEx(ColaDetected, cv2.MORPH_CLOSE, kernelForClosingCola)
+        closing = ColaDetected
+
+        if cupNum == 0:
+            cv2.imshow("Cup 1 C", closing)
+        elif cupNum == 1:
+            cv2.imshow("Cup 2 C", closing)
+        elif cupNum == 2:
+            cv2.imshow("Cup 3 C", closing)
+        elif cupNum == 3:
+            cv2.imshow("Cup 4 C", closing)
+        elif cupNum == 4:
+            cv2.imshow("Cup 5 C", closing)
+        elif cupNum == 5:
+            cv2.imshow("Cup 6 C", closing)
+        elif cupNum == 6:
+            cv2.imshow("Cup 7 C", closing)
+        elif cupNum == 7:
+            cv2.imshow("Cup 8 C", closing)
+        elif cupNum == 8:
+            cv2.imshow("Cup 9 C", closing)
+        elif cupNum == 9:
+            cv2.imshow("Cup 10 C", closing)
+
+        numOfCola = extract_blobs(closing)
+
+
+
+        if len(numOfCola) > 0 and cupNum == 0:
+            print("This is a Cola",  len(numOfCola), "Cup 1")
+
+        elif len(numOfCola) > 0 and cupNum == 1:
+            print("This is a Cola", len(numOfCola), "Cup 2")
+
+        elif len(numOfCola) > 0 and cupNum == 2:
+            print("This is a Cola", len(numOfCola), "Cup 3")
+
+        elif len(numOfCola) > 0 and cupNum == 3:
+            print("This is a Cola", len(numOfCola), "Cup 4")
+
+        elif len(numOfCola) > 0 and cupNum == 4:
+            print("This is a Cola", len(numOfCola), "Cup 5")
+
+        elif len(numOfCola) > 0 and cupNum == 5:
+            print("This is a Cola", len(numOfCola), "Cup 6")
+
+        elif len(numOfCola) > 0 and cupNum == 6:
+            print("This is a Cola", len(numOfCola), "Cup 7")
+
+        elif len(numOfCola) > 0 and cupNum == 7:
+            print("This is a Cola", len(numOfCola), "Cup 8")
+
+        elif len(numOfCola) > 0 and cupNum == 8:
+            print("This is a Cola", len(numOfCola), "Cup 9")
+
+        elif len(numOfCola) > 0 and cupNum == 9:
+            print("This is a Cola", len(numOfCola), "Cup 10")
+
+
+
+    if color_check_presence (source,DARK_BROWN_ALE, DARK_BROWN_ALE_OFFSET) == False and color_check_presence(source,BEER_COLOR, COLOR_OFFSET) == False and color_check_presence(source,MILK, MILK_OFFSET) == False and color_check_presence(source,COLA, COLA_OFFSET) == False :
+        print("There is neither Brown ale, Beer, Milk or Cola in the cup ")

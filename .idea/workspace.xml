@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Test files/hand_detect.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Test files/new_hand_detect.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cupDetect.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test files/cupDetect.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game_algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/game_algorithms.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
