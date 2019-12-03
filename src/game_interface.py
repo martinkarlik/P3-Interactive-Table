@@ -117,9 +117,3 @@ def display_beers(target, beers_left, beers_right):
         else:
             pygame.draw.circle(target, (255, 255, 255),
                                (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
-
-
-def play_song(audio):
-    pygame.mixer.music.load(audio)
-    pygame.mixer.music.queue(audio)
-    pygame.mixer.music.play()

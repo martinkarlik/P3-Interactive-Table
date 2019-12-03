@@ -22,6 +22,8 @@ class Beer:
     def __init__(self, center):
         self.center = center
         self.is_present = True
+        self.wand_here = False
+        self.meter = 0
         self.highlighted = False
         self.balls = [False for i in range(0, 2)]
 
@@ -139,6 +141,28 @@ def check_for_balls(source, beers_left, beers_right):
         current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
         for i in range(0, 2):
             beer.balls[i] = color_check_presence(current_beer_area, BALL_COLORS[i], BALL_COLOR_OFFSET)
+
+
+def check_for_wand(source, beers_left, beers_right):
+    for beer in beers_left:
+
+        start_point_y = int(source.shape[0] * beer.center[0] - 20) if int(source.shape[0] * beer.center[0] - 20) > 0 else 0
+        start_point_x = int(source.shape[1] * beer.center[1] - 20) if int(source.shape[1] * beer.center[1] - 20) > 0 else 0
+        end_point_y = int(start_point_y + 40) if start_point_y + 40 < source.shape[0] else source.shape[0]
+        end_point_x = int(start_point_x + 40) if start_point_x + 40 < source.shape[1] else source.shape[1]
+
+        current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
+        beer.wand_here = color_check_presence(current_beer_area, WAND_COLOR, WAND_COLOR_OFFSET)
+
+    for beer in beers_right:
+
+        start_point_y = int(source.shape[0] * beer.center[0] - 20) if int(source.shape[0] * beer.center[0] - 20) > 0 else 0
+        start_point_x = int(source.shape[1] * beer.center[1] - 20) if int(source.shape[1] * beer.center[1] - 20) > 0 else 0
+        end_point_y = int(start_point_y + 40) if start_point_y + 40 < source.shape[0] else source.shape[0]
+        end_point_x = int(start_point_x + 40) if start_point_x + 40 < source.shape[1] else source.shape[1]
+
+        current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
+        beer.wand_here = color_check_presence(current_beer_area, WAND_COLOR, WAND_COLOR_OFFSET)
 
 
 def find_crop(source):

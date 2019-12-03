@@ -4,6 +4,11 @@ import random
 from src import game_algorithms
 from src import game_interface
 
+selection_music_playing = False
+gameplay_music_playing = False
+songs = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
+
+
 if __name__ == '__main__':
     # CAPTURE SETUP
     cap = cv2.VideoCapture(0)
@@ -17,14 +22,13 @@ if __name__ == '__main__':
     pygame.display.set_icon(icon)
 
     # Songs and music
-    songs = [""]
+
     # Select, Achievement, cursor
-    sounds = ["sound/cuteguisoundsset/Wav/Select.wav", "sound/cuteguisoundsset/Wav/Achievement.wav", "sound/cuteguisoundsset/Wav/Cursor.wav"]
+    sounds = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
+              "../sound/cuteguisoundsset/Wav/Cursor.wav"]
     sound_fx = []
     for sound in sounds:
         sound_fx.append(pygame.mixer.Sound(sound))
-    SONG_END = pygame.USEREVENT + 1
-    pygame.mixer.music.set_endevent(SONG_END)
 
     screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
     font = pygame.font.Font(game_interface.FONT_SANS_BOLD[0], game_interface.FONT_SANS_BOLD[1])
@@ -37,10 +41,12 @@ if __name__ == '__main__':
              game_interface.Mode("CUSTOM", [0.7, 0.9, 0.1, 0.4]),
              game_interface.Mode("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9])]
 
-    team_a = [game_interface.Player(game_interface.Player.team_colors[i]) for i in range(0, game_interface.Player.team_size)]
+    team_a = [game_interface.Player(game_interface.Player.team_colors[i]) for i in
+              range(0, game_interface.Player.team_size)]
     team_a[random.randint(0, len(team_a) - 1)].drinks = True
 
-    team_b = [game_interface.Player(game_interface.Player.team_colors[i]) for i in range(0, game_interface.Player.team_size)]
+    team_b = [game_interface.Player(game_interface.Player.team_colors[i]) for i in
+              range(0, game_interface.Player.team_size)]
     team_b[random.randint(0, len(team_b) - 1)].drinks = True
 
     beers_left = []
@@ -60,6 +66,12 @@ if __name__ == '__main__':
             game_algorithms.choose_mode(table_roi, modes)
             # -------------------------
 
+            if not selection_music_playing:
+                selection_music_playing = True
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load(songs[0])
+                pygame.mixer.music.play(-1)
+
             for mode in modes:
                 if mode.chosen:
                     mode.meter += 2
@@ -77,12 +89,34 @@ if __name__ == '__main__':
             game_interface.display_mode_selection(screen, font, modes)
 
         elif game_phase == "game_play":
-
+            if not gameplay_music_playing:
+                gameplay_music_playing = True
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load(songs[1])
+                pygame.mixer.music.play(-1)
             beers_left = []
             beers_right = []
 
             game_algorithms.inform_beers(table_roi, beers_left, beers_right)
             game_algorithms.check_for_balls(table_roi, beers_left, beers_right)
+
+            game_algorithms.check_for_wand(table_roi, beers_left, beers_right)
+            for beer in beers_left:
+                if beer.wand_here:
+                    beer.meter += 2
+                else:
+                    beer.meter = max(beer.meter - 10, 0)
+                if beer.meter >= 100:
+                    beer.highlighted = True
+
+            for beer in beers_right:
+                if beer.wand_here:
+                    beer.meter += 2
+                else:
+                    beer.meter = max(beer.meter - 10, 0)
+                if beer.meter >= 100:
+                    beer.highlighted = True
+
             # turns = algorithms.detectTurns()
             # -------------------------
 
@@ -126,28 +160,17 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
-            if event.type == SONG_END:
-                print("the song ended!")
-                game_interface.play_song()
-
 
         pygame.display.update()
 
         # cv2.imshow("table", table_roi)
         # cv2.waitKey(20)
 
-
     cap.release()
     cv2.destroyAllWindows()
-
-
 
 # TODO Live beer detection, make accurate, make not detect highlighted circles
 # TODO Live game mode choosing reliable, doesnt go crazy, detect only the wand or the finger
 # TODO Detect balls in the cups
 # TODO Classify liquids in the cups
 # TODO Detect turns
-
-
-
-
