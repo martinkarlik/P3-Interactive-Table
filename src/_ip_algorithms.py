@@ -56,7 +56,6 @@ class Blob:
         return perimeter / (2 * (np.sqrt(np.pi * self.area)))
 
 
-
 def match_template(source, template):
     return cv2.matchTemplate(source, template, cv2.TM_CCOEFF_NORMED)
 
@@ -171,8 +170,6 @@ def get_perspective_transform(source, destination):
 
 def warp_perspective(source, matrix, size):
     return cv2.warpPerspective(source, matrix, size)
-
-
 
 
 def edge_detection_sobel_hv(source):

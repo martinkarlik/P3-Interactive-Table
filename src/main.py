@@ -98,7 +98,12 @@ if __name__ == '__main__':
             beers_left = []
             beers_right = []
 
-            game_algorithms.extract_beers(table, tpl, beers_left, beers_right)
+            current_beers_left = []
+            current_beers_right = []
+
+            game_algorithms.extract_beers(table, tpl, current_beers_left, current_beers_right)
+
+            game_algorithms.inform_beers(table, beers_left, beers_right, current_beers_left, current_beers_right)
             game_algorithms.check_for_balls(table, beers_left, beers_right)
 
             game_algorithms.check_for_wand(table, beers_left, beers_right)
@@ -181,7 +186,6 @@ if __name__ == '__main__':
                         for player in team_a:
                             if player.drinks:
                                 beer.color = player.color
-
 
                     elif team_b[i].hit and not beer.balls[i]:
                         for j in range(1, len(team_a)):
