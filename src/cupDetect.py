@@ -18,7 +18,8 @@ import matplotlib.pyplot as plt
 # out.release()
 # cv2.destroyAllWindows()
 
-team_a = [1, 2, 3, 4]
+team_a = ["Hello", "Hejsa", "Howdy", "Hi"]
 
-team_a[1 if True else 2] = 0
+team_a.pop("Hejsa")
 
+print(team_a)

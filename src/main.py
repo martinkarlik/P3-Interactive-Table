@@ -30,16 +30,18 @@ if __name__ == '__main__':
     for sound in sounds:
         sound_fx.append(pygame.mixer.Sound(sound))
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(game_interface.FONT_SANS_BOLD[0], game_interface.FONT_SANS_BOLD[1])
     table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
 
+    tpl = cv2.imread("../images/testImages/beer.jpg", cv2.IMREAD_GRAYSCALE)
+
     # GAME LOGIC SETUP
-    game_phase = "game_mode"
-    modes = [game_interface.Mode("CASUAL", [0.3, 0.5, 0.1, 0.4]),
-             game_interface.Mode("COMPETITIVE", [0.3, 0.5, 0.6, 0.9]),
-             game_interface.Mode("CUSTOM", [0.7, 0.9, 0.1, 0.4]),
-             game_interface.Mode("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9])]
+    game_phase = "game_play"
+    modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4]),
+             game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9]),
+             game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4]),
+             game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9])]
 
     team_a = [game_interface.Player(game_interface.Player.team_colors[i]) for i in
               range(0, game_interface.Player.team_size)]
@@ -53,17 +55,18 @@ if __name__ == '__main__':
     beers_right = []
 
     _, frame = cap.read()
-    # cropped_dimensions = game_algorithms.find_crop(frame)
-    cropped_dimensions = [65, 378, 21, 620]
+    table_transform = game_algorithms.find_table_transform(frame, game_algorithms.TABLE_SHAPE)
+    table = game_algorithms.apply_transform(frame, table_transform, game_algorithms.TABLE_SHAPE)
 
     app_running = True
     while app_running and cap.isOpened():
 
         _, frame = cap.read()
-        table_roi = frame[cropped_dimensions[0]:cropped_dimensions[1], cropped_dimensions[2]:cropped_dimensions[3]]
+        table = game_algorithms.apply_transform(frame, table_transform, game_algorithms.TABLE_SHAPE)
+        # table = frame[65:378, 21:620]
 
         if game_phase == "game_mode":
-            game_algorithms.choose_mode(table_roi, modes)
+            game_algorithms.choose_option(table, modes)
             # -------------------------
 
             if not selection_music_playing:
@@ -74,7 +77,7 @@ if __name__ == '__main__':
 
             for mode in modes:
                 if mode.chosen:
-                    mode.meter += 2
+                    mode.meter = min(mode.meter + 2, 100)
                 else:
                     pygame.mixer.stop()
                     mode.meter = max(mode.meter - 6, 0)
@@ -97,8 +100,8 @@ if __name__ == '__main__':
             beers_left = []
             beers_right = []
 
-            game_algorithms.inform_beers(table_roi, beers_left, beers_right)
-            game_algorithms.check_for_balls(table_roi, beers_left, beers_right)
+            game_algorithms.extract_beers(table, tpl, beers_left, beers_right)
+            game_algorithms.check_for_balls(table, beers_left, beers_right)
 
             game_algorithms.check_for_wand(table_roi, beers_left, beers_right)
             for beer in beers_left:
@@ -118,6 +121,9 @@ if __name__ == '__main__':
                     beer.highlighted = True
 
             # turns = algorithms.detectTurns()
+
+
+
             # -------------------------
 
             for beer in beers_left:
@@ -125,6 +131,10 @@ if __name__ == '__main__':
                     if beer.balls[i] and not team_b[i].hit:
                         team_b[i].score += 1
                         team_b[i].hit = True
+                        for player in team_a:
+                            if player.drinks:
+                                beer.color = player.color
+
 
                     elif team_b[i].hit and not beer.balls[i]:
                         for j in range(1, len(team_a)):
@@ -172,5 +182,6 @@ if __name__ == '__main__':
 # TODO Live beer detection, make accurate, make not detect highlighted circles
 # TODO Live game mode choosing reliable, doesnt go crazy, detect only the wand or the finger
 # TODO Detect balls in the cups
+
 # TODO Classify liquids in the cups
 # TODO Detect turns

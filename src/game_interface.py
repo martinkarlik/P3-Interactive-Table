@@ -12,24 +12,25 @@ RED_DISPLAY_COLOR = 242, 81, 87
 BLUE_DISPLAY_COLOR = 50, 50, 200
 WHITE_DISPLAY_COLOR = 255, 255, 255
 
-PLAYERS_POS = [[0.1, 0.1], [0.9, 0.9]]
+TEAM_SIZE = 2
 
 
 class Player:
     # static fields... python is weird about it, you don't have to declare anything, it's just static
     # "static" = variable same for every object of this class, "field" = instance variable
 
-    team_size = 2
     team_colors = [RED_DISPLAY_COLOR, GREEN_DISPLAY_COLOR, BLUE_DISPLAY_COLOR]
+    team_names = ["Red", "Green", "Blue"]
 
-    def __init__(self, color):
+    def __init__(self, name, color):
+        self.name = name
         self.color = color
         self.score = 0
         self.drinks = False
         self.hit = False
 
 
-class Mode:
+class Button:
     def __init__(self, title, pos):
         self.title = title
         self.pos = pos
