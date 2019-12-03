@@ -1,6 +1,6 @@
 from src._ip_algorithms import *
 import cv2
-
+import math
 
 TABLE_SHAPE = (800, 400)
 
@@ -26,35 +26,51 @@ class Beer:
         self.balls = [False for i in range(0, 2)]
 
 
-def inform_beers(source, beers_left, beers_right):
+def extract_beers(source, template, beers_left, beers_right):
 
     gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
 
-    # (ret, thresh) = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    _, binary = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY_INV)
 
-    thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, \
-                                   cv2.THRESH_BINARY_INV, 11, 2)
+    match = match_template(binary, template)
+    # kernel = np.ones((10, 10), np.uint8)
+    # dst = cv2.filter2D(thresh, -1, tpl)
 
+    binary_centers = threshold(match, 0.5, 1)
 
-    # kernel = np.ones((4, 4), np.uint8)
+    cv2.imshow("sth", match)
+    cv2.imshow("bin", binary_centers)
+    cv2.waitKey(1)
+
+    blobs = extract_blobs(binary_centers)
+
+    for blob in blobs:
+        if blob.center[1] / source.shape[1] < 0.5:
+            beers_left.append(Beer(blob.center))
+        else:
+            beers_right.append(Beer(blob.center))
+
     # closing = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+    # cv2.imshow("closed", closing)
 
-    contours, _ = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-
-    for contour in contours:
-        area = cv2.contourArea(contour)
-        arclength = cv2.arcLength(contour, True)
-        circularity = 4 * np.pi * area / (arclength * arclength) if arclength != 0 else 0
-        if circularity > 0.83 and area > 1000:
-            M = cv2.moments(contour)
-            if M["m00"] != 0:
-                cX = int((M["m10"] / M["m00"]))
-                cY = int((M["m01"] / M["m00"]))
-                relative_center = [cY / source.shape[0], cX / source.shape[1]]
-                if relative_center[1] < 0.5:
-                    beers_left.append(Beer(relative_center))
-                else:
-                    beers_right.append(Beer(relative_center))
+    # contours, _ = cv2.findContours(binary.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    #
+    # for contour in contours:
+    #     area = cv2.contourArea(contour)
+    #     arclength = cv2.arcLength(contour, True)
+    #     circularity = 4 * np.pi * area / (arclength * arclength) if arclength != 0 else 0
+    #     if circularity > 0.75 and area > 1000:
+    #         M = cv2.moments(contour)
+    #         if M["m00"] != 0:
+    #             cX = int((M["m10"] / M["m00"]))
+    #             cY = int((M["m01"] / M["m00"]))
+    #             relative_center = [cY / source.shape[0], cX / source.shape[1]]
+    #             # print(cX, cY, area)
+    #
+    #             if relative_center[1] < 0.5:
+    #                 beers_left.append(Beer(relative_center))
+    #             else:
+    #                 beers_right.append(Beer(relative_center))
 
 
 # def inform_beers(beers, source, templates, target_color, table_side):
@@ -133,23 +149,6 @@ def check_for_balls(source, beers_left, beers_right):
             beer.balls[i] = color_check_presence(current_beer_area, BALL_COLORS[i], BALL_COLOR_OFFSET)
 
 
-def find_crop(source):
-    markers_binary = color_threshold(source, (331, 0.5, 0.5), (30, 0.4, 0.5))
-    kernel = np.ones((10, 10), np.uint8)
-    markers_binary = cv2.morphologyEx(markers_binary, cv2.MORPH_CLOSE, kernel)
-    markers = extract_blobs(markers_binary)
-    print(len(markers))
-
-    # right now taking only the two markers in two opposing the corners.. cropping based on that
-    # would not work if you angle the camera or the table
-    # need to look into camera calibration, extrinsic parameters
-    start_y = markers[0].bounding_box[0]
-    start_x = markers[0].bounding_box[1]
-    end_y = markers[1].bounding_box[2]
-    end_x = markers[1].bounding_box[3]
-    return [start_y, end_y, start_x, end_x]
-
-
 def find_table_transform(source, dims):
 
     def pop_closest(blobs, pos):
@@ -164,18 +163,17 @@ def find_table_transform(source, dims):
         return blobs.pop(closest_index)
 
     gray = bgr_to_gray(source)
+    binary_inv = 1 - threshold(gray, 0.1, 1)
 
-    binary_inv = 1 - threshold(gray, 0.03, 1)
-
+    cv2.imshow("binary", binary_inv)
     blobs = extract_blobs(binary_inv)
 
     markers = []
     for blob in blobs:
-        if blob.area in range(200, 500) and blob.get_compactness() > 0.8:
+        if blob.area in range(200, 800) and blob.compactness > 0.7:
             markers.append(blob)
 
-    # if len(markers) != 4:
-    #     return None
+    print(len(markers))
 
     ordered_markers = [pop_closest(markers, [0, 0]), pop_closest(markers, [0, source.shape[1]]),
                        pop_closest(markers, [source.shape[0], source.shape[1]]), pop_closest(markers, [source.shape[0], 0])]
@@ -184,16 +182,6 @@ def find_table_transform(source, dims):
                             (ordered_markers[1].bounding_box[3], ordered_markers[1].bounding_box[0]),
                             (ordered_markers[2].bounding_box[3], ordered_markers[2].bounding_box[2]),
                             (ordered_markers[3].bounding_box[1], ordered_markers[3].bounding_box[2])])
-
-    # src_points = np.float32([(ordered_markers[0].center[1], ordered_markers[0].center[0]),
-    #                          (ordered_markers[1].center[1], ordered_markers[1].center[0]),
-    #                          (ordered_markers[2].center[1], ordered_markers[2].center[0]),
-    #                          (ordered_markers[3].center[1], ordered_markers[3].center[0])])
-
-    # src_points = np.float32([(0, 0),
-    #                          (50, 0),
-    #                          (50, 50),
-    #                          (0, 50)])
 
     dst_points = np.float32([(0, 0),
                   (dims[0], 0),

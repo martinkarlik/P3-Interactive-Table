@@ -1,6 +1,5 @@
 import pygame
 import cv2
-import numpy as np
 import random
 from src import game_algorithms
 from src import game_interface
@@ -27,12 +26,14 @@ if __name__ == '__main__':
     SONG_END = pygame.USEREVENT + 1
     pygame.mixer.music.set_endevent(SONG_END)
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(game_interface.FONT_SANS_BOLD[0], game_interface.FONT_SANS_BOLD[1])
     table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
 
+    tpl = cv2.imread("../images/testImages/beer.jpg", cv2.IMREAD_GRAYSCALE)
+
     # GAME LOGIC SETUP
-    game_phase = "game_mode"
+    game_phase = "game_play"
     modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4]),
              game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9]),
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4]),
@@ -48,7 +49,8 @@ if __name__ == '__main__':
     beers_right = []
 
     _, frame = cap.read()
-    table_transform = game_algorithms.find_table_transform(frame.copy(), game_algorithms.TABLE_SHAPE)
+    table_transform = game_algorithms.find_table_transform(frame, game_algorithms.TABLE_SHAPE)
+    table = game_algorithms.apply_transform(frame, table_transform, game_algorithms.TABLE_SHAPE)
 
     app_running = True
     while app_running and cap.isOpened():
@@ -82,7 +84,7 @@ if __name__ == '__main__':
             beers_left = []
             beers_right = []
 
-            game_algorithms.inform_beers(table, beers_left, beers_right)
+            game_algorithms.extract_beers(table, tpl, beers_left, beers_right)
             game_algorithms.check_for_balls(table, beers_left, beers_right)
             # turns = algorithms.detect_turns()
             # -------------------------
@@ -134,7 +136,6 @@ if __name__ == '__main__':
             if event.type == SONG_END:
                 print("the song ended!")
                 game_interface.play_song()
-
 
         pygame.display.update()
 
