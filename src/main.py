@@ -4,10 +4,10 @@ import random
 from src import game_algorithms
 from src import game_interface
 
+# Songs
 selection_music_playing = False
 gameplay_music_playing = False
 songs = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
-
 
 if __name__ == '__main__':
     # CAPTURE SETUP
@@ -21,11 +21,9 @@ if __name__ == '__main__':
     icon = pygame.image.load("../images/cheers.png")
     pygame.display.set_icon(icon)
 
-    # Songs and music
-
     # Select, Achievement, cursor
     sounds = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
-              "../sound/cuteguisoundsset/Wav/Cursor.wav"]
+              "../sound/cuteguisoundsset/Wav/Cursor.wav", "../sound/hit_the_golden_cup_jingle.mp3"]
     sound_fx = []
     for sound in sounds:
         sound_fx.append(pygame.mixer.Sound(sound))
@@ -104,6 +102,7 @@ if __name__ == '__main__':
             game_algorithms.check_for_balls(table, beers_left, beers_right)
 
             game_algorithms.check_for_wand(table, beers_left, beers_right)
+            # region Golden cup
             for beer in beers_left:
                 if beer.wand_here:
                     beer.meter += 2
@@ -111,6 +110,7 @@ if __name__ == '__main__':
                     beer.meter = max(beer.meter - 10, 0)
                 if beer.meter >= 100:
                     beer.yellow = True
+                    sound_fx[3].play()
                 if beer.yellow:
                     beer.counter -= 1
                     if beer.counter <= 0:
@@ -124,6 +124,7 @@ if __name__ == '__main__':
                     beer.meter = max(beer.meter - 10, 0)
                 if beer.meter >= 100:
                     beer.yellow = True
+                    sound_fx[3].play()
                 if beer.yellow:
                     beer.counter -= 1
                     if beer.counter <= 0:
@@ -138,7 +139,8 @@ if __name__ == '__main__':
                         if j == i:
                             continue
                         else:
-                            distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(beers_left[i].center[1] - beers_left[j].center[1])
+                            distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(
+                                beers_left[i].center[1] - beers_left[j].center[1])
                             if distance < min_dist:
                                 min_dist = distance
                                 red_index = j
@@ -155,7 +157,8 @@ if __name__ == '__main__':
                         if j == i:
                             continue
                         else:
-                            distance = abs(beers_right[i].center[0] - beers_right[j].center[0]) + abs(beers_right[i].center[1] - beers_right[j].center[1])
+                            distance = abs(beers_right[i].center[0] - beers_right[j].center[0]) + abs(
+                                beers_right[i].center[1] - beers_right[j].center[1])
                             if distance < min_dist:
                                 min_dist = distance
                                 red_index = j
@@ -163,13 +166,13 @@ if __name__ == '__main__':
                     # This is extremely dumb, help me
                     if not beers_right[i].yellow:
                         beers_right[red_index].red = False
+            # endregion
 
             # turns = algorithms.detectTurns()
 
-
-
             # -------------------------
 
+            # region Ball detection
             for beer in beers_left:
                 for i in range(0, len(beer.balls)):
                     if beer.balls[i] and not team_b[i].hit:
@@ -197,6 +200,7 @@ if __name__ == '__main__':
                             if team_b[j].drinks:
                                 team_b[j].drinks = False
                                 team_b[j + 1 if j + 1 < len(team_b) else 0].drinks = True
+            # endregion
 
             # -------------------------
             game_interface.display_table_img(screen, table_img)
