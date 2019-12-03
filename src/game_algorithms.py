@@ -1,6 +1,7 @@
 from src._ip_algorithms import *
 import cv2
-import math
+
+MOVED_BEER_THRESHOLD = 0.05
 
 TABLE_SHAPE = (800, 400)
 
@@ -19,9 +20,12 @@ BALL_COLORS = [RED_COLOR, GREEN_COLOR, BLUE_COLOR]
 
 
 class Beer:
+
+    MAX_LIFETIME = 100
+
     def __init__(self, center):
         self.center = center
-        self.is_present = True
+        self.lifetime = 5
         self.highlighted = False
         self.balls = [False for i in range(0, 2)]
 
@@ -29,7 +33,6 @@ class Beer:
 def extract_beers(source, template, beers_left, beers_right):
 
     gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
-
     _, binary = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY_INV)
 
     match = match_template(binary, template)
@@ -73,58 +76,47 @@ def extract_beers(source, template, beers_left, beers_right):
     #                 beers_right.append(Beer(relative_center))
 
 
-# def inform_beers(beers, source, templates, target_color, table_side):
-#
-#     beers_binary = np.zeros([source.shape[0], source.shape[1]])
-#
-#     if templates:
-#         beers_likelihood_samples = []
-#         for template in templates:
-#             beers_likelihood_samples.append(match_template(source, template))
-#
-#         beers_binary_samples = []
-#         for sample in beers_likelihood_samples:
-#             beers_binary_samples.append(threshold(sample, 0.4, 1))
-#
-#         beers_binary = beers_binary_samples[0]
-#
-#         for i in range(1, len(beers_binary_samples)):
-#             temp = np.zeros([beers_binary.shape[0], beers_binary.shape[1]])
-#             temp[beers_binary == beers_binary_samples[i]] = 1
-#             beers_binary = temp
-#             # logical AND operation performed on every binary image received from every passed template
-#
-#     elif target_color:
-#         beers_binary = color_threshold(source, target_color[0], target_color[1])
-#         kernel = np.ones((10, 10), np.uint8)
-#         beers_binary = cv2.morphologyEx(beers_binary, cv2.MORPH_CLOSE, kernel)
-#
-#     blobs = extract_blobs(beers_binary)
-#
-#     for beer in beers:
-#         beer.is_present = False
-#
-#     for blob in blobs:
-#         if blob.is_beer:
-#             blob_relative_center = [blob.center[0] / source.shape[0], table_side * 0.6 + 0.4 * blob.center[1] / source.shape[1]]
-#             existing_beer_found = False
-#
-#             for beer in beers:
-#                 distance = abs(blob_relative_center[0] - beer.center[0]) + abs(blob_relative_center[1] - beer.center[1])
-#
-#                 if distance < MOVED_BEER_THRESHOLD:
-#                     beer.is_present = True
-#                     existing_beer_found = True
-#                     break
-#
-#             if not existing_beer_found:
-#                 beer_center = [blob.center[0] / source.shape[0], table_side * 0.6 + 0.4 * blob.center[1] / source.shape[1]]
-#                 beers.append(Beer(beer_center))
-#
-#     beers_len_init = len(beers)
-#     for i in range(0, beers_len_init):
-#         if not beers[beers_len_init - i - 1].is_present:
-#             beers.pop(beers_len_init - i - 1)
+def inform_beers(beers_left, beers_right, current_beers_left, current_beers_right):
+
+    for current_beer in current_beers_left:
+        existing_beer_found = False
+        for beer in beers_left:
+            distance = abs(beer.center[0] - current_beer.center[0]) + abs(beer.center[1] - current_beer.center[1])
+            if distance < MOVED_BEER_THRESHOLD:
+                beer.is_present = True
+                existing_beer_found = True
+                break
+
+        if not existing_beer_found:
+            beers_left.append(Beer(current_beer.center))
+
+    for beer in beers_left:
+        if beer.is_present or any(beer.balls):
+            beer.lifetime = min(beer.MAX_LIFETIME, beer.lifetime + 1)
+        else:
+            beer.lifetime -= 1
+
+    beers_len_init = len(beers_left)
+    for i in range(0, beers_len_init):
+        if beers_left[beers_len_init - i - 1].lifetime <= 0:
+            beers_left.pop(beers_len_init - i - 1)
+
+
+    for current_beer in current_beers_right:
+        existing_beer_found = False
+        for beer in beers_right:
+            distance = abs(beer.center[0] - current_beer.center[0]) + abs(beer.center[1] - current_beer.center[1])
+            if distance < MOVED_BEER_THRESHOLD:
+                beer.is_present = True
+                existing_beer_found = True
+                break
+
+        if not existing_beer_found:
+            beers_right.append(Beer(current_beer.center))
+
+
+
+
 def check_for_balls(source, beers_left, beers_right):
     for beer in beers_left:
 
