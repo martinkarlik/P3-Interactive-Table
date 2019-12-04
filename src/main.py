@@ -15,6 +15,7 @@ SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset
 
 # I just wanted to make all the constant things as constants, I dint delete anythin dont worry
 
+
 if __name__ == '__main__':
     # CAPTURE SETUP
     cap = cv2.VideoCapture(0)
@@ -177,9 +178,6 @@ if __name__ == '__main__':
                     if not beers_right[i].yellow:
                         beers_right[red_index].red = False
             # endregion
-
-
-            # -------------------------
 
             # region Ball detection
             for beer in beers_left:

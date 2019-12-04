@@ -4,19 +4,22 @@ MOVED_BEER_THRESHOLD = 0.05
 
 TABLE_SHAPE = (800, 400)
 
-GREEN_COLOR = (120, 0.7, 0.5)
-RED_COLOR = (350, 0.9, 0.5)
-BLUE_COLOR = (350, 0.9, 0.5)
+GREEN_COLOR_HSI = (120, 0.7, 0.5)
+RED_COLOR_HSI = (350, 0.9, 0.5)
+BLUE_COLOR_HSI = (350, 0.9, 0.5)
+WAND_COLOR_HSI = (216, 0.6, 0.5)
 
-WAND_COLOR = (216, 0.6, 0.5)
-FINGER_COLOR = (37, 0.9, 0.5)
+GREEN_COLOR_BGR = [14, 94, 1]
+RED_COLOR_BGR = [20, 9, 165]
+BLUE_COLOR_BGR = [110, 58, 21]
+WAND_COLOR_BGR = [110, 58, 21]
 
-BALL_COLOR_OFFSET = (10, 0.3, 0.4)
-WAND_COLOR_OFFSET = (20, 0.2, 0.3)
+BALL_COLOR_OFFSET_HSI = (10, 0.3, 0.4)
+WAND_COLOR_OFFSET_HSI = (20, 0.2, 0.3)
 
 # Different liquid:
-BEER_COLOR = (50, 0.6, 0.6)
-BEER_OFFSET = (10, 0.3, 0.5)
+BEER_COLOR_HSI = (50, 0.6, 0.6)
+BEER_OFFSET_HSI = (10, 0.3, 0.5)
 
 DARK_BROWN_ALE = (40, 0.37, 0.115)
 DARK_BROWN_ALE_OFFSET = (10, 0.11, 0.025)
@@ -30,7 +33,7 @@ COLA_OFFSET = (10, 0.45, 0.06)
 
 class Beer:
 
-    ball_colors = [RED_COLOR, GREEN_COLOR, BLUE_COLOR]
+    ball_colors = [RED_COLOR_HSI, GREEN_COLOR_HSI, BLUE_COLOR_HSI]
     balls_num = 2
     max_lifetime = 100
 
@@ -126,7 +129,6 @@ def inform_beers(beers_left, beers_right, current_beers_left, current_beers_righ
 def check_for_objects(source, beers_left, beers_right):
     for beer in beers_left:
 
-
         start_point_y = int(source.shape[0] * beer.center[0] - 20) if int(source.shape[0] * beer.center[0] - 20) > 0 else 0
         start_point_x = int(source.shape[1] * beer.center[1] - 20) if int(source.shape[1] * beer.center[1] - 20) > 0 else 0
         end_point_y = int(start_point_y + 40) if start_point_y + 40 < source.shape[0] else source.shape[0]
@@ -134,10 +136,8 @@ def check_for_objects(source, beers_left, beers_right):
 
         current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
         for i in range(0, Beer.balls_num):
-            beer.balls[i] = color_check_presence(current_beer_area, Beer.ball_colors[i], BALL_COLOR_OFFSET)
-        beer.wand_here = color_check_presence(current_beer_area, WAND_COLOR, WAND_COLOR_OFFSET)
-        if beer.wand_here:
-            print("yess")
+            beer.balls[i] = color_check_presence(current_beer_area, Beer.ball_colors[i], BALL_COLOR_OFFSET_HSI)
+        beer.wand_here = color_check_presence(current_beer_area, WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
 
 
     for beer in beers_right:
@@ -149,8 +149,8 @@ def check_for_objects(source, beers_left, beers_right):
 
         current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
         for i in range(0, Beer.balls_num):
-            beer.balls[i] = color_check_presence(current_beer_area, Beer.ball_colors[i], BALL_COLOR_OFFSET)
-        beer.wand_here = color_check_presence(current_beer_area, WAND_COLOR, WAND_COLOR_OFFSET)
+            beer.balls[i] = color_check_presence(current_beer_area, Beer.ball_colors[i], BALL_COLOR_OFFSET_HSI)
+        beer.wand_here = color_check_presence(current_beer_area, WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
         if beer.wand_here:
             print("yess")
 
@@ -170,11 +170,16 @@ def find_table_transform(source, dims):
 
     gray = bgr_to_gray(source)
     binary_inv = 1 - threshold(gray, 0.1, 1)
+
+    cv2.imshow("bin", binary_inv)
+    cv2.waitKey(1)
     blobs = extract_blobs(binary_inv)
+
+
 
     markers = []
     for blob in blobs:
-        if blob.area in range(200, 600) and blob.compactness > 0.75:
+        if blob.area in range(200, 800) and blob.compactness > 0.80:
             markers.append(blob)
 
     if len(markers) != 4:
@@ -208,7 +213,7 @@ def get_roi(source, pos):
 def choose_option(source, options):
     for option in options:
         if option.working:
-            option.chosen = color_check_presence(get_roi(source, option.pos), WAND_COLOR, WAND_COLOR_OFFSET)
+            option.chosen = color_check_presence(get_roi(source, option.pos), WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
 
 
 def detect_liquid(source, beers_left, beers_right):

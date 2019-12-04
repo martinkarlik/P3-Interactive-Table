@@ -118,13 +118,18 @@ def color_check_presence(source, target_color, target_offset):
     return color_match.any()
 
 
-def color_check_presence(source, target_color):
-    lower_color = target_color - 15
-    upper_color = target_color + 15
-    mask = cv2.inRange(source, lower_color, upper_color)
-    mask_rgb = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
-    color_match = source & mask_rgb
-    return color_match.any()
+# def color_check_presence(source, target_color):
+#     lower_color = tuple(np.subtract(target_color, 15))
+#     upper_color = tuple(np.add(target_color, 15))
+#
+#     lower_color = (10, 10, 10)
+#     upper_color = (20, 20, 20)
+#
+#     mask = cv2.inRange(source, lower_color, upper_color)
+#     mask_rgb = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
+#     color_match = source & mask_rgb
+#     return color_match.any()
+
 
 def bgr_to_gray(source):
     blue = source[:, :, 0] / 255
@@ -133,7 +138,6 @@ def bgr_to_gray(source):
 
     result = (blue + green + red) / 3
     return result
-
 
 
 def bgr_to_hsi(source):
