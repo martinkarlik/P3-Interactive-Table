@@ -97,7 +97,6 @@ def display_mode_selection(target, font, tape, modes):
             target.blit(tape, (x, y))
 
 
-
 def display_score(target, team_a, team_b):
     return
     # for i in range(0, len(scores)):

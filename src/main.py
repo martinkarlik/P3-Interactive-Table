@@ -18,7 +18,7 @@ SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset
 if __name__ == '__main__':
     # CAPTURE SETUP
     cap = cv2.VideoCapture(0)
-    cap.set(cv2.CAP_PROP_EXPOSURE, -5)
+    cap.set(cv2.CAP_PROP_EXPOSURE, -3)
 
     # PYGAME SETUP
     pygame.init()
@@ -110,10 +110,9 @@ if __name__ == '__main__':
 
             game_algorithms.extract_beers(table, tpl, current_beers_left, current_beers_right)
 
-            game_algorithms.inform_beers(beers_left, beers_right, current_beers_left, current_beers_right)
+            # game_algorithms.inform_beers(beers_left, beers_right, current_beers_left, current_beers_right)
 
-            game_algorithms.check_for_balls(table, beers_left, beers_right)
-            game_algorithms.check_for_wand(table, beers_left, beers_right)
+            game_algorithms.check_for_objects(table, current_beers_left, current_beers_right)
 
             # -------------------------
 
@@ -209,7 +208,7 @@ if __name__ == '__main__':
             # -------------------------
             game_interface.display_table_img(screen, table_img)
             # game_interface.display_score(screen, team_a, team_b)
-            game_interface.display_beers(screen, beers_left, beers_right)
+            game_interface.display_beers(screen, current_beers_left, current_beers_right)
 
         elif game_phase == "game_over":
             # if there are more screens, different IP stuff on each
