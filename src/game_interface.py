@@ -1,18 +1,15 @@
 import pygame
 
-DISPLAY_WIDTH = 960
-DISPLAY_HEIGHT = 540
+DISPLAY_WIDTH = 1920
+DISPLAY_HEIGHT = 1080
 
-FONT_SANS_BOLD = ['freesansbold.ttf', 20]
-TABLE_IMG1 = "../images/tableImages/choose_game_mode.png"
-TABLE_IMG2 = "../images/tableImages/PlaceCups.png"
 
 GREEN_DISPLAY_COLOR = 7, 129, 30
 RED_DISPLAY_COLOR = 242, 81, 87
 BLUE_DISPLAY_COLOR = 50, 50, 200
 WHITE_DISPLAY_COLOR = 255, 255, 255
 
-TEAM_SIZE = 2
+
 
 
 class Player:
@@ -21,7 +18,7 @@ class Player:
 
     team_colors = [RED_DISPLAY_COLOR, GREEN_DISPLAY_COLOR, BLUE_DISPLAY_COLOR]
     team_names = ["Red", "Green", "Blue"]
-    team_size = 2
+    players_num = 2
 
     def __init__(self, name, color):
         self.name = name
@@ -32,11 +29,13 @@ class Player:
 
 
 class Button:
-    def __init__(self, title, pos):
+    def __init__(self, title, pos, working):
         self.title = title
         self.pos = pos
         self.meter = 0
         self.chosen = False
+        self.working = working
+
 
 
 def display_text(font, score, player):
@@ -61,9 +60,8 @@ def display_table_img(target, img):
     target.blit(img, (0, 0))
 
 
-def display_mode_selection(target, font, modes):
+def display_mode_selection(target, font, tape, modes):
     for i in range(0, len(modes)):
-
         x = int(modes[i].pos[2] * DISPLAY_WIDTH)
         y = int(modes[i].pos[0] * DISPLAY_HEIGHT)
         w = int(modes[i].pos[3] * DISPLAY_WIDTH) - int(modes[i].pos[2] * DISPLAY_WIDTH)
@@ -75,24 +73,28 @@ def display_mode_selection(target, font, modes):
         text_rect = text.get_rect(center=(x + w / 2, y + h / 2))
         target.blit(text, text_rect)
 
-        fire_len = int(modes[i].meter / 100 * (2 * w + 2 * h))
-        line_num = 0
+        if modes[i].working:
+            fire_len = int(modes[i].meter / 100 * (2 * w + 2 * h))
+            line_num = 0
 
-        while fire_len > 0:
-            start_x = x if line_num < 2 else x + w
-            start_y = y if line_num == 0 or line_num == 3 else y + h
-            end_x = x if line_num == 0 or line_num == 3 else x + w
-            end_y = y if line_num >= 2 else y + h
+            while fire_len > 0:
+                start_x = x if line_num < 2 else x + w
+                start_y = y if line_num == 0 or line_num == 3 else y + h
+                end_x = x if line_num == 0 or line_num == 3 else x + w
+                end_y = y if line_num >= 2 else y + h
 
-            fire_end_x = start_x + min(fire_len, abs(end_x - start_x)) if line_num < 2 else start_x - min(fire_len, abs(
-                end_x - start_x))
-            fire_end_y = start_y + min(fire_len, abs(end_y - start_y)) if line_num < 2 else start_y - min(fire_len, abs(
-                end_y - start_y))
+                fire_end_x = start_x + min(fire_len, abs(end_x - start_x)) if line_num < 2 else start_x - min(fire_len, abs(
+                    end_x - start_x))
+                fire_end_y = start_y + min(fire_len, abs(end_y - start_y)) if line_num < 2 else start_y - min(fire_len, abs(
+                    end_y - start_y))
 
-            pygame.draw.line(target, (255, 255, 255), (start_x, start_y), (fire_end_x, fire_end_y), 5)
+                pygame.draw.line(target, (255, 255, 255), (start_x, start_y), (fire_end_x, fire_end_y), 5)
 
-            fire_len = fire_len - h if line_num % 2 == 0 else fire_len - w
-            line_num += 1
+                fire_len = fire_len - h if line_num % 2 == 0 else fire_len - w
+                line_num += 1
+        else:
+            tape = pygame.transform.scale(tape, (int(0.3 * DISPLAY_WIDTH), int(0.2 * DISPLAY_HEIGHT)))
+            target.blit(tape, (x, y))
 
 
 def display_score(target, team_a, team_b):
@@ -104,6 +106,7 @@ def display_score(target, team_a, team_b):
 
 
 def display_beers(target, beers_left, beers_right):
+
     for beer in beers_left:
         if beer.balls[0] or beer.balls[1]:
             pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
