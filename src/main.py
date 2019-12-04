@@ -26,8 +26,6 @@ if __name__ == '__main__':
     icon = pygame.image.load(ICON)
     pygame.display.set_icon(icon)
 
-    # Songs and music
-
     # Select, Achievement, cursor
 
     sound_fx = []
@@ -124,6 +122,7 @@ if __name__ == '__main__':
                     beer.meter = max(beer.meter - 10, 0)
                 if beer.meter >= 100:
                     beer.yellow = True
+                    sound_fx[3].play()
                 if beer.yellow:
                     beer.counter -= 1
                     if beer.counter <= 0:
@@ -137,6 +136,7 @@ if __name__ == '__main__':
                     beer.meter = max(beer.meter - 10, 0)
                 if beer.meter >= 100:
                     beer.yellow = True
+                    sound_fx[3].play()
                 if beer.yellow:
                     beer.counter -= 1
                     if beer.counter <= 0:
@@ -167,7 +167,8 @@ if __name__ == '__main__':
                         if j == i:
                             continue
                         else:
-                            distance = abs(beers_right[i].center[0] - beers_right[j].center[0]) + abs(beers_right[i].center[1] - beers_right[j].center[1])
+                            distance = abs(beers_right[i].center[0] - beers_right[j].center[0]) + abs(
+                                beers_right[i].center[1] - beers_right[j].center[1])
                             if distance < min_dist:
                                 min_dist = distance
                                 red_index = j
@@ -175,9 +176,12 @@ if __name__ == '__main__':
                     # This is extremely dumb, help me
                     if not beers_right[i].yellow:
                         beers_right[red_index].red = False
+            # endregion
 
 
+            # -------------------------
 
+            # region Ball detection
             for beer in beers_left:
                 for i in range(0, len(beer.balls)):
                     if beer.balls[i] and not team_b[i].hit:
@@ -204,6 +208,7 @@ if __name__ == '__main__':
                             if team_b[j].drinks:
                                 team_b[j].drinks = False
                                 team_b[j + 1 if j + 1 < len(team_b) else 0].drinks = True
+            # endregion
 
             # -------------------------
             game_interface.display_table_img(screen, table_img)
@@ -226,4 +231,3 @@ if __name__ == '__main__':
 
     cap.release()
     cv2.destroyAllWindows()
-
