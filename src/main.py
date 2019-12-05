@@ -40,7 +40,7 @@ if __name__ == '__main__':
                      cv2.IMREAD_GRAYSCALE)  # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
 
     # GAME LOGIC SETUP
-    game_phase = "game_play"
+    game_phase = "game_mode"
     modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4], True),
              game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
@@ -120,89 +120,91 @@ if __name__ == '__main__':
                     beer[i].yellow = True
                     print('This: ', beer[i], ' should be yellow')
 
-            # region Wand Detection/ Golden cup
-            for beer in beers_left:
-                if beer.wand_here:
-                    print("Some beer has a wand in it!")
-                    beer.meter += 2
-                    print(beer.meter)
-                else:
-                    beer.meter = max(beer.meter - 10, 0)
-                if beer.meter >= 100:
-                    beer.yellow = True
-                    sound_fx[3].play()
-                if beer.yellow:
-                    # Display text Gold cup text: for when the right side has highlighted a cup in the left side. So
-                    # a cup on the left is highlighted
-                    golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-                    rotated_text = pygame.transform.rotate(golden_cup_txt, 90)
-                    screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) + 50,
-                                                                            game_interface.DISPLAY_HEIGHT / 2)))
-                    beer.counter -= 1
-                    if beer.counter <= 0:
-                        beer.yellow = False
-                        beer.counter = 1200
+            #if modes[0].chosen:
+            if modes[0] == True:
+                # region Wand Detection/ Golden cup
+                for beer in beers_left:
+                    if beer.wand_here:
+                        print("Some beer has a wand in it!")
+                        beer.meter += 2
+                        print(beer.meter)
+                    else:
+                        beer.meter = max(beer.meter - 10, 0)
+                    if beer.meter >= 100:
+                        beer.yellow = True
+                        sound_fx[3].play()
+                    if beer.yellow:
+                        # Display text Gold cup text: for when the right side has highlighted a cup in the left side. So
+                        # a cup on the left is highlighted
+                        golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
+                        rotated_text = pygame.transform.rotate(golden_cup_txt, 90)
+                        screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) + 50,
+                                                                                game_interface.DISPLAY_HEIGHT / 2)))
+                        beer.counter -= 1
+                        if beer.counter <= 0:
+                            beer.yellow = False
+                            beer.counter = 1200
 
-            for beer in beers_right:
-                if beer.wand_here:
-                    beer.meter += 2
-                else:
-                    beer.meter = max(beer.meter - 10, 0)
-                if beer.meter >= 100:
-                    beer.yellow = True
-                    sound_fx[3].play()
-                if beer.yellow:
-                    # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
-                    # a cup on the right is highlighted
-                    golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-                    rotated_text = pygame.transform.rotate(golden_cup_txt, -90)
-                    screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) - 50,
-                                                                            game_interface.DISPLAY_HEIGHT / 2)))
-                    beer.counter -= 1
-                    if beer.counter <= 0:
-                        beer.yellow = False
-                        beer.counter = 1200
+                for beer in beers_right:
+                    if beer.wand_here:
+                        beer.meter += 2
+                    else:
+                        beer.meter = max(beer.meter - 10, 0)
+                    if beer.meter >= 100:
+                        beer.yellow = True
+                        sound_fx[3].play()
+                    if beer.yellow:
+                        # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
+                        # a cup on the right is highlighted
+                        golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
+                        rotated_text = pygame.transform.rotate(golden_cup_txt, -90)
+                        screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) - 50,
+                                                                                game_interface.DISPLAY_HEIGHT / 2)))
+                        beer.counter -= 1
+                        if beer.counter <= 0:
+                            beer.yellow = False
+                            beer.counter = 1200
 
-            for i in range(0, len(beers_left)):
-                if beers_left[i].yellow:
-                    # Display golden text
-                    pygame.transform.rotate(screen, 90)
-                    golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-                    screen.blit(golden_cup_txt, game_interface.DISPLAY_WIDTH / 2, game_interface.DISPLAY_HEIGHT / 2)
-                    pygame.transform.rotate(screen, 0)
-                    min_dist = 1000
-                    red_index = 0
-                    for j in range(0, len(beers_left)):
-                        if j != i:
-                            distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(
-                                beers_left[i].center[1] - beers_left[j].center[1])
-                            if distance < min_dist:
-                                min_dist = distance
-                                red_index = j
+                for i in range(0, len(beers_left)):
+                    if beers_left[i].yellow:
+                        # Display golden text
+                        pygame.transform.rotate(screen, 90)
+                        golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
+                        screen.blit(golden_cup_txt, game_interface.DISPLAY_WIDTH / 2, game_interface.DISPLAY_HEIGHT / 2)
+                        pygame.transform.rotate(screen, 0)
+                        min_dist = 1000
+                        red_index = 0
+                        for j in range(0, len(beers_left)):
+                            if j != i:
+                                distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(
+                                    beers_left[i].center[1] - beers_left[j].center[1])
+                                if distance < min_dist:
+                                    min_dist = distance
+                                    red_index = j
 
-                    beers_left[red_index].red = True
-                    # This is extremely dumb, help me
-                    if not beers_left[i].yellow:
-                        beers_left[red_index].red = False
+                        beers_left[red_index].red = True
+                        # This is extremely dumb, help me
+                        if not beers_left[i].yellow:
+                            beers_left[red_index].red = False
 
-            for i in range(0, len(beers_right)):
-                if beers_right[i].yellow:
-                    min_dist = 1000
-                    red_index = 0
-                    for j in range(0, len(beers_right)):
-                        if j == i:
-                            continue
-                        else:
-                            distance = abs(beers_right[i].center[0] - beers_right[j].center[0]) + abs(
-                                beers_right[i].center[1] - beers_right[j].center[1])
-                            if distance < min_dist:
-                                min_dist = distance
-                                red_index = j
-                    beers_right[red_index].red = True
-                    # This is extremely dumb, help me
-                    if not beers_right[i].yellow:
-                        beers_right[red_index].red = False
-            # endregion
+                for i in range(0, len(beers_right)):
+                    if beers_right[i].yellow:
+                        min_dist = 1000
+                        red_index = 0
+                        for j in range(0, len(beers_right)):
+                            if j == i:
+                                continue
+                            else:
+                                distance = abs(beers_right[i].center[0] - beers_right[j].center[0]) + abs(
+                                    beers_right[i].center[1] - beers_right[j].center[1])
+                                if distance < min_dist:
+                                    min_dist = distance
+                                    red_index = j
+                        beers_right[red_index].red = True
+                        # This is extremely dumb, help me
+                        if not beers_right[i].yellow:
+                            beers_right[red_index].red = False
+                # endregion
 
             # region Ball detection
             for beer in beers_left:
@@ -238,6 +240,7 @@ if __name__ == '__main__':
             game_interface.display_beers(screen, beers_left, beers_right)
 
         elif game_phase == "game_over":
+            MAGICWAND = TRUE
             game_interface.display_table_img(screen, table_img)
             game_algorithms.choose_option(table, gameoverbutton)
 

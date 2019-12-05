@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/fonts/MyriadProRegular.ttf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FONTS/MyriadPro-Light.otf" beforeDir="false" afterPath="$PROJECT_DIR$/fonts/MyriadPro-Light.otf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test files/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test files/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/game_interface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +50,18 @@
       <recent name="C:\Users\karli\PycharmProjects\p3\images" />
       <recent name="C:\Users\karli\PycharmProjects\p3\recordings" />
     </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="RunManager" selected="Python.main (1)">
     <configuration name="CameraFuckery" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -169,18 +178,6 @@
         <item itemvalue="Python.hand_detect" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -354,7 +351,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574346549175</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Cup Detection now spits out the x and y coordinates">
+      <created>1575549232664</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1575549232664</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
