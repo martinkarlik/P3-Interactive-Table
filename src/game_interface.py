@@ -3,11 +3,11 @@ import pygame
 #DISPLAY_WIDTH = 960
 #DISPLAY_HEIGHT = 540
 
-DISPLAY_WIDTH = 1920
-DISPLAY_HEIGHT = 1080
+DISPLAY_WIDTH = 960
+DISPLAY_HEIGHT = 540
 
-FONT_MYRIAD_PRO_REGULAR = ['C:/Users/Alexander/Desktop/MyriadProRegular.ttf', 60]
-FONT_MYRIAD_PRO_REGULAR2 = ['C:/Users/Alexander/Desktop/MyriadProRegular.ttf', 97]
+# FONT_MYRIAD_PRO_REGULAR = ['C:/Users/Alexander/Desktop/MyriadProRegular.ttf', 60]
+# FONT_MYRIAD_PRO_REGULAR2 = ['C:/Users/Alexander/Desktop/MyriadProRegular.ttf', 97]
 #FONT_SANS_BOLD = ['freesansbold.ttf', 40]
 TABLE_IMG1 = "../images/tableImages/choose_game_mode.png"
 TABLE_IMG2 = "../images/tableImages/PlaceCups.png"
@@ -19,10 +19,6 @@ GREEN_DISPLAY_COLOR = 7, 129, 30
 RED_DISPLAY_COLOR = 242, 81, 87
 BLUE_DISPLAY_COLOR = 50, 50, 200
 WHITE_DISPLAY_COLOR = 255, 255, 255
-
-
-
-
 
 class Player:
     # static fields... python is weird about it, you don't have to declare anything, it's just static

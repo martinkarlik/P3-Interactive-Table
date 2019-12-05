@@ -35,7 +35,7 @@ if __name__ == '__main__':
     pygame.mixer.music.set_endevent(SONG_END)
 
     screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
-    font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
+    font2 = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
     table_img = game_interface.set_table_img(TABLE_IMAGES[1])
     tape_img = pygame.image.load(TAPE_IMAGE)
     tpl = cv2.imread("../images/testImages/beer.jpg",
@@ -47,10 +47,10 @@ if __name__ == '__main__':
              game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
              game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9], False)]
-    gameoverbutton = [game_interface.Button("PLAY AGAIN", [0.3, 0.5, 0.5, 0.75])]
 
-    team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
-              range(0, game_interface.Player.players_num)]
+    gameoverbutton = [game_interface.Button("PLAY AGAIN", [0.3, 0.5, 0.5, 0.75], False)]
+
+    team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in range(0, game_interface.Player.players_num)]
     team_a[random.randint(0, len(team_a) - 1)].drinks = True
 
     team_b = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
@@ -111,11 +111,7 @@ if __name__ == '__main__':
             current_beers_right = []
 
             game_algorithms.extract_beers(table, tpl, current_beers_left, current_beers_right)
-
             game_algorithms.inform_beers(beers_left, beers_right, current_beers_left, current_beers_right)
-
-            print(len(beers_left), len(beers_right))
-
             game_algorithms.check_for_objects(table, beers_left, beers_right)
 
             # -------------------------
