@@ -184,9 +184,9 @@ if __name__ == '__main__':
                     if red_index > -1:
                         beers_left[red_index].red = True
                     # This is extremely dumb, help me
-            if not beers_left[i].yellow:
-                beers_left[red_index].red = False
-                beers_left[i].red = False
+                    if not beers_left[i].yellow:
+                        beers_left[red_index].red = False
+                        beers_left[i].red = False
 
             for i in range(0, len(beers_right)):
                 if beers_right[i].yellow:
