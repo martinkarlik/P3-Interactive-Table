@@ -48,7 +48,7 @@ class Beer:
 
         self.wand_here = False
         self.meter = 0
-        self.counter = 1200
+        self.counter = 100
         self.yellow = False
         self.red = False
         self.balls = [False for i in range(0, self.balls_num)]
@@ -143,7 +143,7 @@ def find_table_transform(source, dims):
         return blobs.pop(closest_index)
 
     gray = bgr_to_gray(source)
-    binary_inv = 1 - threshold(gray, 0.1, 1)
+    binary_inv = 1 - threshold(gray, 0.12, 1)
 
     cv2.imshow("bin markers", binary_inv)
     cv2.imshow("source", source)
@@ -152,7 +152,7 @@ def find_table_transform(source, dims):
 
     markers = []
     for blob in blobs:
-        if blob.area in range(700, 1000) and blob.compactness > 0.7:
+        if blob.area in range(700, 1200) and blob.compactness > 0.7:
             print("Blob: ", blob.area, blob.compactness)
             markers.append(blob)
 
