@@ -4,15 +4,6 @@ MOVED_BEER_THRESHOLD = 0.05
 
 TABLE_SHAPE = (800, 400)
 
-red = 175, 27, 43
-hsv = 354, 85, 69
-
-green = 49, 150, 28
-hsv = 110, 81, 59
-
-wand = 10, 51, 156
-hsv = 223, 94, 61
-
 
 GREEN_COLOR_HSI = (115, 0.75, 0.5)
 
@@ -71,12 +62,14 @@ def extract_beers(source, template, beers_left, beers_right):
     match = match_template(binary, template)
     binary_centers = threshold(match, 0.35, 1)
 
-    # cv2.imshow("binary", binary)
-    # cv2.imshow("sth", match)
-    # cv2.imshow("bin centers", binary_centers)
-    # cv2.waitKey(1)
+    full_binary_centers = np.zeros([source.shape[0], source.shape[1]])
+    tpl_radius = int(template.shape[0] / 2)
+    full_binary_centers[tpl_radius:source.shape[0] - tpl_radius + 1, tpl_radius:source.shape[1] - tpl_radius + 1] = binary_centers
 
-    blobs = extract_blobs(binary_centers)
+    cv2.imshow("bin", binary_centers)
+    cv2.imshow("full bin", full_binary_centers)
+
+    blobs = extract_blobs(full_binary_centers)
 
     for blob in blobs:
         relative_center = [blob.center[0] / source.shape[0], blob.center[1] / source.shape[1]]
@@ -123,10 +116,12 @@ def check_for_objects(source, beers_left, beers_right):
     for side in sides:
         for beer in side:
 
-            start_point_y = int(source.shape[0] * beer.center[0] - 20) if int(source.shape[0] * beer.center[0] - 20) > 0 else 0
-            start_point_x = int(source.shape[1] * beer.center[1] - 20) if int(source.shape[1] * beer.center[1] - 20) > 0 else 0
-            end_point_y = int(start_point_y + 40) if start_point_y + 40 < source.shape[0] else source.shape[0]
-            end_point_x = int(start_point_x + 40) if start_point_x + 40 < source.shape[1] else source.shape[1]
+            start_point_y = int(source.shape[0] * beer.center[0] - 25) if int(source.shape[0] * beer.center[0] - 25) > 0 else 0
+            start_point_x = int(source.shape[1] * beer.center[1] - 25) if int(source.shape[1] * beer.center[1] - 25) > 0 else 0
+            end_point_y = int(start_point_y + 50) if start_point_y + 50 < source.shape[0] else source.shape[0]
+            end_point_x = int(start_point_x + 50) if start_point_x + 50 < source.shape[1] else source.shape[1]
+
+            # source[start_point_y:end_point_y, start_point_x:end_point_x] = 0
 
             current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
             for i in range(0, Beer.balls_num):
@@ -156,7 +151,7 @@ def find_table_transform(source, dims):
 
     markers = []
     for blob in blobs:
-        if blob.area in range(200, 800) and blob.compactness > 0.8:
+        if blob.area in range(300, 800) and blob.compactness > 0.8:
             markers.append(blob)
 
     if len(markers) != 4:
