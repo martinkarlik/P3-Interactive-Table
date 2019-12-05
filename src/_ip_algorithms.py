@@ -56,7 +56,6 @@ class Blob:
         return perimeter / (2 * (np.sqrt(np.pi * self.area)))
 
 
-
 def match_template(source, template):
     return cv2.matchTemplate(source, template, cv2.TM_CCOEFF_NORMED)
 
@@ -119,6 +118,30 @@ def color_check_presence(source, target_color, target_offset):
     return color_match.any()
 
 
+def color_check_presence(source, target_color):
+    hsv = cv2.cvtColor(source, cv2.COLOR_BGR2HSV)
+
+    # Input BGR color to get HSV
+    colorBGR = np.uint8([[[target_color(0), target_color(1), target_color(2)]]])
+    hsv_color = cv2.cvtColor(colorBGR, cv2.COLOR_BGR2HSV)
+
+    hue = hsv_color[0, 0, 0]
+    # print(hue)
+
+    lowerValue = np.array([hue, 80, 0])
+    upperValue = np.array([hue, 255, 255])
+
+    lowerValue[0] -= 15
+    # print("Lower", lowerValue)
+    upperValue[0] += 15
+    # print("Upper: ", upperValue)
+
+    blurred_frame = cv2.GaussianBlur(hsv, (5, 5), cv2.BORDER_DEFAULT)
+    mask = cv2.inRange(blurred_frame, lowerValue, upperValue)
+    resBGR = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
+    color_match = source & resBGR
+    return color_match.any()
+
 def bgr_to_gray(source):
     blue = source[:, :, 0] / 255
     green = source[:, :, 1] / 255
@@ -126,7 +149,6 @@ def bgr_to_gray(source):
 
     result = (blue + green + red) / 3
     return result
-
 
 
 def bgr_to_hsi(source):
@@ -171,8 +193,6 @@ def get_perspective_transform(source, destination):
 
 def warp_perspective(source, matrix, size):
     return cv2.warpPerspective(source, matrix, size)
-
-
 
 
 def edge_detection_sobel_hv(source):
