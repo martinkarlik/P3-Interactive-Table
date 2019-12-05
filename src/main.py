@@ -28,6 +28,7 @@ if __name__ == '__main__':
 
     # Select, Achievement, cursor
 
+
     sound_fx = []
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
@@ -136,7 +137,9 @@ if __name__ == '__main__':
                     beer.counter -= 1
                     if beer.counter <= 0:
                         beer.yellow = False
-                        beer.counter = 600
+                        beer.counter = 200
+
+                    print("One side: ", beer.counter)
 
             for beer in beers_right:
                 if beer.wand_here:
@@ -154,20 +157,22 @@ if __name__ == '__main__':
                     rotated_text = pygame.transform.rotate(golden_cup_txt, -90)
                     screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) - 50,
                                                                             game_interface.DISPLAY_HEIGHT / 2)))
+
+                    print(beer.counter)
                     beer.counter -= 1
                     if beer.counter <= 0:
                         beer.yellow = False
-                        beer.counter = 600
+                        beer.counter = 100
 
             for i in range(0, len(beers_left)):
                 if beers_left[i].yellow:
                     # Display golden text
                     pygame.transform.rotate(screen, 90)
                     golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-                    screen.blit(golden_cup_txt, game_interface.DISPLAY_WIDTH / 2, game_interface.DISPLAY_HEIGHT / 2)
+                    screen.blit(golden_cup_txt, 0, 0)
                     pygame.transform.rotate(screen, 0)
                     min_dist = 1000
-                    red_index = 0
+                    red_index = -1
                     for j in range(0, len(beers_left)):
                         if j != i:
                             distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(
@@ -176,15 +181,17 @@ if __name__ == '__main__':
                                 min_dist = distance
                                 red_index = j
 
-                    beers_left[red_index].red = True
+                    if red_index > -1:
+                        beers_left[red_index].red = True
                     # This is extremely dumb, help me
-                    if not beers_left[i].yellow:
-                        beers_left[red_index].red = False
+            if not beers_left[i].yellow:
+                beers_left[red_index].red = False
+                beers_left[i].red = False
 
             for i in range(0, len(beers_right)):
                 if beers_right[i].yellow:
                     min_dist = 1000
-                    red_index = 0
+                    red_index = -1
                     for j in range(0, len(beers_right)):
                         if j == i:
                             continue
@@ -194,10 +201,12 @@ if __name__ == '__main__':
                             if distance < min_dist:
                                 min_dist = distance
                                 red_index = j
-                    beers_right[red_index].red = True
+                    if red_index > -1:
+                        beers_right[red_index].red = True
                     # This is extremely dumb, help me
                     if not beers_right[i].yellow:
                         beers_right[red_index].red = False
+                        beers_right[i].red = False
             # endregion
 
             # region Ball detection
