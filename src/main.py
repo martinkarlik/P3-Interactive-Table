@@ -125,6 +125,7 @@ if __name__ == '__main__':
                 if beer.wand_here:
                     print("Some beer has a wand in it!")
                     beer.meter += 2
+                    print(beer.meter)
                 else:
                     beer.meter = max(beer.meter - 10, 0)
                 if beer.meter >= 100:

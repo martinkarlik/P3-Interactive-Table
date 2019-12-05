@@ -148,10 +148,7 @@ def display_beers(target, beers_left, beers_right):
 
     for beer in beers_left:
 
-        if beer.wand_here:
-            pygame.draw.circle(target, (0, 0, 255),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
-        elif beer.balls[0] or beer.balls[1]:
+        if beer.balls[0] or beer.balls[1]:
             pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
                                (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
         elif beer.yellow:
