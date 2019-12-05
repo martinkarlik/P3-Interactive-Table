@@ -4,6 +4,8 @@ import random
 from src import game_algorithms
 from src import game_interface
 
+random_cup = False
+
 FONT_SANS_BOLD = ['freesansbold.ttf', 40]
 TAPE_IMAGE = "../images/tableImages/tape.png"
 ICON = "../images/cheers.png"
@@ -11,14 +13,14 @@ TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableIm
 
 SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
 SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
-              "../sound/cuteguisoundsset/Wav/Cursor.wav"]
+          "../sound/cuteguisoundsset/Wav/Cursor.wav"]
 
 # I just wanted to make all the constant things as constants, I dint delete anythin dont worry
 
 
 if __name__ == '__main__':
     # CAPTURE SETUP
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
 
     # PYGAME SETUP
@@ -33,14 +35,15 @@ if __name__ == '__main__':
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
     table_img = game_interface.set_table_img(TABLE_IMAGES[0])
     tape_img = pygame.image.load(TAPE_IMAGE)
-    tpl = cv2.imread("../images/testImages/beer.jpg", cv2.IMREAD_GRAYSCALE) # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
+    tpl = cv2.imread("../images/testImages/beer.jpg",
+                     cv2.IMREAD_GRAYSCALE)  # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
 
     # GAME LOGIC SETUP
-    game_phase = "mode_selection"
+    game_phase = "game_play"
     modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4], True),
              game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
@@ -75,11 +78,11 @@ if __name__ == '__main__':
         if game_phase == "mode_selection":
             game_algorithms.choose_option(table, modes)
 
-            if not selection_music_playing:
-                selection_music_playing = True
-                pygame.mixer.music.stop()
-                pygame.mixer.music.load(SONGS[0])
-                pygame.mixer.music.play(-1)
+            # if not selection_music_playing:
+            #     selection_music_playing = True
+            #     pygame.mixer.music.stop()
+            #     pygame.mixer.music.load(SONGS[0])
+            #     pygame.mixer.music.play(-1)
 
             for mode in modes:
                 if mode.chosen:
@@ -98,11 +101,11 @@ if __name__ == '__main__':
 
         elif game_phase == "game_play":
 
-            if not gameplay_music_playing:
-                gameplay_music_playing = True
-                pygame.mixer.music.stop()
-                pygame.mixer.music.load(SONGS[1])
-                pygame.mixer.music.play(-1)
+            # if not gameplay_music_playing:
+            #     gameplay_music_playing = True
+            #     pygame.mixer.music.stop()
+            #     pygame.mixer.music.load(SONGS[1])
+            #     pygame.mixer.music.play(-1)
 
             current_beers_left = []
             current_beers_right = []
@@ -114,7 +117,14 @@ if __name__ == '__main__':
             game_algorithms.check_for_objects(table, current_beers_left, current_beers_right)
 
             # -------------------------
+            if random_cup:
+                random_cup = False
+                for beer in beers_left:
+                    i = random.randrange(0, len(beers_left))
+                    beer[i].yellow = True
+                    print('This: ', beer[i], ' should be yellow')
 
+            # region Wand Detection/ Golden cup
             for beer in beers_left:
                 if beer.wand_here:
                     print("Some beer has a wand in it!")
@@ -161,13 +171,14 @@ if __name__ == '__main__':
                     # Display golden text
                     pygame.transform.rotate(screen, 90)
                     golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-                    screen.blit(golden_cup_txt, game_interface.DISPLAY_WIDTH/2, game_interface.DISPLAY_HEIGHT/2)
+                    screen.blit(golden_cup_txt, game_interface.DISPLAY_WIDTH / 2, game_interface.DISPLAY_HEIGHT / 2)
                     pygame.transform.rotate(screen, 0)
                     min_dist = 1000
                     red_index = 0
                     for j in range(0, len(beers_left)):
                         if j != i:
-                            distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(beers_left[i].center[1] - beers_left[j].center[1])
+                            distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(
+                                beers_left[i].center[1] - beers_left[j].center[1])
                             if distance < min_dist:
                                 min_dist = distance
                                 red_index = j
@@ -224,7 +235,6 @@ if __name__ == '__main__':
                                 team_b[j].drinks = False
                                 team_b[j + 1 if j + 1 < len(team_b) else 0].drinks = True
             # endregion
-
             # -------------------------
             game_interface.display_table_img(screen, table_img)
             # game_interface.display_score(screen, team_a, team_b)
@@ -241,6 +251,9 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
+                if event.key == pygame.K_SPACE:
+                    random_cup = True
+                    print('You have pressed spacebar')
 
         pygame.display.update()
 

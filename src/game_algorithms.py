@@ -169,7 +169,7 @@ def find_table_transform(source, dims):
         return blobs.pop(closest_index)
 
     gray = bgr_to_gray(source)
-    binary_inv = 1 - threshold(gray, 0.1, 1)
+    binary_inv = 1 - threshold(gray, 0.2, 1)
 
     cv2.imshow("bin", binary_inv)
     cv2.waitKey(1)
@@ -181,7 +181,7 @@ def find_table_transform(source, dims):
     for blob in blobs:
         if blob.area in range(200, 800) and blob.compactness > 0.80:
             markers.append(blob)
-
+    print(len(markers))
     if len(markers) != 4:
         print("Could not find the correct markers.")
         return np.zeros([3, 3])
