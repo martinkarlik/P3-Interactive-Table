@@ -12,7 +12,8 @@ ICON = "../images/cheers.png"
 TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableImages/PlaceCups.png"]
 
 SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
-
+SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
+          "../sound/cuteguisoundsset/Wav/Cursor.wav", "../sound/hit_the_golden_cup_jingle.wav"]
 
 if __name__ == '__main__':
     # CAPTURE SETUP
@@ -27,8 +28,6 @@ if __name__ == '__main__':
 
     # Select, Achievement, cursor
 
-    SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
-              "../sound/hit_the_golden_cup_jingle.mp3", "../sound/cuteguisoundsset/Wav/Cursor.wav"]
 
     sound_fx = []
     for sound in SOUNDS:
@@ -78,11 +77,11 @@ if __name__ == '__main__':
         if game_phase == "mode_selection":
             game_algorithms.choose_option(table, modes)
 
-            # if not selection_music_playing:
-            #     selection_music_playing = True
-            #     pygame.mixer.music.stop()
-            #     pygame.mixer.music.load(SONGS[0])
-            #     pygame.mixer.music.play(-1)
+            if not selection_music_playing:
+                selection_music_playing = True
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load(SONGS[0])
+                pygame.mixer.music.play(-1)
 
             for mode in modes:
                 if mode.chosen:
@@ -101,11 +100,11 @@ if __name__ == '__main__':
 
         elif game_phase == "game_play":
 
-            # if not gameplay_music_playing:
-            #     gameplay_music_playing = True
-            #     pygame.mixer.music.stop()
-            #     pygame.mixer.music.load(SONGS[1])
-            #     pygame.mixer.music.play(-1)
+            if not gameplay_music_playing:
+                gameplay_music_playing = True
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load(SONGS[1])
+                pygame.mixer.music.play(-1)
 
             current_beers_left = []
             current_beers_right = []
