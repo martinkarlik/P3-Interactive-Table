@@ -33,7 +33,7 @@ if __name__ == '__main__':
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
     font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
     table_img = game_interface.set_table_img(TABLE_IMAGES[0])
     tape_img = pygame.image.load(TAPE_IMAGE)
@@ -125,6 +125,12 @@ if __name__ == '__main__':
                     beer.yellow = True
                     sound_fx[3].play()
                 if beer.yellow:
+                    # Display text Gold cup text: for when the right side has highlighted a cup in the left side. So
+                    # a cup on the left is highlighted
+                    golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
+                    rotated_text = pygame.transform.rotate(golden_cup_txt, 90)
+                    screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) + 50,
+                                                                            game_interface.DISPLAY_HEIGHT / 2)))
                     beer.counter -= 1
                     if beer.counter <= 0:
                         beer.yellow = False
@@ -139,6 +145,12 @@ if __name__ == '__main__':
                     beer.yellow = True
                     sound_fx[3].play()
                 if beer.yellow:
+                    # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
+                    # a cup on the right is highlighted
+                    golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
+                    rotated_text = pygame.transform.rotate(golden_cup_txt, -90)
+                    screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) - 50,
+                                                                            game_interface.DISPLAY_HEIGHT / 2)))
                     beer.counter -= 1
                     if beer.counter <= 0:
                         beer.yellow = False
@@ -146,6 +158,11 @@ if __name__ == '__main__':
 
             for i in range(0, len(beers_left)):
                 if beers_left[i].yellow:
+                    # Display golden text
+                    pygame.transform.rotate(screen, 90)
+                    golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
+                    screen.blit(golden_cup_txt, game_interface.DISPLAY_WIDTH/2, game_interface.DISPLAY_HEIGHT/2)
+                    pygame.transform.rotate(screen, 0)
                     min_dist = 1000
                     red_index = 0
                     for j in range(0, len(beers_left)):
