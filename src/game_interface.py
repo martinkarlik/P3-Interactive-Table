@@ -1,10 +1,10 @@
 import pygame
 
-#DISPLAY_WIDTH = 960
-#DISPLAY_HEIGHT = 540
-
-DISPLAY_WIDTH = 960
-DISPLAY_HEIGHT = 540
+# DISPLAY_WIDTH = 960
+# DISPLAY_HEIGHT = 540
+# #
+DISPLAY_WIDTH = 1920
+DISPLAY_HEIGHT = 1080
 
 FONT_MYRIAD_PRO_REGULAR = ['../fonts/MyriadProRegular.ttf', 60]
 FONT_MYRIAD_PRO_REGULAR2 = ['../fonts/MyriadProRegular.ttf', 97]
@@ -159,37 +159,29 @@ def display_beers(target, beers_left, beers_right, colour):
                                (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
         elif beer.yellow:
             pygame.draw.circle(target, (0, 255, 255,),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
         elif beer.red:
             pygame.draw.circle(target, (255, 0, 0,),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
         else:
             pygame.draw.circle(target, (255, 255, 255),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
 
     for beer in beers_right:
 
-        if beer.wand_here:
-            pygame.draw.circle(target, (0, 0, 255),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
-        elif beer.balls[0] or beer.balls[1]:
+        if beer.balls[0] or beer.balls[1]:
             pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
         elif beer.yellow:
             pygame.draw.circle(target, (0, 255, 255,),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
         elif beer.red:
             pygame.draw.circle(target, (255, 0, 0,),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
         else:
             pygame.draw.circle(target, (255, 255, 255),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
 
-
-def play_song(audio):
-    pygame.mixer.music.load(audio)
-    pygame.mixer.music.queue(audio)
-    pygame.mixer.music.play()
 
 def game_over(target, team_a, team_b, font2, font):
     team1 = ("1", (0.3, 0.5, 0.1, 0.4))
