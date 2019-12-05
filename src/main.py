@@ -4,7 +4,7 @@ import random
 from src import game_algorithms
 from src import game_interface
 
-FONT_SANS_BOLD = ['freesansbold.ttf', 40]
+FONT_SANS_BOLD = ['freesansbold.ttf', 20]
 TAPE_IMAGE = "../images/tableImages/tape.png"
 ICON = "../images/cheers.png"
 TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableImages/PlaceCups.png"]
@@ -12,9 +12,6 @@ TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableIm
 SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
 SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
               "../sound/cuteguisoundsset/Wav/Cursor.wav"]
-
-# I just wanted to make all the constant things as constants, I dint delete anythin dont worry
-
 
 if __name__ == '__main__':
     # CAPTURE SETUP
@@ -33,14 +30,14 @@ if __name__ == '__main__':
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
-    table_img = game_interface.set_table_img(TABLE_IMAGES[0])
+    table_img = game_interface.set_table_img(TABLE_IMAGES[1])
     tape_img = pygame.image.load(TAPE_IMAGE)
     tpl = cv2.imread("../images/testImages/beer.jpg", cv2.IMREAD_GRAYSCALE) # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
 
     # GAME LOGIC SETUP
-    game_phase = "mode_selection"
+    game_phase = "game_play"
     modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4], True),
              game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
@@ -109,9 +106,11 @@ if __name__ == '__main__':
 
             game_algorithms.extract_beers(table, tpl, current_beers_left, current_beers_right)
 
-            # game_algorithms.inform_beers(beers_left, beers_right, current_beers_left, current_beers_right)
+            game_algorithms.inform_beers(beers_left, beers_right, current_beers_left, current_beers_right)
 
-            game_algorithms.check_for_objects(table, current_beers_left, current_beers_right)
+            print(len(beers_left), len(beers_right))
+
+            game_algorithms.check_for_objects(table, beers_left, beers_right)
 
             # -------------------------
 
@@ -228,7 +227,7 @@ if __name__ == '__main__':
             # -------------------------
             game_interface.display_table_img(screen, table_img)
             # game_interface.display_score(screen, team_a, team_b)
-            game_interface.display_beers(screen, current_beers_left, current_beers_right)
+            game_interface.display_beers(screen, beers_left, beers_right)
 
         elif game_phase == "game_over":
             # if there are more screens, different IP stuff on each
