@@ -113,24 +113,19 @@ if __name__ == '__main__':
             game_algorithms.check_for_objects(table, beers_left, beers_right)
 
             # -------------------------
-            if random_cup:
-                random_cup = False
-                for beer in beers_left:
-                    i = random.randrange(0, len(beers_left))
-                    beer[i].yellow = True
-                    print('This: ', beer[i], ' should be yellow')
 
             # region Wand Detection/ Golden cup
             for beer in beers_left:
                 if beer.wand_here:
                     print("Some beer has a wand in it!")
-                    beer.meter += 2
+                    beer.meter += 10
                     print(beer.meter)
                 else:
                     beer.meter = max(beer.meter - 10, 0)
+                if beer.meter == 100:
+                    sound_fx[3].play()
                 if beer.meter >= 100:
                     beer.yellow = True
-                    sound_fx[3].play()
                 if beer.yellow:
                     # Display text Gold cup text: for when the right side has highlighted a cup in the left side. So
                     # a cup on the left is highlighted
@@ -141,16 +136,17 @@ if __name__ == '__main__':
                     beer.counter -= 1
                     if beer.counter <= 0:
                         beer.yellow = False
-                        beer.counter = 1200
+                        beer.counter = 600
 
             for beer in beers_right:
                 if beer.wand_here:
-                    beer.meter += 2
+                    beer.meter += 10
                 else:
                     beer.meter = max(beer.meter - 10, 0)
+                    if beer.meter == 100:
+                        sound_fx[3].play()
                 if beer.meter >= 100:
                     beer.yellow = True
-                    sound_fx[3].play()
                 if beer.yellow:
                     # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
                     # a cup on the right is highlighted
@@ -161,7 +157,7 @@ if __name__ == '__main__':
                     beer.counter -= 1
                     if beer.counter <= 0:
                         beer.yellow = False
-                        beer.counter = 1200
+                        beer.counter = 600
 
             for i in range(0, len(beers_left)):
                 if beers_left[i].yellow:
