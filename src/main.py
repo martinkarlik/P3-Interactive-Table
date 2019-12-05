@@ -116,12 +116,13 @@ if __name__ == '__main__':
             game_algorithms.inform_beers(beers_left, beers_right, current_beers_left, current_beers_right)
             game_algorithms.check_for_objects(table, beers_left, beers_right)
 
-            # -------------------------
+            # startRegion
 
             for beer in beers_left:
                 if beer.wand_here:
                     print("Some beer has a wand in it!")
                     beer.meter += 2
+                    print(beer.meter)
                 else:
                     beer.meter = max(beer.meter - 10, 0)
                 if beer.meter >= 100:
