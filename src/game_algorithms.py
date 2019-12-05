@@ -144,6 +144,8 @@ def find_table_transform(source, dims):
 
     gray = bgr_to_gray(source)
     binary_inv = 1 - threshold(gray, 0.2, 1)
+    # gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
+    # _, binary_inv = cv2.threshold(gray, 60, 255, cv2.THRESH_BINARY_INV - cv2.THRESH_OTSU)
 
     cv2.imshow("bin", binary_inv)
     cv2.waitKey(1)
@@ -151,7 +153,7 @@ def find_table_transform(source, dims):
 
     markers = []
     for blob in blobs:
-        if blob.area in range(300, 800) and blob.compactness > 0.8:
+        if blob.area in range(300, 1200) and blob.compactness > 0.7:
             markers.append(blob)
     print(len(markers))
     if len(markers) != 4:
