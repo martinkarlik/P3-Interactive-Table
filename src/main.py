@@ -169,7 +169,7 @@ if __name__ == '__main__':
                     # Display golden text
                     pygame.transform.rotate(screen, 90)
                     golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-                    screen.blit(golden_cup_txt, game_interface.DISPLAY_WIDTH / 2, game_interface.DISPLAY_HEIGHT / 2)
+                    screen.blit(golden_cup_txt, 0, 0)
                     pygame.transform.rotate(screen, 0)
                     min_dist = 1000
                     red_index = 0

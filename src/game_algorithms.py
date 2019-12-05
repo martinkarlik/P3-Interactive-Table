@@ -105,8 +105,8 @@ def inform_beers(beers_left, beers_right, current_beers_left, current_beers_righ
 
         beers_len_init = len(sides[i])
         for j in range(0, beers_len_init):
-            if beers_left[beers_len_init - j - 1].lifetime <= 0:
-                beers_left.pop(beers_len_init - j - 1)
+            if sides[i][beers_len_init - j - 1].lifetime <= 0:
+                sides[i].pop(beers_len_init - j - 1)
 
 
 def check_for_objects(source, beers_left, beers_right):
@@ -143,16 +143,19 @@ def find_table_transform(source, dims):
         return blobs.pop(closest_index)
 
     gray = bgr_to_gray(source)
-    binary_inv = 1 - threshold(gray, 0.2, 1)
+    binary_inv = 1 - threshold(gray, 0.1, 1)
 
-    cv2.imshow("bin", binary_inv)
+    cv2.imshow("bin markers", binary_inv)
+    cv2.imshow("source", source)
     cv2.waitKey(1)
     blobs = extract_blobs(binary_inv)
 
     markers = []
     for blob in blobs:
-        if blob.area in range(300, 800) and blob.compactness > 0.8:
+        if blob.area in range(700, 1000) and blob.compactness > 0.7:
+            print("Blob: ", blob.area, blob.compactness)
             markers.append(blob)
+
     print(len(markers))
     if len(markers) != 4:
         print("Could not find the correct markers. Instead found ", len(markers), " markers.")
