@@ -49,12 +49,12 @@ if __name__ == '__main__':
     tpl = cv2.imread("../images/testImages/beer.jpg", cv2.IMREAD_GRAYSCALE) # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
 
     # GAME LOGIC SETUP
-    game_phase = "game_play"
-    modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4]),
-             game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9]),
-             game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4]),
-             game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9])]
-    gameoverbutton = [game_interface.Button("PLAY AGAIN", [0.3, 0.5, 0.5, 0.75])]
+    game_phase = "game_over"
+    modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4], True),
+             game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
+             game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4],True),
+             game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9], True)]
+    gameoverbutton = [game_interface.Button("PLAY AGAIN", [0.3, 0.5, 0.5, 0.75], True)]
 
     team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in range(0, game_interface.TEAM_SIZE)]
     team_a[random.randint(0, len(team_a) - 1)].drinks = True

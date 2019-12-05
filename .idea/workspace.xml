@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="Cup Detection now spits out the x and y coordinates">
-      <change afterPath="$PROJECT_DIR$/FONTS/MyriadPro-Light.otf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/tableImages/digital_design.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/tableImages/gameover_screen.png" afterDir="false" />
+    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/fonts/MyriadProRegular.ttf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game_algorithms.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/game_algorithms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FONTS/MyriadPro-Light.otf" beforeDir="false" afterPath="$PROJECT_DIR$/fonts/MyriadPro-Light.otf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test files/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test files/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/game_interface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test files/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,22 +30,23 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Images/tableImages" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/fonts" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Alexander\Documents\GitHub\p3\fonts" />
+      <recent name="C:\Users\Alexander\Documents\GitHub\p3\Images\tableImages" />
+      <recent name="C:\Users\Alexander\Documents\GitHub\p3\FONTS" />
+      <recent name="C:\Users\karli\PycharmProjects\p3" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Alexander\Documents\GitHub\p3\Test files" />
       <recent name="C:\Users\Victor\PycharmProjects\p3\Test files" />
       <recent name="C:\Users\karli\PycharmProjects\p3" />
       <recent name="C:\Users\karli\PycharmProjects\p3\images" />
       <recent name="C:\Users\karli\PycharmProjects\p3\recordings" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Alexander\Documents\GitHub\p3\Images\tableImages" />
-      <recent name="C:\Users\Alexander\Documents\GitHub\p3\FONTS" />
-      <recent name="C:\Users\karli\PycharmProjects\p3" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -150,7 +149,6 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.new_hand_detect" />
         <item itemvalue="Python.CameraFuckery" />
         <item itemvalue="Python.hand_detect (1)" />
         <item itemvalue="Python.hand_detect" />

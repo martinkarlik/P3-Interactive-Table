@@ -6,8 +6,8 @@ import pygame
 DISPLAY_WIDTH = 1920
 DISPLAY_HEIGHT = 1080
 
-FONT_MYRIAD_PRO_REGULAR = ['C:/Users/Alexander/Desktop/MyriadProRegular.ttf', 60]
-FONT_MYRIAD_PRO_REGULAR2 = ['C:/Users/Alexander/Desktop/MyriadProRegular.ttf', 97]
+FONT_MYRIAD_PRO_REGULAR = ['../fonts/MyriadProRegular.ttf', 60]
+FONT_MYRIAD_PRO_REGULAR2 = ['../fonts/MyriadProRegular.ttf', 97]
 #FONT_SANS_BOLD = ['freesansbold.ttf', 40]
 TABLE_IMG1 = "../images/tableImages/choose_game_mode.png"
 TABLE_IMG2 = "../images/tableImages/PlaceCups.png"
@@ -21,7 +21,7 @@ BLUE_DISPLAY_COLOR = 50, 50, 200
 WHITE_DISPLAY_COLOR = 255, 255, 255
 
 
-
+TEAM_SIZE = 2
 
 
 class Player:
@@ -194,7 +194,7 @@ def game_over(target, team_a, team_b, font2, font):
     scoreB2 = str(team_b[1].score)
 
 
-    #     target.blit(pygame.transform.rotate(display_text(scores[i], i % 2), -90, (x, y))
+
     textA1 = font.render(scoreA1, True, WHITE_DISPLAY_COLOR)
     text_rectA1 = textA1.get_rect(center=(DISPLAY_WIDTH/15, DISPLAY_HEIGHT/6))
     target.blit(pygame.transform.rotate(textA1, -90), text_rectA1)
