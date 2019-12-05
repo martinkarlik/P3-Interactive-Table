@@ -113,12 +113,6 @@ if __name__ == '__main__':
             game_algorithms.check_for_objects(table, beers_left, beers_right)
 
             # -------------------------
-            if random_cup:
-                random_cup = False
-                for beer in beers_left:
-                    i = random.randrange(0, len(beers_left))
-                    beer[i].yellow = True
-                    print('This: ', beer[i], ' should be yellow')
 
             #if modes[0].chosen:
             if modes[0] == True:
