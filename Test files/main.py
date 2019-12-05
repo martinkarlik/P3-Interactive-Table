@@ -29,6 +29,15 @@ if __name__ == '__main__':
     sound_fx = []
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
+    SONG_END = pygame.USEREVENT + 1
+    pygame.mixer.music.set_endevent(SONG_END)
+
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    #font = pygame.font.Font(game_interface.FONT_SANS_BOLD[0], game_interface.FONT_SANS_BOLD[1])
+    font = pygame.font.Font(game_interface.FONT_MYRIAD_PRO_REGULAR[0], game_interface.FONT_MYRIAD_PRO_REGULAR[1])
+    font2 = pygame.font.Font(game_interface.FONT_MYRIAD_PRO_REGULAR2[0], game_interface.FONT_MYRIAD_PRO_REGULAR2[1])
+    table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
+    table_img2 = game_interface.set_table_img(game_interface.TABLE_IMG3)
 
     screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
@@ -38,13 +47,13 @@ if __name__ == '__main__':
 
     # GAME LOGIC SETUP
     game_phase = "game_play"
-    modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4], True),
-             game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
-             game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
-             game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9], False)]
+    modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4]),
+             game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9]),
+             game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4]),
+             game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9])]
+    gameoverbutton = [game_interface.Button("PLAY AGAIN", [0.3, 0.5, 0.5, 0.75])]
 
-    team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
-              range(0, game_interface.Player.players_num)]
+    team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in range(0, game_interface.TEAM_SIZE)]
     team_a[random.randint(0, len(team_a) - 1)].drinks = True
 
     team_b = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
@@ -230,8 +239,23 @@ if __name__ == '__main__':
             game_interface.display_beers(screen, beers_left, beers_right)
 
         elif game_phase == "game_over":
-            # if there are more screens, different IP stuff on each
-            pass
+            game_interface.display_table_img(screen, table_img2)
+            game_algorithms.choose_option(table, gameoverbutton)
+
+            for gameobutton in gameoverbutton:
+                if gameobutton.chosen:
+                    gameobutton.meter = min(gameobutton.meter + 2, 100)
+                else:
+                    pygame.mixer.stop()
+                    gameobutton.meter = max(gameobutton.meter - 6, 0)
+
+                if gameobutton.meter >= 100:
+                    #sound_fx[0].play()
+                    game_phase = "game_mode"
+                    table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
+
+            game_interface.game_over(screen, team_a, team_b, font2, font)
+            game_interface.gamebutton(screen, font, gameoverbutton)
 
         # KEYBOARD INPUT
         for event in pygame.event.get():
