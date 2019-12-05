@@ -14,6 +14,8 @@ TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableIm
 SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
 SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
           "../sound/cuteguisoundsset/Wav/Cursor.wav", "../sound/hit_the_golden_cup_jingle.wav"]
+whosTurn = (0,0,0)
+
 
 if __name__ == '__main__':
     # CAPTURE SETUP
@@ -208,7 +210,7 @@ if __name__ == '__main__':
                         team_b[i].hit = True
                         for player in team_a:
                             if player.drinks:
-                                beer.color = player.color
+                                whosTurn = player.color
 
                     elif team_b[i].hit and not beer.balls[i]:
                         for j in range(1, len(team_a)):
@@ -231,7 +233,7 @@ if __name__ == '__main__':
             # -------------------------
             game_interface.display_table_img(screen, table_img)
             # game_interface.display_score(screen, team_a, team_b)
-            game_interface.display_beers(screen, beers_left, beers_right)
+            game_interface.display_beers(screen, beers_left, beers_right, whosTurn)
 
         elif game_phase == "game_over":
             MAGICWAND = TRUE
