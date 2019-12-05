@@ -494,3 +494,4 @@ def choose_option(source, modes):
     for i in range(0, len(modes)):
         modes[i].chosen = color_check_presence(get_roi(source, modes[i].pos), WAND_COLOR, WAND_COLOR_OFFSET)
 
+
