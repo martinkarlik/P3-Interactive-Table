@@ -4,6 +4,8 @@ import random
 from src import game_algorithms
 from src import game_interface
 
+random_cup = False
+
 FONT_SANS_BOLD = ['freesansbold.ttf', 40]
 TAPE_IMAGE = "../images/tableImages/tape.png"
 ICON = "../images/cheers.png"
@@ -11,10 +13,7 @@ TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableIm
 
 SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
 SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
-              "../sound/cuteguisoundsset/Wav/Cursor.wav"]
-
-# I just wanted to make all the constant things as constants, I dint delete anythin dont worry
-
+          "../sound/cuteguisoundsset/Wav/Cursor.wav", "../sound/hit_the_golden_cup_jingle.wav"]
 
 if __name__ == '__main__':
     # CAPTURE SETUP
@@ -32,31 +31,24 @@ if __name__ == '__main__':
     sound_fx = []
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
-    SONG_END = pygame.USEREVENT + 1
-    pygame.mixer.music.set_endevent(SONG_END)
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
-    #font = pygame.font.Font(game_interface.FONT_SANS_BOLD[0], game_interface.FONT_SANS_BOLD[1])
-    font = pygame.font.Font(game_interface.FONT_MYRIAD_PRO_REGULAR[0], game_interface.FONT_MYRIAD_PRO_REGULAR[1])
-    font2 = pygame.font.Font(game_interface.FONT_MYRIAD_PRO_REGULAR2[0], game_interface.FONT_MYRIAD_PRO_REGULAR2[1])
-    table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
-    table_img2 = game_interface.set_table_img(game_interface.TABLE_IMG3)
-
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
-    table_img = game_interface.set_table_img(TABLE_IMAGES[0])
+    table_img = game_interface.set_table_img(TABLE_IMAGES[1])
     tape_img = pygame.image.load(TAPE_IMAGE)
-    tpl = cv2.imread("../images/testImages/beer.jpg", cv2.IMREAD_GRAYSCALE) # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
+    tpl = cv2.imread("../images/testImages/beer.jpg",
+                     cv2.IMREAD_GRAYSCALE)  # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
 
     # GAME LOGIC SETUP
-    game_phase = "game_over"
+    game_phase = "game_play"
     modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4], True),
              game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
-             game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4],True),
-             game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9], True)]
-    gameoverbutton = [game_interface.Button("PLAY AGAIN", [0.3, 0.5, 0.5, 0.75], True)]
+             game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
+             game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9], False)]
 
-    team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in range(0, game_interface.TEAM_SIZE)]
+    gameoverbutton = [game_interface.Button("PLAY AGAIN", [0.3, 0.5, 0.5, 0.75], False)]
+
+    team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in range(0, game_interface.Player.players_num)]
     team_a[random.randint(0, len(team_a) - 1)].drinks = True
 
     team_b = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
@@ -117,17 +109,23 @@ if __name__ == '__main__':
             current_beers_right = []
 
             game_algorithms.extract_beers(table, tpl, current_beers_left, current_beers_right)
-
-            # game_algorithms.inform_beers(beers_left, beers_right, current_beers_left, current_beers_right)
-
-            game_algorithms.check_for_objects(table, current_beers_left, current_beers_right)
+            game_algorithms.inform_beers(beers_left, beers_right, current_beers_left, current_beers_right)
+            game_algorithms.check_for_objects(table, beers_left, beers_right)
 
             # -------------------------
+            if random_cup:
+                random_cup = False
+                for beer in beers_left:
+                    i = random.randrange(0, len(beers_left))
+                    beer[i].yellow = True
+                    print('This: ', beer[i], ' should be yellow')
 
+            # region Wand Detection/ Golden cup
             for beer in beers_left:
                 if beer.wand_here:
                     print("Some beer has a wand in it!")
                     beer.meter += 2
+                    print(beer.meter)
                 else:
                     beer.meter = max(beer.meter - 10, 0)
                 if beer.meter >= 100:
@@ -170,13 +168,14 @@ if __name__ == '__main__':
                     # Display golden text
                     pygame.transform.rotate(screen, 90)
                     golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-                    screen.blit(golden_cup_txt, game_interface.DISPLAY_WIDTH/2, game_interface.DISPLAY_HEIGHT/2)
+                    screen.blit(golden_cup_txt, game_interface.DISPLAY_WIDTH / 2, game_interface.DISPLAY_HEIGHT / 2)
                     pygame.transform.rotate(screen, 0)
                     min_dist = 1000
                     red_index = 0
                     for j in range(0, len(beers_left)):
                         if j != i:
-                            distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(beers_left[i].center[1] - beers_left[j].center[1])
+                            distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(
+                                beers_left[i].center[1] - beers_left[j].center[1])
                             if distance < min_dist:
                                 min_dist = distance
                                 red_index = j
@@ -233,14 +232,13 @@ if __name__ == '__main__':
                                 team_b[j].drinks = False
                                 team_b[j + 1 if j + 1 < len(team_b) else 0].drinks = True
             # endregion
-
             # -------------------------
             game_interface.display_table_img(screen, table_img)
             # game_interface.display_score(screen, team_a, team_b)
-            game_interface.display_beers(screen, current_beers_left, current_beers_right)
+            game_interface.display_beers(screen, beers_left, beers_right)
 
         elif game_phase == "game_over":
-            game_interface.display_table_img(screen, table_img2)
+            game_interface.display_table_img(screen, table_img)
             game_algorithms.choose_option(table, gameoverbutton)
 
             for gameobutton in gameoverbutton:
@@ -255,7 +253,7 @@ if __name__ == '__main__':
                     game_phase = "game_mode"
                     table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
 
-            game_interface.game_over(screen, team_a, team_b, font2, font)
+            game_interface.game_over(screen, team_a, team_b, font, font)
             game_interface.gamebutton(screen, font, gameoverbutton)
 
         # KEYBOARD INPUT
@@ -265,6 +263,9 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
+                if event.key == pygame.K_SPACE:
+                    random_cup = True
+                    print('You have pressed spacebar')
 
         pygame.display.update()
 

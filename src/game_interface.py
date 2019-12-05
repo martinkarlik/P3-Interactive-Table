@@ -3,8 +3,8 @@ import pygame
 #DISPLAY_WIDTH = 960
 #DISPLAY_HEIGHT = 540
 
-DISPLAY_WIDTH = 1920
-DISPLAY_HEIGHT = 1080
+DISPLAY_WIDTH = 960
+DISPLAY_HEIGHT = 540
 
 FONT_MYRIAD_PRO_REGULAR = ['../fonts/MyriadProRegular.ttf', 60]
 FONT_MYRIAD_PRO_REGULAR2 = ['../fonts/MyriadProRegular.ttf', 97]
@@ -151,6 +151,7 @@ def display_score(target, team_a, team_b):
 def display_beers(target, beers_left, beers_right):
 
     for beer in beers_left:
+
         if beer.balls[0] or beer.balls[1]:
             pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
                                (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
@@ -165,7 +166,11 @@ def display_beers(target, beers_left, beers_right):
                                (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
 
     for beer in beers_right:
-        if beer.balls[0] or beer.balls[1]:
+
+        if beer.wand_here:
+            pygame.draw.circle(target, (0, 0, 255),
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+        elif beer.balls[0] or beer.balls[1]:
             pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
                                (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
         elif beer.yellow:
