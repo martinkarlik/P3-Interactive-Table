@@ -12,12 +12,11 @@ ICON = "../images/cheers.png"
 TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableImages/PlaceCups.png"]
 
 SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
-SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
-          "../sound/cuteguisoundsset/Wav/Cursor.wav"]
+
 
 if __name__ == '__main__':
     # CAPTURE SETUP
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
 
     # PYGAME SETUP
@@ -28,14 +27,15 @@ if __name__ == '__main__':
 
     # Select, Achievement, cursor
 
+    SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
+              "../sound/hit_the_golden_cup_jingle.mp3", "../sound/cuteguisoundsset/Wav/Cursor.wav"]
+
     sound_fx = []
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
-    SONG_END = pygame.USEREVENT + 1
-    pygame.mixer.music.set_endevent(SONG_END)
 
     screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
-    font2 = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
+    font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
     table_img = game_interface.set_table_img(TABLE_IMAGES[1])
     tape_img = pygame.image.load(TAPE_IMAGE)
     tpl = cv2.imread("../images/testImages/beer.jpg",
@@ -240,7 +240,7 @@ if __name__ == '__main__':
             game_interface.display_beers(screen, beers_left, beers_right)
 
         elif game_phase == "game_over":
-            game_interface.display_table_img(screen, table_img2)
+            game_interface.display_table_img(screen, table_img)
             game_algorithms.choose_option(table, gameoverbutton)
 
             for gameobutton in gameoverbutton:
@@ -255,7 +255,7 @@ if __name__ == '__main__':
                     game_phase = "game_mode"
                     table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
 
-            game_interface.game_over(screen, team_a, team_b, font2, font)
+            game_interface.game_over(screen, team_a, team_b, font, font)
             game_interface.gamebutton(screen, font, gameoverbutton)
 
         # KEYBOARD INPUT
