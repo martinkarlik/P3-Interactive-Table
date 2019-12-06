@@ -23,9 +23,6 @@ BLUE_DISPLAY_COLOR = 50, 50, 200
 WHITE_DISPLAY_COLOR = 255, 255, 255
 
 
-TEAM_SIZE = 2
-
-
 class Player:
     # static fields... python is weird about it, you don't have to declare anything, it's just static
     # "static" = variable same for every object of this class, "field" = instance variable
@@ -110,6 +107,7 @@ def display_mode_selection(target, font, tape, modes):
             tape = pygame.transform.scale(tape, (int(0.3 * DISPLAY_WIDTH), int(0.2 * DISPLAY_HEIGHT)))
             target.blit(tape, (x, y))
 
+
 def gamebutton (target, font, gameoverbutton):
     for i in range(0, len(gameoverbutton)):
         w = int(gameoverbutton[i].pos[3] * DISPLAY_WIDTH) - int(gameoverbutton[i].pos[2] * DISPLAY_WIDTH)
@@ -142,21 +140,36 @@ def gamebutton (target, font, gameoverbutton):
             line_num += 1
 
 
-def display_score(target, team_a, team_b):
-    pass
-    # for i in range(0, len(scores)):
-    #     x = int(scores[i][1] * DISPLAY_WIDTH)
-    #     y = int(scores[i][0] * DISPLAY_HEIGHT)
-    #     target.blit(pygame.transform.rotate(display_text(scores[i], i % 2), -90, (x, y))
+def display_score(target, font, team_a, team_b):
+
+    for player in team_a:
+        print("team a", player.score)
+
+    for player in team_b:
+        print("team b", player.score)
+
+    # for player in team_a:
+    #     text = font.render(player.score, True, player.color)
+    #     text_rect = text.get_rect(center=(0.1 * DISPLAY_WIDTH, 0.1 * DISPLAY_HEIGHT))
+    #     target.blit(text, text_rect)
+    #
+    #     # target.blit(pygame.transform.rotate(display_text(scores[i], i % 2), -90, (x, y))
+    #
+    # for player in team_b:
+    #     text = font.render(player.score, True, player.color)
+    #     text_rect = text.get_rect(center=(0.1 * DISPLAY_WIDTH, 0.1 * DISPLAY_HEIGHT))
+    #     target.blit(text, text_rect)
 
 
-def display_beers(target, beers_left, beers_right):
+def display_beers(target, beers_left, beers_right, colour):
 
     for beer in beers_left:
 
         if beer.balls[0] or beer.balls[1]:
-            pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
+            # pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
+            #                    (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+            pygame.draw.circle(target, colour,
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
         elif beer.yellow:
             pygame.draw.circle(target, (0, 255, 255,),
                                (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
@@ -170,8 +183,10 @@ def display_beers(target, beers_left, beers_right):
     for beer in beers_right:
 
         if beer.balls[0] or beer.balls[1]:
-            pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
+            pygame.draw.circle(target, colour,
+                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
+            # pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
+            #                    (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
         elif beer.yellow:
             pygame.draw.circle(target, (0, 255, 255,),
                                (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
