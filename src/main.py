@@ -14,12 +14,15 @@ TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableIm
 SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
 SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
           "../sound/cuteguisoundsset/Wav/Cursor.wav", "../sound/hit_the_golden_cup_jingle.wav"]
-whosTurn = (0,0,0)
-
+whosTurnA = (0, 0, 0)
+whosTurnB = (0, 0, 0)
+whoHit = (0,0,0)
+totalScoreRight = 0
+totalScoreLeft = 0
 
 if __name__ == '__main__':
     # CAPTURE SETUP
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
 
     # PYGAME SETUP
@@ -43,7 +46,7 @@ if __name__ == '__main__':
                      cv2.IMREAD_GRAYSCALE)  # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
 
     # GAME LOGIC SETUP
-    game_phase = "game_mode"
+    game_phase = "game_play"
     modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4], True),
              game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
@@ -116,134 +119,164 @@ if __name__ == '__main__':
             game_algorithms.check_for_objects(table, beers_left, beers_right)
 
             # -------------------------
+            if(len(beers_left) > 1 or len(beers_right) > 1) and totalScoreRight == 0 and totalScoreLeft == 0:
 
-            # region Wand Detection/ Golden cup
-            for beer in beers_left:
-                if beer.wand_here:
-                    beer.meter += 10
-                else:
-                    beer.meter = max(beer.meter - 10, 0)
-                if beer.meter == 100 and not jingle.get_busy():
-                    jingle.play(sound_fx[3])
-                if beer.meter >= 100:
-                    beer.yellow = True
-                if beer.yellow:
-                    # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
-                    # a cup on the right is highlighted
-                    golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-                    rotated_text = pygame.transform.rotate(golden_cup_txt, 90)
-                    screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) + 50,
-                                                                            game_interface.DISPLAY_HEIGHT / 2)))
+                # region Wand Detection/ Golden cup
+                for beer in beers_left:
+                    if beer.wand_here:
+                        beer.meter += 10
+                    else:
+                        beer.meter = max(beer.meter - 10, 0)
+                    if beer.meter == 100 and not jingle.get_busy():
+                        jingle.play(sound_fx[3])
+                    if beer.meter >= 100:
+                        beer.yellow = True
+                    if beer.yellow:
+                        # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
+                        # a cup on the right is highlighted
+                        golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
+                        rotated_text = pygame.transform.rotate(golden_cup_txt, 90)
+                        screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) + 50,
+                                                                                game_interface.DISPLAY_HEIGHT / 2)))
 
-                    print(beer.counter)
-                    beer.counter -= 1
-                    if beer.counter <= 0:
-                        beer.yellow = False
-                        beer.counter = 100
+                        print(beer.counter)
+                        beer.counter -= 1
+                        if beer.counter <= 0:
+                            beer.yellow = False
+                            beer.counter = 100
 
-            for beer in beers_right:
-                if beer.wand_here:
-                    beer.meter += 10
-                else:
-                    beer.meter = max(beer.meter - 10, 0)
-                if beer.meter == 100 and not jingle.get_busy():
-                    jingle.play(sound_fx[3])
-                if beer.meter >= 100:
-                    beer.yellow = True
-                if beer.yellow:
-                    # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
-                    # a cup on the right is highlighted
-                    golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-                    rotated_text = pygame.transform.rotate(golden_cup_txt, -90)
-                    screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) - 50,
-                                                                            game_interface.DISPLAY_HEIGHT / 2)))
+                for beer in beers_right:
+                    if beer.wand_here:
+                        beer.meter += 10
+                    else:
+                        beer.meter = max(beer.meter - 10, 0)
+                    if beer.meter == 100 and not jingle.get_busy():
+                        jingle.play(sound_fx[3])
+                    if beer.meter >= 100:
+                        beer.yellow = True
+                    if beer.yellow:
+                        # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
+                        # a cup on the right is highlighted
+                        golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
+                        rotated_text = pygame.transform.rotate(golden_cup_txt, -90)
+                        screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) - 50,
+                                                                                game_interface.DISPLAY_HEIGHT / 2)))
 
-                    print(beer.counter)
-                    beer.counter -= 1
-                    if beer.counter <= 0:
-                        beer.yellow = False
-                        beer.counter = 100
+                        #print(beer.counter)
+                        beer.counter -= 1
+                        if beer.counter <= 0:
+                            beer.yellow = False
+                            beer.counter = 100
 
-            for i in range(0, len(beers_left)):
-                if beers_left[i].yellow:
-                    min_dist = 1000
-                    red_index = -1
-                    for j in range(0, len(beers_left)):
-                        if j == i:
-                            continue
-                        else:
-                            distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(
-                                beers_left[i].center[1] - beers_left[j].center[1])
-                            if distance < min_dist:
-                                min_dist = distance
-                                red_index = j
-                    if red_index > -1:
-                        beers_left[red_index].red = True
-                        # This is extremely dumb, help me
-                        # if not beers_left[i].yellow:
-                        #     beers_left[red_index].red = False
-                        #     beers_left[i].red = False
-                else:
-                    beers_left[i].red = False
+                for i in range(0, len(beers_left)):
+                    if beers_left[i].yellow:
+                        min_dist = 1000
+                        red_index = -1
+                        for j in range(0, len(beers_left)):
+                            if j == i:
+                                continue
+                            else:
+                                distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(
+                                    beers_left[i].center[1] - beers_left[j].center[1])
+                                if distance < min_dist:
+                                    min_dist = distance
+                                    red_index = j
+                        if red_index > -1:
+                            beers_left[red_index].red = True
+                            # This is extremely dumb, help me
+                            # if not beers_left[i].yellow:
+                            #     beers_left[red_index].red = False
+                            #     beers_left[i].red = False
+                    else:
+                        beers_left[i].red = False
 
-            for i in range(0, len(beers_right)):
-                if beers_right[i].yellow:
-                    min_dist = 1000
-                    red_index = -1
-                    for j in range(0, len(beers_right)):
-                        if j == i:
-                            continue
-                        else:
-                            distance = abs(beers_right[i].center[0] - beers_right[j].center[0]) + abs(
-                                beers_right[i].center[1] - beers_right[j].center[1])
-                            if distance < min_dist:
-                                min_dist = distance
-                                red_index = j
-                    if red_index > -1:
-                        beers_right[red_index].red = True
-                        # This is extremely dumb, help me
-                        # if not beers_right[i].yellow:
-                        #     beers_right[red_index].red = False
-                        #     beers_right[i].red = False
-                else:
-                    beers_right[i].red = False
-            # endregion
+                for i in range(0, len(beers_right)):
+                    if beers_right[i].yellow:
+                        min_dist = 1000
+                        red_index = -1
+                        for j in range(0, len(beers_right)):
+                            if j == i:
+                                continue
+                            else:
+                                distance = abs(beers_right[i].center[0] - beers_right[j].center[0]) + abs(
+                                    beers_right[i].center[1] - beers_right[j].center[1])
+                                if distance < min_dist:
+                                    min_dist = distance
+                                    red_index = j
+                        if red_index > -1:
+                            beers_right[red_index].red = True
+                            # This is extremely dumb, help me
+                            # if not beers_right[i].yellow:
+                            #     beers_right[red_index].red = False
+                            #     beers_right[i].red = False
+                    else:
+                        beers_right[i].red = False
+                # endregion
 
-            # region Ball detection
-            for beer in beers_left:
-                for i in range(0, len(beer.balls)):
-                    if beer.balls[i] and not team_b[i].hit:
-                        team_b[i].score += 1
-                        team_b[i].hit = True
-                        for player in team_a:
-                            if player.drinks:
-                                whosTurn = player.color
+                # region Ball detection
+                for beer in beers_left:
+                    for i in range(0, len(beer.balls)):
+                        if beer.balls[i] and not team_b[i].hit:
+                            team_b[i].score += 1
+                            team_b[i].hit = True
 
-                    elif team_b[i].hit and not beer.balls[i]:
-                        for j in range(1, len(team_a)):
-                            if team_a[j].drinks:
-                                team_a[j].drinks = False
-                                team_a[j + 1 if j + 1 < len(team_a) else 0].drinks = True
+                            if whosTurnA == team_a[0].color:
+                                whosTurnA = team_a[1].color
+                                team_b[i].hit = False
 
-            for beer in beers_right:
-                for i in range(0, len(beer.balls)):
-                    if beer.balls[i] and not team_a[i].hit:
-                        team_a[i].score += 1
-                        team_a[i].hit = True
+                            elif whosTurnA == team_a[1].color:
+                                whosTurnA = team_a[0].color
+                                team_b[i].hit = False
 
-                    elif team_a[i].hit and not beer.balls[i]:
-                        for j in range(1, len(team_b)):
-                            if team_b[j].drinks:
-                                team_b[j].drinks = False
-                                team_b[j + 1 if j + 1 < len(team_b) else 0].drinks = True
-            # endregion
-            # -------------------------
-            game_interface.display_table_img(screen, table_img)
-            # game_interface.display_score(screen, team_a, team_b)
-            game_interface.display_beers(screen, beers_left, beers_right, whosTurn)
+                            elif whosTurnA != team_a[0].color and whosTurnA != team_a[1].color:
+                                whosTurnA = team_a[1].color
+                                team_b[i].hit = False
+
+                            # for player in team_a:
+                            #     if player.drinks:
+                            #         whosTurn = player.color
+
+                        # elif team_b[i].hit and not beer.balls[i]:
+                        #     for j in range(1, len(team_a)):
+                        #         if team_a[j].drinks:
+                        #             team_a[j].drinks = False
+                        #             team_a[j + 1 if j + 1 < len(team_a) else 0].drinks = True
+
+                for beer in beers_right:
+                    for i in range(0, len(beer.balls)):
+                        if beer.balls[i] and not team_a[i].hit:
+                            team_a[i].score += 1
+                            team_a[i].hit = True
+                            totalScoreRight = team_a[0].score + team_a[1].score
+                            if totalScoreRight == 1:
+                                whosTurnB = team_b[0].color
+                                print("I am picking a stating point")
+                                print()
+
+
+                        elif team_a[i].hit and not beer.balls[i]:
+                            if whosTurnB == team_b[0].color and totalScoreRight %2 == 0:
+                                whosTurnB = team_b[1].color
+                                print("I am in team_b[1]")
+                            elif whosTurnB == team_b[1].color and totalScoreRight %2 == 1:
+                                whosTurnB = team_b[0].color
+                                print("I am in team_b[0]")
+                        #     for j in range(1, len(team_b)):
+                        #         if team_b[j].drinks:
+                        #             team_b[j].drinks = False
+                        #             team_b[j + 1 if j + 1 < len(team_b) else 0].drinks = True
+                # endregion
+                # -------------------------
+                game_interface.display_table_img(screen, table_img)
+                # game_interface.display_score(screen, team_a, team_b)
+                game_interface.display_beers(screen, beers_left, beers_right, whosTurnA)
+
+            elif (len(beers_right) == 0 or len(beers_left) == 0) and (totalScoreLeft > 0 or totalScoreRight > 0):
+                game_phase = "game_over"
+                table_img = game_interface.set_table_img(game_interface.TABLE_IMG3)
 
         elif game_phase == "game_over":
-            MAGICWAND = TRUE
+
             game_interface.display_table_img(screen, table_img)
             game_algorithms.choose_option(table, gameoverbutton)
 
@@ -271,7 +304,7 @@ if __name__ == '__main__':
                     app_running = False
                 if event.key == pygame.K_SPACE:
                     random_cup = True
-                    print('You have pressed spacebar')
+                    #print('You have pressed spacebar')
 
         pygame.display.update()
 
