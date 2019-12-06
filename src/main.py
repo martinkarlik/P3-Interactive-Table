@@ -17,7 +17,7 @@ SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset
 
 if __name__ == '__main__':
     # CAPTURE SETUP
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
 
     # PYGAME SETUP
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
     table_img = game_interface.set_table_img(TABLE_IMAGES[1])
     tape_img = pygame.image.load(TAPE_IMAGE)
@@ -157,7 +157,6 @@ if __name__ == '__main__':
                     screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) - 50,
                                                                             game_interface.DISPLAY_HEIGHT / 2)))
 
-                    print(beer.counter)
                     beer.counter -= 1
                     if beer.counter <= 0:
                         beer.yellow = False
@@ -208,7 +207,7 @@ if __name__ == '__main__':
                     beers_right[i].red = False
             # endregion
 
-            # region Ball detection
+            # region Score detection
             for beer in beers_left:
                 for i in range(0, len(beer.balls)):
                     if beer.balls[i] and not team_b[i].hit:
@@ -237,8 +236,10 @@ if __name__ == '__main__':
                                 team_b[j + 1 if j + 1 < len(team_b) else 0].drinks = True
             # endregion
             # -------------------------
+
+            print(len(beers_left), len(beers_right))
             game_interface.display_table_img(screen, table_img)
-            # game_interface.display_score(screen, team_a, team_b)
+            game_interface.display_score(screen, font, team_a, team_b)
             game_interface.display_beers(screen, beers_left, beers_right)
 
         elif game_phase == "game_over":
@@ -255,7 +256,7 @@ if __name__ == '__main__':
                 if gameobutton.meter >= 100:
                     #sound_fx[0].play()
                     game_phase = "game_mode"
-                    table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
+                    table_img = game_interface.set_table_img(TABLE_IMAGES[1])
 
             game_interface.game_over(screen, team_a, team_b, font, font)
             game_interface.gamebutton(screen, font, gameoverbutton)
