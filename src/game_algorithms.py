@@ -1,16 +1,12 @@
 from src._ip_algorithms import *
 
-MOVED_BEER_THRESHOLD = 0.05
+MOVED_BEER_THRESHOLD = 0.01
 
 TABLE_SHAPE = (800, 400)
 
-
 GREEN_COLOR_HSI = (115, 0.75, 0.5)
-
 RED_COLOR_HSI = (350, 0.85, 0.5)
-
 BLUE_COLOR_HSI = (350, 0.9, 0.5)
-
 WAND_COLOR_HSI = (216, 0.8, 0.5)
 
 GREEN_COLOR_BGR = (14, 94, 1)
@@ -21,25 +17,14 @@ WAND_COLOR_BGR = (110, 58, 21)
 BALL_COLOR_OFFSET_HSI = (10, 0.3, 0.4)
 WAND_COLOR_OFFSET_HSI = (20, 0.2, 0.3)
 
-# Different liquid:
-BEER_COLOR_HSI = (50, 0.6, 0.6)
-BEER_OFFSET_HSI = (10, 0.3, 0.5)
-
-DARK_BROWN_ALE = (40, 0.37, 0.115)
-DARK_BROWN_ALE_OFFSET = (10, 0.11, 0.025)
-
-MILK = (49.5, 0.403, 0.6145)
-MILK_OFFSET = (0.5, 0.003, 0.0265)
-
-COLA = (10, 0.45, 0.06)
-COLA_OFFSET = (10, 0.45, 0.06)
+DEFAULT_SRC_POINTS = np.float32([(1, 55), (619, 61), (610, 383), (7, 379)])
 
 
 class Beer:
 
     ball_colors = [RED_COLOR_HSI, GREEN_COLOR_HSI, BLUE_COLOR_HSI]
     balls_num = 2
-    max_lifetime = 100
+    max_lifetime = 10
 
     def __init__(self, center):
         self.center = center
@@ -85,12 +70,17 @@ def inform_beers(beers_left, beers_right, current_beers_left, current_beers_righ
     sides = [beers_left, beers_right]
 
     for i in range(0, len(sides)):
+
+        for beer in sides[i]:
+            beer.is_present = False
+
         for current_beer in current_sides[i]:
             existing_beer_found = False
             for beer in sides[i]:
                 distance = abs(beer.center[0] - current_beer.center[0]) + abs(beer.center[1] - current_beer.center[1])
                 if distance < MOVED_BEER_THRESHOLD:
                     beer.is_present = True
+                    beer.center = current_beer.center
                     existing_beer_found = True
                     break
 
@@ -98,15 +88,17 @@ def inform_beers(beers_left, beers_right, current_beers_left, current_beers_righ
                 sides[i].append(Beer(current_beer.center))
 
         for beer in sides[i]:
-            if beer.is_present or any(beer.balls) or beer.wand_here:
+            if beer.is_present:
                 beer.lifetime = min(beer.max_lifetime, beer.lifetime + 1)
             else:
                 beer.lifetime -= 1
+                print("some beer is not present")
 
         beers_len_init = len(sides[i])
         for j in range(0, beers_len_init):
             if sides[i][beers_len_init - j - 1].lifetime <= 0:
                 sides[i].pop(beers_len_init - j - 1)
+                print("deleted something")
 
 
 def check_for_objects(source, beers_left, beers_right):
@@ -149,8 +141,6 @@ def find_table_transform(source, dims):
     open = cv2.morphologyEx(binary_inv, cv2.MORPH_OPEN, kernel=(15, 15))
     close = cv2.morphologyEx(open, cv2.MORPH_CLOSE, kernel=(18, 18))
 
-    #cv2.imshow("bin markers", close)
-    #cv2.imshow("source", source)
     cv2.waitKey(1)
     blobs = extract_blobs(close)
 
@@ -160,22 +150,17 @@ def find_table_transform(source, dims):
             print("Blob: ", blob.area, blob.compactness)
             markers.append(blob)
 
-    print(len(markers))
-    if len(markers) != 4:
-        print("Could not find the correct markers. Instead found ", len(markers), " markers.")
+    src_points = DEFAULT_SRC_POINTS
 
-        for marker in markers:
-            print(marker.compactness, marker.area, marker.center)
+    if len(markers) == 4:
+        ordered_markers = [pop_closest(markers, [0, 0]), pop_closest(markers, [0, source.shape[1]]),
+                           pop_closest(markers, [source.shape[0], source.shape[1]]), pop_closest(markers, [source.shape[0], 0])]
 
-        return np.ones([3, 3])
-
-    ordered_markers = [pop_closest(markers, [0, 0]), pop_closest(markers, [0, source.shape[1]]),
-                       pop_closest(markers, [source.shape[0], source.shape[1]]), pop_closest(markers, [source.shape[0], 0])]
-
-    src_points = np.float32([(ordered_markers[0].bounding_box[1], ordered_markers[0].bounding_box[0]),
-                            (ordered_markers[1].bounding_box[3], ordered_markers[1].bounding_box[0]),
-                            (ordered_markers[2].bounding_box[3], ordered_markers[2].bounding_box[2]),
-                            (ordered_markers[3].bounding_box[1], ordered_markers[3].bounding_box[2])])
+        src_points = np.float32([(ordered_markers[0].bounding_box[1], ordered_markers[0].bounding_box[0]),
+                                (ordered_markers[1].bounding_box[3], ordered_markers[1].bounding_box[0]),
+                                (ordered_markers[2].bounding_box[3], ordered_markers[2].bounding_box[2]),
+                                (ordered_markers[3].bounding_box[1], ordered_markers[3].bounding_box[2])])
+        print(src_points)
 
     dst_points = np.float32([(0, 0),
                   (dims[0], 0),

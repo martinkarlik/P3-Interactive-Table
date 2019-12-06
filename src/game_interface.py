@@ -3,8 +3,8 @@ import pygame
 # DISPLAY_WIDTH = 960
 # DISPLAY_HEIGHT = 540
 # #
-DISPLAY_WIDTH = 1920
-DISPLAY_HEIGHT = 1080
+DISPLAY_WIDTH = 960
+DISPLAY_HEIGHT = 540
 
 FONT_MYRIAD_PRO_REGULAR = ['../fonts/MyriadProRegular.ttf', 60]
 FONT_MYRIAD_PRO_REGULAR2 = ['../fonts/MyriadProRegular.ttf', 97]
@@ -19,9 +19,6 @@ GREEN_DISPLAY_COLOR = 7, 129, 30
 RED_DISPLAY_COLOR = 242, 81, 87
 BLUE_DISPLAY_COLOR = 50, 50, 200
 WHITE_DISPLAY_COLOR = 255, 255, 255
-
-
-TEAM_SIZE = 2
 
 
 class Player:
@@ -108,6 +105,7 @@ def display_mode_selection(target, font, tape, modes):
             tape = pygame.transform.scale(tape, (int(0.3 * DISPLAY_WIDTH), int(0.2 * DISPLAY_HEIGHT)))
             target.blit(tape, (x, y))
 
+
 def gamebutton (target, font, gameoverbutton):
     for i in range(0, len(gameoverbutton)):
         w = int(gameoverbutton[i].pos[3] * DISPLAY_WIDTH) - int(gameoverbutton[i].pos[2] * DISPLAY_WIDTH)
@@ -140,12 +138,25 @@ def gamebutton (target, font, gameoverbutton):
             line_num += 1
 
 
-def display_score(target, team_a, team_b):
-    return
-    # for i in range(0, len(scores)):
-    #     x = int(scores[i][1] * DISPLAY_WIDTH)
-    #     y = int(scores[i][0] * DISPLAY_HEIGHT)
-    #     target.blit(pygame.transform.rotate(display_text(scores[i], i % 2), -90, (x, y))
+def display_score(target, font, team_a, team_b):
+
+    for player in team_a:
+        print("team a", player.score)
+
+    for player in team_b:
+        print("team b", player.score)
+
+    # for player in team_a:
+    #     text = font.render(player.score, True, player.color)
+    #     text_rect = text.get_rect(center=(0.1 * DISPLAY_WIDTH, 0.1 * DISPLAY_HEIGHT))
+    #     target.blit(text, text_rect)
+    #
+    #     # target.blit(pygame.transform.rotate(display_text(scores[i], i % 2), -90, (x, y))
+    #
+    # for player in team_b:
+    #     text = font.render(player.score, True, player.color)
+    #     text_rect = text.get_rect(center=(0.1 * DISPLAY_WIDTH, 0.1 * DISPLAY_HEIGHT))
+    #     target.blit(text, text_rect)
 
 
 def display_beers(target, beers_left, beers_right, colour):

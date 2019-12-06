@@ -38,7 +38,7 @@ if __name__ == '__main__':
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
     table_img = game_interface.set_table_img(TABLE_IMAGES[1])
     tape_img = pygame.image.load(TAPE_IMAGE)
@@ -69,6 +69,7 @@ if __name__ == '__main__':
 
     _, frame = cap.read()
     table_transform = game_algorithms.find_table_transform(frame, game_algorithms.TABLE_SHAPE)
+    print(table_transform)
 
     app_running = True
     while app_running and cap.isOpened():
@@ -290,7 +291,7 @@ if __name__ == '__main__':
                 if gameobutton.meter >= 100:
                     #sound_fx[0].play()
                     game_phase = "game_mode"
-                    table_img = game_interface.set_table_img(game_interface.TABLE_IMG1)
+                    table_img = game_interface.set_table_img(TABLE_IMAGES[1])
 
             game_interface.game_over(screen, team_a, team_b, font, font)
             game_interface.gamebutton(screen, font, gameoverbutton)
