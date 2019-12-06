@@ -4,7 +4,7 @@ import random
 from src import game_algorithms
 from src import game_interface
 
-random_cup = False
+team_a_won = False
 
 FONT_SANS_BOLD = ['freesansbold.ttf', 40]
 TAPE_IMAGE = "../images/tableImages/tape.png"
@@ -13,6 +13,7 @@ TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableIm
                 "../images/tableImages/gameover_screen.png"]
 
 SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
+
 SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
           "../sound/cuteguisoundsset/Wav/Cursor.wav", "../sound/hit_the_golden_cup_jingle.wav"]
 whosTurnA = (0, 0, 0)
@@ -21,10 +22,14 @@ whoHit = (0,0,0)
 totalScoreRight = 0
 totalScoreLeft = 0
 
+SPEAK = ["../sound/Speak/team_1_wins.wav", "../sound/Speak/team_2_wins.wav", "../sound/Speak/well_done.wav",
+         "../sound/Speak/great_job.wav", "../sound/Speak/what_a_shot.wav",
+         "../sound/Speak/wow.wav", "../sound/Speak/you_did_it.wav"]
 
 if __name__ == '__main__':
     # CAPTURE SETUP
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
+    cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
 
     # PYGAME SETUP
@@ -34,7 +39,10 @@ if __name__ == '__main__':
     pygame.display.set_icon(icon)
 
     # Select, Achievement, cursor
-
+    speak = pygame.mixer.Channel(4)
+    speak_fx = []
+    for sound in SPEAK:
+        speak_fx.append(pygame.mixer.Sound(sound))
     jingle = pygame.mixer.Channel(3)
     sound_fx = []
     for sound in SOUNDS:
@@ -220,6 +228,8 @@ if __name__ == '__main__':
                 for beer in beers_left:
                     for i in range(0, len(beer.balls)):
                         if beer.balls[i] and not team_b[i].hit:
+                            if not speak.get_busy():
+                                speak.play(sound_fx[random.randrange(2, len(SPEAK))])
                             team_b[i].score += 1
                             team_b[i].hit = True
 
@@ -248,6 +258,8 @@ if __name__ == '__main__':
                 for beer in beers_right:
                     for i in range(0, len(beer.balls)):
                         if beer.balls[i] and not team_a[i].hit:
+                            if not speak.get_busy():
+                                speak.play(sound_fx[random.randrange(2, len(SPEAK))])
                             team_a[i].score += 1
                             team_a[i].hit = True
                             totalScoreRight = team_a[0].score + team_a[1].score
@@ -300,6 +312,13 @@ if __name__ == '__main__':
             game_interface.display_mode_selection(screen, font, tape_img, gameoverbutton)
             game_interface.game_over(screen, team_a, team_b, font, font)
 
+
+            if team_a_won:
+                if not speak.get_busy():
+                    speak.play(speak_fx[0], 0)
+            else:
+                if not speak.get_busy():
+                    speak.play(speak_fx[1], 0)
 
         # KEYBOARD INPUT
         for event in pygame.event.get():
