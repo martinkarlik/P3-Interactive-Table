@@ -129,13 +129,17 @@ def find_table_transform(source, dims):
 
         return blobs.pop(closest_index)
 
-    gray = bgr_to_gray(source)
-    binary_inv = 1 - threshold(gray, 0.12, 1)
+    # gray = bgr_to_gray(source)
+    # binary_inv = 1 - threshold(gray, 0.12, 1)
+    gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
+    _, binary_inv = cv2.threshold(gray, 40, 255, cv2.THRESH_BINARY_INV)
+    open = cv2.morphologyEx(binary_inv, cv2.MORPH_OPEN, kernel=(15, 15))
+    close = cv2.morphologyEx(open, cv2.MORPH_CLOSE, kernel=(18, 18))
 
-    cv2.imshow("bin markers", binary_inv)
-    cv2.imshow("source", source)
+    #cv2.imshow("bin markers", close)
+    #cv2.imshow("source", source)
     cv2.waitKey(1)
-    blobs = extract_blobs(binary_inv)
+    blobs = extract_blobs(close)
 
     markers = []
     for blob in blobs:

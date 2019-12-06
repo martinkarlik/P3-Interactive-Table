@@ -139,7 +139,7 @@ def color_check_presence(source, target_color, target_offset):
 #     blurred_frame = cv2.GaussianBlur(hsv, (5, 5), cv2.BORDER_DEFAULT)
 #     mask = cv2.inRange(blurred_frame, lowerValue, upperValue)
 #     resBGR = cv2.bitwise_and(source, source, mask=mask)
-#     cv2.imshow('res', resBGR)
+#     #cv2.imshow('res', resBGR)
 #     cv2.waitKey(1)
 #     return resBGR.any()
 
