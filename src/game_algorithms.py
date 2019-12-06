@@ -7,7 +7,7 @@ TABLE_SHAPE = (800, 400)
 GREEN_COLOR_HSI = (115, 0.75, 0.5)
 RED_COLOR_HSI = (350, 0.85, 0.5)
 BLUE_COLOR_HSI = (350, 0.9, 0.5)
-WAND_COLOR_HSI = (216, 0.8, 0.5)
+WAND_COLOR_HSI = (216, 0.5, 0.4)
 
 GREEN_COLOR_BGR = (14, 94, 1)
 RED_COLOR_BGR = (20, 9, 165)
@@ -15,7 +15,7 @@ BLUE_COLOR_BGR = (110, 58, 21)
 WAND_COLOR_BGR = (110, 58, 21)
 
 BALL_COLOR_OFFSET_HSI = (10, 0.3, 0.4)
-WAND_COLOR_OFFSET_HSI = (20, 0.2, 0.3)
+WAND_COLOR_OFFSET_HSI = (20, 0.15, 0.2)
 
 DEFAULT_SRC_POINTS = np.float32([(1, 55), (619, 61), (610, 383), (7, 379)])
 
@@ -50,9 +50,6 @@ def extract_beers(source, template, beers_left, beers_right):
     full_binary_centers = np.zeros([source.shape[0], source.shape[1]])
     tpl_radius = int(template.shape[0] / 2)
     full_binary_centers[tpl_radius:source.shape[0] - tpl_radius + 1, tpl_radius:source.shape[1] - tpl_radius + 1] = binary_centers
-
-    cv2.imshow("bin", binary_centers)
-    cv2.imshow("full bin", full_binary_centers)
 
     blobs = extract_blobs(full_binary_centers)
 
@@ -141,7 +138,6 @@ def find_table_transform(source, dims):
     open = cv2.morphologyEx(binary_inv, cv2.MORPH_OPEN, kernel=(15, 15))
     close = cv2.morphologyEx(open, cv2.MORPH_CLOSE, kernel=(18, 18))
 
-    cv2.waitKey(1)
     blobs = extract_blobs(close)
 
     markers = []
@@ -152,15 +148,15 @@ def find_table_transform(source, dims):
 
     src_points = DEFAULT_SRC_POINTS
 
+    print("Found ", len(markers))
     if len(markers) == 4:
         ordered_markers = [pop_closest(markers, [0, 0]), pop_closest(markers, [0, source.shape[1]]),
-                           pop_closest(markers, [source.shape[0], source.shape[1]]), pop_closest(markers, [source.shape[0], 0])]
+                           pop_closest(markers, [source.shape[0], source.shape[1]]) , pop_closest(markers, [source.shape[0], 0])]
 
         src_points = np.float32([(ordered_markers[0].bounding_box[1], ordered_markers[0].bounding_box[0]),
                                 (ordered_markers[1].bounding_box[3], ordered_markers[1].bounding_box[0]),
                                 (ordered_markers[2].bounding_box[3], ordered_markers[2].bounding_box[2]),
                                 (ordered_markers[3].bounding_box[1], ordered_markers[3].bounding_box[2])])
-        print(src_points)
 
     dst_points = np.float32([(0, 0),
                   (dims[0], 0),

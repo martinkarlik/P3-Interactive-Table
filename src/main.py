@@ -6,7 +6,7 @@ from src import game_interface
 
 random_cup = False
 
-FONT_SANS_BOLD = ['freesansbold.ttf', 40]
+FONT_SANS_BOLD = ['freesansbold.ttf', 25]
 TAPE_IMAGE = "../images/tableImages/tape.png"
 ICON = "../images/cheers.png"
 TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableImages/PlaceCups.png"]
@@ -33,15 +33,15 @@ if __name__ == '__main__':
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
     font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
-    table_img = game_interface.set_table_img(TABLE_IMAGES[1])
+    table_img = game_interface.set_table_img(TABLE_IMAGES[0])
     tape_img = pygame.image.load(TAPE_IMAGE)
     tpl = cv2.imread("../images/testImages/beer.jpg",
                      cv2.IMREAD_GRAYSCALE)  # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
 
     # GAME LOGIC SETUP
-    game_phase = "game_play"
+    game_phase = "mode_selection"
     modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4], True),
              game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
@@ -64,7 +64,6 @@ if __name__ == '__main__':
 
     _, frame = cap.read()
     table_transform = game_algorithms.find_table_transform(frame, game_algorithms.TABLE_SHAPE)
-    print(table_transform)
 
     app_running = True
     while app_running and cap.isOpened():
@@ -72,8 +71,7 @@ if __name__ == '__main__':
         _, frame = cap.read()
         table = game_algorithms.apply_transform(frame, table_transform, game_algorithms.TABLE_SHAPE)
 
-        ###cv2.imshow("table", table)
-        cv2.waitKey(1)
+        # cv2.imshow("table", table)
 
         if game_phase == "mode_selection":
             game_algorithms.choose_option(table, modes)
@@ -96,7 +94,7 @@ if __name__ == '__main__':
                     game_phase = "game_play"
                     table_img = game_interface.set_table_img(TABLE_IMAGES[1])
 
-            # game_interface.display_table_img(screen, table_img)
+            game_interface.display_table_img(screen, table_img)
             game_interface.display_mode_selection(screen, font, tape_img, modes)
 
         elif game_phase == "game_play":
@@ -134,7 +132,6 @@ if __name__ == '__main__':
                     screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) + 50,
                                                                             game_interface.DISPLAY_HEIGHT / 2)))
 
-                    print(beer.counter)
                     beer.counter -= 1
                     if beer.counter <= 0:
                         beer.yellow = False
@@ -237,7 +234,6 @@ if __name__ == '__main__':
             # endregion
             # -------------------------
 
-            print(len(beers_left), len(beers_right))
             game_interface.display_table_img(screen, table_img)
             game_interface.display_score(screen, font, team_a, team_b)
             game_interface.display_beers(screen, beers_left, beers_right)
@@ -270,7 +266,7 @@ if __name__ == '__main__':
                     app_running = False
                 if event.key == pygame.K_SPACE:
                     random_cup = True
-                    print('You have pressed spacebar')
+                    # print('You have pressed spacebar')
 
         pygame.display.update()
 
