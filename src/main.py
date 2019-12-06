@@ -21,6 +21,7 @@ whoHit = (0,0,0)
 totalScoreRight = 0
 totalScoreLeft = 0
 
+
 if __name__ == '__main__':
     # CAPTURE SETUP
     cap = cv2.VideoCapture(0)
