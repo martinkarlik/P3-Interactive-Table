@@ -9,7 +9,8 @@ random_cup = False
 FONT_SANS_BOLD = ['freesansbold.ttf', 40]
 TAPE_IMAGE = "../images/tableImages/tape.png"
 ICON = "../images/cheers.png"
-TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableImages/PlaceCups.png"]
+TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableImages/PlaceCups.png",
+                "../images/tableImages/gameover_screen.png"]
 
 SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
 SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
@@ -40,19 +41,19 @@ if __name__ == '__main__':
 
     screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
-    table_img = game_interface.set_table_img(TABLE_IMAGES[1])
+    table_img = game_interface.set_table_img(TABLE_IMAGES[0])
     tape_img = pygame.image.load(TAPE_IMAGE)
     tpl = cv2.imread("../images/testImages/beer.jpg",
                      cv2.IMREAD_GRAYSCALE)  # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
 
     # GAME LOGIC SETUP
-    game_phase = "game_play"
+    game_phase = "mode_selection"
     modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4], True),
              game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
              game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9], False)]
 
-    gameoverbutton = [game_interface.Button("PLAY AGAIN", [0.3, 0.5, 0.5, 0.75], False)]
+    gameoverbutton = [game_interface.Button("PLAY AGAIN", [0.75, 0.95, 0.3, 0.7], True)]
 
     team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in range(0, game_interface.Player.players_num)]
     team_a[random.randint(0, len(team_a) - 1)].drinks = True
@@ -101,7 +102,7 @@ if __name__ == '__main__':
                     game_phase = "game_play"
                     table_img = game_interface.set_table_img(TABLE_IMAGES[1])
 
-            # game_interface.display_table_img(screen, table_img)
+            game_interface.display_table_img(screen, table_img)
             game_interface.display_mode_selection(screen, font, tape_img, modes)
 
         elif game_phase == "game_play":
@@ -120,7 +121,7 @@ if __name__ == '__main__':
             game_algorithms.check_for_objects(table, beers_left, beers_right)
 
             # -------------------------
-            if(len(beers_left) > 1 or len(beers_right) > 1) and totalScoreRight == 0 and totalScoreLeft == 0:
+            if(len(current_beers_left) > 1 or len(current_beers_right) > 1) and totalScoreRight == 0 and totalScoreLeft == 0:
 
                 # region Wand Detection/ Golden cup
                 for beer in beers_left:
@@ -267,34 +268,37 @@ if __name__ == '__main__':
                         #             team_b[j].drinks = False
                         #             team_b[j + 1 if j + 1 < len(team_b) else 0].drinks = True
                 # endregion
-                # -------------------------
-                game_interface.display_table_img(screen, table_img)
-                # game_interface.display_score(screen, team_a, team_b)
-                game_interface.display_beers(screen, beers_left, beers_right, whosTurnA)
 
-            elif (len(beers_right) == 0 or len(beers_left) == 0) and (totalScoreLeft > 0 or totalScoreRight > 0):
+            elif (len(current_beers_right) == 0 or len(current_beers_left) == 0) and (totalScoreLeft > 0 or totalScoreRight > 0):
                 game_phase = "game_over"
-                table_img = game_interface.set_table_img(game_interface.TABLE_IMG3)
+                table_img = game_interface.set_table_img(TABLE_IMAGES[2])
+            # -------------------------
+            game_interface.display_table_img(screen, table_img)
+            # game_interface.display_score(screen, team_a, team_b)
+            game_interface.display_beers(screen, beers_left, beers_right, whosTurnA)
 
         elif game_phase == "game_over":
 
             game_interface.display_table_img(screen, table_img)
             game_algorithms.choose_option(table, gameoverbutton)
 
-            for gameobutton in gameoverbutton:
-                if gameobutton.chosen:
-                    gameobutton.meter = min(gameobutton.meter + 2, 100)
+            for mode in gameoverbutton:
+                if mode.chosen:
+                    mode.meter = min(mode.meter + 2, 100)
                 else:
                     pygame.mixer.stop()
-                    gameobutton.meter = max(gameobutton.meter - 6, 0)
+                    mode.meter = max(mode.meter - 6, 0)
 
-                if gameobutton.meter >= 100:
-                    #sound_fx[0].play()
-                    game_phase = "game_mode"
-                    table_img = game_interface.set_table_img(TABLE_IMAGES[1])
+                if mode.meter >= 100:
+                    sound_fx[0].play()
+                    game_phase = "mode_selection"
+                    table_img = game_interface.set_table_img(TABLE_IMAGES[0])
+                    totalScoreRight = 0
+                    totalScoreLeft = 0
 
+            game_interface.display_mode_selection(screen, font, tape_img, gameoverbutton)
             game_interface.game_over(screen, team_a, team_b, font, font)
-            game_interface.gamebutton(screen, font, gameoverbutton)
+
 
         # KEYBOARD INPUT
         for event in pygame.event.get():
