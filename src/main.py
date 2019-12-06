@@ -64,6 +64,7 @@ if __name__ == '__main__':
 
     _, frame = cap.read()
     table_transform = game_algorithms.find_table_transform(frame, game_algorithms.TABLE_SHAPE)
+    print(table_transform)
 
     app_running = True
     while app_running and cap.isOpened():

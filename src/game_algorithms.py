@@ -4,13 +4,9 @@ MOVED_BEER_THRESHOLD = 0.05
 
 TABLE_SHAPE = (800, 400)
 
-
 GREEN_COLOR_HSI = (115, 0.75, 0.5)
-
 RED_COLOR_HSI = (350, 0.85, 0.5)
-
 BLUE_COLOR_HSI = (350, 0.9, 0.5)
-
 WAND_COLOR_HSI = (216, 0.8, 0.5)
 
 GREEN_COLOR_BGR = (14, 94, 1)
@@ -21,18 +17,9 @@ WAND_COLOR_BGR = (110, 58, 21)
 BALL_COLOR_OFFSET_HSI = (10, 0.3, 0.4)
 WAND_COLOR_OFFSET_HSI = (20, 0.2, 0.3)
 
-# Different liquid:
-BEER_COLOR_HSI = (50, 0.6, 0.6)
-BEER_OFFSET_HSI = (10, 0.3, 0.5)
-
-DARK_BROWN_ALE = (40, 0.37, 0.115)
-DARK_BROWN_ALE_OFFSET = (10, 0.11, 0.025)
-
-MILK = (49.5, 0.403, 0.6145)
-MILK_OFFSET = (0.5, 0.003, 0.0265)
-
-COLA = (10, 0.45, 0.06)
-COLA_OFFSET = (10, 0.45, 0.06)
+DEFAULT_TRANSFORM = [[1.27587826e+00, -2.75652710e-02, 1.57515834e-01],
+[-1.35872391e-02, 1.19761807e+00, -6.22625525e+01],
+[-1.86242674e-05, -7.98354912e-05, 1.00000000e+00]]
 
 
 class Beer:
@@ -163,7 +150,7 @@ def find_table_transform(source, dims):
         for marker in markers:
             print(marker.compactness, marker.area, marker.center)
 
-        return np.ones([3, 3])
+        return DEFAULT_TRANSFORM
 
     ordered_markers = [pop_closest(markers, [0, 0]), pop_closest(markers, [0, source.shape[1]]),
                        pop_closest(markers, [source.shape[0], source.shape[1]]), pop_closest(markers, [source.shape[0], 0])]
