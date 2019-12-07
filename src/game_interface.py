@@ -188,6 +188,12 @@ def display_beers(target, beers_left, beers_right):
             pygame.draw.circle(target, (255, 255, 255),
                                (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
 
+def team_win_one(team_a,team_b):
+    scorea =  team_a[0].score + team_a[1].score
+    scoreb = team_b[0].score + team_b[1].score
+    if scorea> scoreb:
+        return True
+
 
 def game_over(target, team_a, team_b, font2, font):
     team1 = ("1", (0.3, 0.5, 0.1, 0.4))
