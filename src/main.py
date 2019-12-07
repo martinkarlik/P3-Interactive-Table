@@ -9,7 +9,7 @@ team_a_won = False
 FONT_SANS_BOLD = ['freesansbold.ttf', 25]
 TAPE_IMAGE = "../images/tableImages/tape.png"
 ICON = "../images/cheers.png"
-TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableImages/PlaceCups.png",
+TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableImages/digital_design.png",
                 "../images/tableImages/gameover_screen.png"]
 
 SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
@@ -19,6 +19,7 @@ SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset
 whosTurnA = (0, 0, 0)
 whosTurnB = (0, 0, 0)
 whoHit = (0,0,0)
+
 totalScoreRight = 0
 totalScoreLeft = 0
 
@@ -28,7 +29,7 @@ SPEAK = ["../sound/Speak/team_1_wins.wav", "../sound/Speak/team_2_wins.wav", "..
 
 if __name__ == '__main__':
     # CAPTURE SETUP
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
 
@@ -57,8 +58,8 @@ if __name__ == '__main__':
 
     # GAME LOGIC SETUP
     game_phase = "mode_selection"
-    modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4], True),
-             game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
+    modes = [game_interface.Button("CASUAL", [0.35, 0.55, 0.1, 0.4], True),
+             game_interface.Button("COMPETITIVE", [0.35, 0.55, 0.6, 0.9], True),
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
              game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9], False)]
 
@@ -227,7 +228,7 @@ if __name__ == '__main__':
                     for i in range(0, len(beer.balls)):
                         if beer.balls[i] and not team_b[i].hit:
                             if not speak.get_busy():
-                                speak.play(sound_fx[random.randrange(2, len(SPEAK))])
+                                speak.play(speak_fx[random.randrange(2, len(SPEAK))])
                             team_b[i].score += 1
                             team_b[i].hit = True
 
@@ -256,8 +257,9 @@ if __name__ == '__main__':
                 for beer in beers_right:
                     for i in range(0, len(beer.balls)):
                         if beer.balls[i] and not team_a[i].hit:
+                            6
                             if not speak.get_busy():
-                                speak.play(sound_fx[random.randrange(2, len(SPEAK))])
+                                speak.play(speak_fx[random.randrange(2, len(SPEAK))])
                             team_a[i].score += 1
                             team_a[i].hit = True
                             totalScoreRight = team_a[0].score + team_a[1].score
@@ -286,7 +288,7 @@ if __name__ == '__main__':
             # -------------------------
             game_interface.display_table_img(screen, table_img)
             # game_interface.display_score(screen, team_a, team_b)
-            game_interface.display_beers(screen, beers_left, beers_right, whosTurnA)
+            game_interface.display_beers(screen, beers_left, beers_right)
 
         elif game_phase == "game_over":
 

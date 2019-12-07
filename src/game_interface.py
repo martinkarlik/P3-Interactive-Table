@@ -221,12 +221,10 @@ def game_over(target, team_a, team_b, font2, font):
     teamScoreB = team_b[0].score + team_b[1].score
 
     if teamScoreA > teamScoreB:
-        main.team_a_won = True
         text = font2.render("1", True, WHITE_DISPLAY_COLOR)
         text_rect = text.get_rect(center=(DISPLAY_WIDTH*4/7, DISPLAY_HEIGHT/8))
         target.blit(text, text_rect)
     elif teamScoreB > teamScoreA:
-        main.team_a_won = False
         text = font2.render("2", True, WHITE_DISPLAY_COLOR)
         text_rect = text.get_rect(center=(DISPLAY_WIDTH*4/7, DISPLAY_HEIGHT/8))
         target.blit(text, text_rect)

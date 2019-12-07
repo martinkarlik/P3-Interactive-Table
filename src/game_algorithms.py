@@ -1,13 +1,13 @@
 from src._ip_algorithms import *
 
-MOVED_BEER_THRESHOLD = 0.01
-
 TABLE_SHAPE = (800, 400)
+CUP_RADIUS = 20
+MOVED_BEER_THRESHOLD = 0.01
 
 GREEN_COLOR_HSI = (115, 0.75, 0.5)
 RED_COLOR_HSI = (350, 0.85, 0.5)
 BLUE_COLOR_HSI = (350, 0.9, 0.5)
-WAND_COLOR_HSI = (216, 0.5, 0.4)
+WAND_COLOR_HSI = (216, 0.7, 0.4)
 
 GREEN_COLOR_BGR = (14, 94, 1)
 RED_COLOR_BGR = (20, 9, 165)
@@ -15,7 +15,7 @@ BLUE_COLOR_BGR = (110, 58, 21)
 WAND_COLOR_BGR = (110, 58, 21)
 
 BALL_COLOR_OFFSET_HSI = (10, 0.3, 0.4)
-WAND_COLOR_OFFSET_HSI = (20, 0.15, 0.2)
+WAND_COLOR_OFFSET_HSI = (20, 0.2, 0.4)
 
 DEFAULT_SRC_POINTS = np.float32([(1, 55), (619, 61), (610, 383), (7, 379)])
 
@@ -105,10 +105,10 @@ def check_for_objects(source, beers_left, beers_right):
     for side in sides:
         for beer in side:
 
-            start_point_y = int(source.shape[0] * beer.center[0] - 25) if int(source.shape[0] * beer.center[0] - 25) > 0 else 0
-            start_point_x = int(source.shape[1] * beer.center[1] - 25) if int(source.shape[1] * beer.center[1] - 25) > 0 else 0
-            end_point_y = int(start_point_y + 50) if start_point_y + 50 < source.shape[0] else source.shape[0]
-            end_point_x = int(start_point_x + 50) if start_point_x + 50 < source.shape[1] else source.shape[1]
+            start_point_y = int(source.shape[0] * beer.center[0] - CUP_RADIUS) if int(source.shape[0] * beer.center[0] - CUP_RADIUS) > 0 else 0
+            start_point_x = int(source.shape[1] * beer.center[1] - CUP_RADIUS) if int(source.shape[1] * beer.center[1] - CUP_RADIUS) > 0 else 0
+            end_point_y = int(start_point_y + CUP_RADIUS * 2) if start_point_y + CUP_RADIUS * 2 < source.shape[0] else source.shape[0]
+            end_point_x = int(start_point_x + CUP_RADIUS * 2) if start_point_x + CUP_RADIUS * 2 < source.shape[1] else source.shape[1]
 
             # source[start_point_y:end_point_y, start_point_x:end_point_x] = 0
 
@@ -179,51 +179,3 @@ def choose_option(source, options):
         if option.working:
             option.chosen = color_check_presence(get_roi(source, option.pos), WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
 
-
-def detect_liquid(source, beers_left, beers_right):
-    return
-    # if color_check_presence(source,DARK_BROWN_ALE, DARK_BROWN_ALE_OFFSET):
-    #
-    #     DarkBrownAleDetected = color_threshold(source, DARK_BROWN_ALE, DARK_BROWN_ALE_OFFSET)
-    #     kernelForClosingDarkAle = np.ones((9, 9), np.uint8)
-    #     kernelForOpenningDarkAle = np.ones((5, 5), np.uint8)
-    #
-    #     # opening = cv2.morphologyEx(BeerDetected, cv2.MORPH_OPEN, kernelForOpeningDarkAle)
-    #     # closing = cv2.morphologyEx(DarkBrownAleDetected, cv2.MORPH_CLOSE, kernelForClosingDarkAle)
-    #     closing = DarkBrownAleDetected
-    #
-    # if color_check_presence(source, BEER_COLOR, BEER_OFFSET):
-    #
-    #     BeerDetected = color_threshold(source, BEER_COLOR, BEER_OFFSET)
-    #     kernel = np.ones((9, 9), np.uint8)
-    #     kernelOpening = np.ones((5, 5), np.uint8)
-    #
-    #     # opening = cv2.morphologyEx(BeerDetected, cv2.MORPH_OPEN, kernelOpening)
-    #     # closing = cv2.morphologyEx(BeerDetected, cv2.MORPH_CLOSE, kernel)
-    #     closing = BeerDetected
-    #
-    # if color_check_presence(source, MILK, MILK_OFFSET):
-    #     MilkDetected = color_threshold(source, MILK, MILK_OFFSET)
-    #     kernel = np.ones((7, 7), np.uint8)
-    #     kernelOpening = np.ones((5, 5), np.uint8)
-    #     kernelSmall = np.ones((10, 10), np.uint8)
-    #
-    #     # opening = cv2.morphologyEx(MilkDetected, cv2.MORPH_OPEN, kernelOpening)
-    #     # closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
-    #     closing = MilkDetected
-    #
-    #
-    # if color_check_presence(source, COLA, COLA_OFFSET):
-    #     ColaDetected = color_threshold(source, COLA, COLA_OFFSET)
-    #     kernelForClosingCola = np.ones((20, 20), np.uint8)
-    #     kernelForOpenningCola = np.ones((10, 10), np.uint8)
-    #
-    #     # opening = cv2.morphologyEx(ColaDetected, cv2.MORPH_OPEN, kernelForOpenningScotch)
-    #     # closing = cv2.morphologyEx(ColaDetected, cv2.MORPH_CLOSE, kernelForClosingCola)
-    #     closing = ColaDetected
-    #
-    #
-    #
-    #
-    # if color_check_presence (source,DARK_BROWN_ALE, DARK_BROWN_ALE_OFFSET) == False and color_check_presence(source,BEER_COLOR, BEER_OFFSET) == False and color_check_presence(source,MILK, MILK_OFFSET) == False and color_check_presence(source,COLA, COLA_OFFSET) == False :
-    #     print("There is neither Brown ale, Beer, Milk or Cola in the cup ")
