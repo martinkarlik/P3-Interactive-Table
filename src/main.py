@@ -4,42 +4,37 @@ import random
 from src import game_algorithms
 from src import game_interface
 
-team_a_won = False
-
 FONT_SANS_BOLD = ['freesansbold.ttf', 25]
-TAPE_IMAGE = "../images/tableImages/tape.png"
-ICON = "../images/cheers.png"
-TABLE_IMAGES = ["../images/tableImages/choose_game_mode.png", "../images/tableImages/digital_design.png",
-                "../images/tableImages/gameover_screen.png"]
+FONT_MYRIAD_PRO_REGULAR = ['../fonts/MyriadProRegular.ttf', 60]
+FONT_MYRIAD_PRO_REGULAR2 = ['../fonts/MyriadProRegular.ttf', 97]
 
+ICON = "../images/tableImages/cheers.png"
+TAPE_IMAGE = "../images/tableImages/tape.png"
+TABLE_IMAGES = ["../images/tableImages/mode_selection.png", "../images/tableImages/game_play_competitive.png",
+                "../images/tableImages/game_over.png"]
 SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
 
 SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
           "../sound/cuteguisoundsset/Wav/Cursor.wav", "../sound/hit_the_golden_cup_jingle.wav"]
-whosTurnA = (0, 0, 0)
-whosTurnB = (0, 0, 0)
-whoHit = (0,0,0)
-
-totalScoreRight = 0
-totalScoreLeft = 0
 
 SPEAK = ["../sound/Speak/team_1_wins.wav", "../sound/Speak/team_2_wins.wav", "../sound/Speak/well_done.wav",
          "../sound/Speak/great_job.wav", "../sound/Speak/what_a_shot.wav",
          "../sound/Speak/wow.wav", "../sound/Speak/you_did_it.wav"]
 
+
 if __name__ == '__main__':
+
     # CAPTURE SETUP
     cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
 
-    # PYGAME SETUP
+    # INTERFACE SETUP
     pygame.init()
     pygame.display.set_caption("BeerPong")
     icon = pygame.image.load(ICON)
     pygame.display.set_icon(icon)
 
-    # Select, Achievement, cursor
     speak = pygame.mixer.Channel(4)
     speak_fx = []
     for sound in SPEAK:
@@ -49,12 +44,12 @@ if __name__ == '__main__':
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
-    table_img = game_interface.set_table_img(TABLE_IMAGES[0])
+
+    table_img = game_interface.set_table_image(TABLE_IMAGES[0])
     tape_img = pygame.image.load(TAPE_IMAGE)
-    tpl = cv2.imread("../images/testImages/beer.jpg",
-                     cv2.IMREAD_GRAYSCALE)  # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
+    template = cv2.imread("../images/testImages/beer.jpg", cv2.IMREAD_GRAYSCALE)
 
     # GAME LOGIC SETUP
     game_phase = "mode_selection"
@@ -63,34 +58,47 @@ if __name__ == '__main__':
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
              game_interface.Button("EASTERN EUROPEAN", [0.7, 0.9, 0.6, 0.9], False)]
 
-    gameoverbutton = [game_interface.Button("PLAY AGAIN", [0.75, 0.95, 0.3, 0.7], True)]
+    play_again_button = game_interface.Button("PLAY AGAIN", [0.75, 0.95, 0.3, 0.7], True)
 
-    team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in range(0, game_interface.Player.players_num)]
-    team_a[random.randint(0, len(team_a) - 1)].drinks = True
+    teams = [[], []]
+    team_a_won = True
 
-    team_b = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
-              range(0, game_interface.Player.players_num)]
-    team_b[random.randint(0, len(team_b) - 1)].drinks = True
+    teams[0] = [game_algorithms.Player(game_algorithms.Player.team_names[i], game_algorithms.Player.team_colors[i]) for i in range(0, game_algorithms.Player.players_num)]
+    teams[0][random.randint(0, len(teams[0]) - 1)].drinks = True
 
-    beers_left = []
-    beers_right = []
+    teams[1] = [game_algorithms.Player(game_algorithms.Player.team_names[i], game_algorithms.Player.team_colors[i]) for i in
+              range(0, game_algorithms.Player.players_num)]
+    teams[1][random.randint(0, len(teams[1]) - 1)].drinks = True
+
+    cups = [[], []]
 
     selection_music_playing = False
     gameplay_music_playing = False
 
     _, frame = cap.read()
     table_transform = game_algorithms.find_table_transform(frame, game_algorithms.TABLE_SHAPE)
+    table = cv2.imread("../images/testImages/table_trans.jpg")
 
     app_running = True
     while app_running and cap.isOpened():
 
         _, frame = cap.read()
-        table = game_algorithms.apply_transform(frame, table_transform, game_algorithms.TABLE_SHAPE)
-
-        # cv2.imshow("table", table)
+        # table = game_algorithms.apply_transform(frame, table_transform, game_algorithms.TABLE_SHAPE)
 
         if game_phase == "mode_selection":
             game_algorithms.choose_option(table, modes)
+
+            for mode in modes:
+                if mode.chosen:
+                    mode.selection_meter = min(mode.selection_meter + 2, 100)
+                else:
+                    pygame.mixer.stop()
+                    mode.selection_meter = max(mode.selection_meter - 6, 0)
+
+                if mode.selection_meter >= 100:
+                    sound_fx[0].play()
+                    game_phase = "game_play"
+                    table_img = game_interface.set_table_image(TABLE_IMAGES[1])
 
             if not selection_music_playing:
                 selection_music_playing = True
@@ -98,22 +106,77 @@ if __name__ == '__main__':
                 pygame.mixer.music.load(SONGS[0])
                 pygame.mixer.music.play(-1)
 
-            for mode in modes:
-                if mode.chosen:
-                    mode.meter = min(mode.meter + 2, 100)
-                else:
-                    pygame.mixer.stop()
-                    mode.meter = max(mode.meter - 6, 0)
-
-                if mode.meter >= 100:
-                    sound_fx[0].play()
-                    game_phase = "game_play"
-                    table_img = game_interface.set_table_img(TABLE_IMAGES[1])
-
-            game_interface.display_table_img(screen, table_img)
-            game_interface.display_mode_selection(screen, font, tape_img, modes)
+            game_interface.display_table_image(screen, table_img)
+            game_interface.display_options(screen, font, tape_img, modes)
 
         elif game_phase == "game_play":
+
+            current_cups = [[], []]
+
+            game_algorithms.get_current_cups(table, template, current_cups)
+            game_algorithms.update_cups(current_cups, cups)
+            game_algorithms.check_for_objects(table, cups)
+
+            if len(cups[0]) == len(cups[1]) == 0 and (game_algorithms.Player.game_score[0] > 0 or game_algorithms.Player.game_score[1] > 0):
+                game_phase = "game_over"
+                table_img = game_interface.set_table_image(TABLE_IMAGES[2])
+
+            # region Cup selection
+
+            for side in cups:
+                for cup in side:
+                    if cup.has_wand:
+                        cup.selection_meter = min(cup.selection_meter + 1, 100)
+                    else:
+                        cup.selection_meter = max(cup.selection_meter - 10, 0)
+
+                    if not cup.is_yellow and cup.selection_meter >= 100 and not jingle.get_busy():
+                        jingle.play(sound_fx[3])
+                        cup.is_yellow = True
+
+                        min_distance = 1
+                        closest_cup_index = -1
+                        for i in range(0, len(side)):
+                            if cup is not side[i]:
+                                distance = abs(cup.center[0] - side[i].center[0]) + abs(cup.center[1] - side[i].center[1])
+                                if distance < min_distance:
+                                    min_distance = distance
+                                    closest_cup_index = i
+                        if closest_cup_index > -1:
+                            side[closest_cup_index].is_red = True
+
+                    if cup.is_yellow:
+                        cup.selected_time -= 1
+                        if cup.selected_time <= 0:
+                            cup.is_yellow = False
+                            cup.selected_time = cup.max_selected_time
+
+            # endregion
+
+            # region Score checking
+
+            for i in range(0, len(teams)):
+                for cup in cups[i]:
+                    for j in range(0, len(cup.has_balls)):
+                        current_team = teams[i]
+                        opposite_team = teams[len(teams) - i - 1]
+
+                        if cup.has_balls[j] and not current_team[j].hit:
+                            if not speak.get_busy():
+                                speak.play(speak_fx[random.randrange(2, len(SPEAK))])
+
+                            current_team[j].score += 1
+                            game_algorithms.Player.game_score[i] += 1
+                            current_team[j].hit = True
+
+                        elif current_team[j].hit and not cup.has_balls[j]:
+                            for k in range(0, len(opposite_team)):
+                                if opposite_team[k].drinks:
+                                    opposite_team[k].drinks = False
+                                    opposite_team[k + 1 if k + 1 < len(opposite_team) else 0].drinks = True
+                                    break
+
+            # endregion
 
             if not gameplay_music_playing:
                 gameplay_music_playing = True
@@ -121,197 +184,34 @@ if __name__ == '__main__':
                 pygame.mixer.music.load(SONGS[1])
                 pygame.mixer.music.play(-1)
 
-            current_beers_left = []
-            current_beers_right = []
-
-            game_algorithms.extract_beers(table, tpl, current_beers_left, current_beers_right)
-            game_algorithms.inform_beers(beers_left, beers_right, current_beers_left, current_beers_right)
-            game_algorithms.check_for_objects(table, beers_left, beers_right)
-
-            # -------------------------
-            if(len(current_beers_left) > 1 or len(current_beers_right) > 1) and totalScoreRight == 0 and totalScoreLeft == 0:
-
-                # region Wand Detection/ Golden cup
-                for beer in beers_left:
-                    if beer.wand_here:
-                        beer.meter += 10
-                    else:
-                        beer.meter = max(beer.meter - 10, 0)
-                    if beer.meter == 100 and not jingle.get_busy():
-                        jingle.play(sound_fx[3])
-                    if beer.meter >= 100:
-                        beer.yellow = True
-                    if beer.yellow:
-                        # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
-                        # a cup on the right is highlighted
-                        golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-                        rotated_text = pygame.transform.rotate(golden_cup_txt, 90)
-                        screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) + 50,
-                                                                                game_interface.DISPLAY_HEIGHT / 2)))
-
-                        print(beer.counter)
-                        beer.counter -= 1
-                        if beer.counter <= 0:
-                            beer.yellow = False
-                            beer.counter = 100
-
-                for beer in beers_right:
-                    if beer.wand_here:
-                        beer.meter += 10
-                    else:
-                        beer.meter = max(beer.meter - 10, 0)
-                    if beer.meter == 100 and not jingle.get_busy():
-                        jingle.play(sound_fx[3])
-                    if beer.meter >= 100:
-                        beer.yellow = True
-                    if beer.yellow:
-                        # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
-                        # a cup on the right is highlighted
-                        golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-                        rotated_text = pygame.transform.rotate(golden_cup_txt, -90)
-                        screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) - 50,
-                                                                                game_interface.DISPLAY_HEIGHT / 2)))
-
-                        #print(beer.counter)
-                        beer.counter -= 1
-                        if beer.counter <= 0:
-                            beer.yellow = False
-                            beer.counter = 100
-
-                for i in range(0, len(beers_left)):
-                    if beers_left[i].yellow:
-                        min_dist = 1000
-                        red_index = -1
-                        for j in range(0, len(beers_left)):
-                            if j == i:
-                                continue
-                            else:
-                                distance = abs(beers_left[i].center[0] - beers_left[j].center[0]) + abs(
-                                    beers_left[i].center[1] - beers_left[j].center[1])
-                                if distance < min_dist:
-                                    min_dist = distance
-                                    red_index = j
-                        if red_index > -1:
-                            beers_left[red_index].red = True
-                            # This is extremely dumb, help me
-                            # if not beers_left[i].yellow:
-                            #     beers_left[red_index].red = False
-                            #     beers_left[i].red = False
-                    else:
-                        beers_left[i].red = False
-
-                for i in range(0, len(beers_right)):
-                    if beers_right[i].yellow:
-                        min_dist = 1000
-                        red_index = -1
-                        for j in range(0, len(beers_right)):
-                            if j == i:
-                                continue
-                            else:
-                                distance = abs(beers_right[i].center[0] - beers_right[j].center[0]) + abs(
-                                    beers_right[i].center[1] - beers_right[j].center[1])
-                                if distance < min_dist:
-                                    min_dist = distance
-                                    red_index = j
-                        if red_index > -1:
-                            beers_right[red_index].red = True
-                            # This is extremely dumb, help me
-                            # if not beers_right[i].yellow:
-                            #     beers_right[red_index].red = False
-                            #     beers_right[i].red = False
-                    else:
-                        beers_right[i].red = False
-                # endregion
-
-                # region Ball detection
-                for beer in beers_left:
-                    for i in range(0, len(beer.balls)):
-                        if beer.balls[i] and not team_b[i].hit:
-                            if not speak.get_busy():
-                                speak.play(speak_fx[random.randrange(2, len(SPEAK))])
-                            team_b[i].score += 1
-                            team_b[i].hit = True
-
-                            if whosTurnA == team_a[0].color:
-                                whosTurnA = team_a[1].color
-                                team_b[i].hit = False
-
-                            elif whosTurnA == team_a[1].color:
-                                whosTurnA = team_a[0].color
-                                team_b[i].hit = False
-
-                            elif whosTurnA != team_a[0].color and whosTurnA != team_a[1].color:
-                                whosTurnA = team_a[1].color
-                                team_b[i].hit = False
-
-                            # for player in team_a:
-                            #     if player.drinks:
-                            #         whosTurn = player.color
-
-                        # elif team_b[i].hit and not beer.balls[i]:
-                        #     for j in range(1, len(team_a)):
-                        #         if team_a[j].drinks:
-                        #             team_a[j].drinks = False
-                        #             team_a[j + 1 if j + 1 < len(team_a) else 0].drinks = True
-
-                for beer in beers_right:
-                    for i in range(0, len(beer.balls)):
-                        if beer.balls[i] and not team_a[i].hit:
-                            6
-                            if not speak.get_busy():
-                                speak.play(speak_fx[random.randrange(2, len(SPEAK))])
-                            team_a[i].score += 1
-                            team_a[i].hit = True
-                            totalScoreRight = team_a[0].score + team_a[1].score
-                            if totalScoreRight == 1:
-                                whosTurnB = team_b[0].color
-                                print("I am picking a stating point")
-                                print()
-
-
-                        elif team_a[i].hit and not beer.balls[i]:
-                            if whosTurnB == team_b[0].color and totalScoreRight %2 == 0:
-                                whosTurnB = team_b[1].color
-                                print("I am in team_b[1]")
-                            elif whosTurnB == team_b[1].color and totalScoreRight %2 == 1:
-                                whosTurnB = team_b[0].color
-                                print("I am in team_b[0]")
-                        #     for j in range(1, len(team_b)):
-                        #         if team_b[j].drinks:
-                        #             team_b[j].drinks = False
-                        #             team_b[j + 1 if j + 1 < len(team_b) else 0].drinks = True
-                # endregion
-
-            elif (len(current_beers_right) == 0 or len(current_beers_left) == 0) and (totalScoreLeft > 0 or totalScoreRight > 0):
-                game_phase = "game_over"
-                table_img = game_interface.set_table_img(TABLE_IMAGES[2])
-            # -------------------------
-            game_interface.display_table_img(screen, table_img)
-            # game_interface.display_score(screen, team_a, team_b)
-            game_interface.display_beers(screen, beers_left, beers_right)
+            game_interface.display_table_image(screen, table_img)
+            game_interface.display_score(screen, font, teams)
+            game_interface.display_cups(screen, cups)
 
         elif game_phase == "game_over":
 
-            game_interface.display_table_img(screen, table_img)
-            game_algorithms.choose_option(table, gameoverbutton)
+            game_algorithms.choose_option(table, [play_again_button])
 
-            for mode in gameoverbutton:
-                if mode.chosen:
-                    mode.meter = min(mode.meter + 2, 100)
-                else:
-                    pygame.mixer.stop()
-                    mode.meter = max(mode.meter - 6, 0)
+            if play_again_button.chosen:
+                play_again_button.selection_meter = min(play_again_button.selection_meter + 2, 100)
+            else:
+                play_again_button.selection_meter = max(play_again_button.selection_meter - 6, 0)
 
-                if mode.meter >= 100:
-                    sound_fx[0].play()
-                    game_phase = "mode_selection"
-                    table_img = game_interface.set_table_img(TABLE_IMAGES[0])
-                    totalScoreRight = 0
-                    totalScoreLeft = 0
+            if play_again_button.selection_meter >= 100:
+                sound_fx[0].play()
+                game_phase = "mode_selection"
+                table_img = game_interface.set_table_image(TABLE_IMAGES[0])
+                game_algorithms.Player.game_score = [0, 0]
+                for side in teams:
+                    for player in side:
+                        player.score = 0
 
-            game_interface.display_mode_selection(screen, font, tape_img, gameoverbutton)
-            game_interface.game_over(screen, team_a, team_b, font, font)
+                for mode in modes:
+                    mode.selection_meter = 0
 
+            game_interface.display_table_image(screen, table_img)
+            game_interface.game_over(screen, teams, font, font)
+            game_interface.display_options(screen, font, tape_img, [play_again_button])
 
             if team_a_won:
                 if not speak.get_busy():
@@ -329,9 +229,12 @@ if __name__ == '__main__':
                     app_running = False
                 if event.key == pygame.K_SPACE:
                     random_cup = True
-                    #print('You have pressed spacebar')
 
         pygame.display.update()
 
     cap.release()
     cv2.destroyAllWindows()
+
+
+# TODO better cup detection - make template matching not care about the middle part of the circle
+# TODO better object detection - either Malte's method, or at least less naive color thresholding than "one pixel -> it's a ball!"
