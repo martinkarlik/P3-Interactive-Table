@@ -218,8 +218,8 @@ if __name__ == '__main__':
                     pygame.mixer.music.play(-1)
                 game_interface.display_table_image(screen, table_img)
                 game_interface.display_score(screen, font, teams)
-                game_interface.display_message(screen, font, teams, cups)
-                game_interface.display_cups(screen, cups)
+                # game_interface.display_message(screen, font, teams, cups)
+                game_interface.display_cups(screen, cups, teams)
 
             # COMPETITIVE GAMEMODE
             if game_interface.Button.selected_option == "COMPETITIVE":
@@ -230,8 +230,8 @@ if __name__ == '__main__':
                     pygame.mixer.music.play(-1)
                 game_interface.display_table_image(screen, table_img)
                 game_interface.display_score(screen, font, teams)
-                game_interface.display_message(screen, font, teams, cups)
-                game_interface.display_cups(screen, cups)
+                # game_interface.display_message(screen, font, teams, cups)
+                game_interface.display_cups(screen, cups, teams)
 
         elif game_phase == "game_over":
 
