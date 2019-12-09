@@ -17,7 +17,7 @@ BLUE_COLOR_RGB = (21, 58, 110)
 BALL_COLOR_OFFSET_HSI = (10, 0.3, 0.4)
 WAND_COLOR_OFFSET_HSI = (20, 0.2, 0.4)
 
-DEFAULT_SRC_POINTS = np.float32([(1, 55), (619, 61), (610, 383), (7, 379)])
+DEFAULT_SRC_POINTS = np.float32([(2, 58), (622, 53), (619, 377), (14, 383)])
 
 
 class Player:
@@ -147,16 +147,16 @@ def check_ball(source, index):
     hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
 
     if index == 0:
-        lower_color = np.array([150, 63, 79])
-        upper_color = np.array([179, 255, 255])
+        lower_color = np.array([0, 131, 0])
+        upper_color = np.array([12, 255, 255])
     else:
-        lower_color = np.array([47, 58, 62])
-        upper_color = np.array([66, 207, 200])
+        lower_color = np.array([48, 80, 50])
+        upper_color = np.array([61, 255, 255])
 
     mask = cv2.inRange(hsv, lower_color, upper_color)
 
     result = cv2.bitwise_and(source, source, mask=mask)
-    #
+
     kernel = np.ones((5, 5), np.uint8)
     closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
     opening = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel, iterations=2)
@@ -184,9 +184,10 @@ def check_wand(source):
     mask = cv2.inRange(hsv, lower_color, upper_color)
 
     result = cv2.bitwise_and(source, source, mask=mask)
-    #
     kernel = np.ones((5, 5), np.uint8)
     closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
+
+    cv2.imshow("closing", closing)
 
 
     contours, _ = cv2.findContours(closing, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -195,11 +196,13 @@ def check_wand(source):
         rect = cv2.minAreaRect(contour)
         box = cv2.boxPoints(rect)
         box = np.int0(box)
+        print(area)
         if 300 < area < 1000:
             if rect[1][1] > 20 or rect[1][0] > 20:
                 cv2.drawContours(source, [box], 0, (0, 0, 255), 2)
                 return True
 
+    cv2.imshow("source", source)
     return False
 
 def find_table_transform(source, dims):
@@ -218,15 +221,16 @@ def find_table_transform(source, dims):
     # gray = bgr_to_gray(source)
     # binary_inv = 1 - threshold(gray, 0.12, 1)
     gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
-    _, binary_inv = cv2.threshold(gray, 40, 255, cv2.THRESH_BINARY_INV)
-    open = cv2.morphologyEx(binary_inv, cv2.MORPH_OPEN, kernel=(15, 15))
-    close = cv2.morphologyEx(open, cv2.MORPH_CLOSE, kernel=(18, 18))
+    _, binary_inv = cv2.threshold(gray, 70, 255, cv2.THRESH_BINARY_INV)
+    # open = cv2.morphologyEx(binary_inv, cv2.MORPH_OPEN, kernel=(15, 15))
+    close = cv2.morphologyEx(binary_inv, cv2.MORPH_CLOSE, kernel=(18, 18))
+
 
     blobs = extract_blobs(close)
 
     markers = []
     for blob in blobs:
-        if blob.area in range(700, 1200) and blob.compactness > 0.8:
+        if blob.area in range(700, 1200) and blob.compactness > 0.85:
             print("Blob: ", blob.area, blob.compactness)
             markers.append(blob)
 

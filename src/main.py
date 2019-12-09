@@ -130,9 +130,6 @@ if __name__ == '__main__':
             game_algorithms.update_cups(current_cups, cups)
             game_algorithms.check_for_objects(table, cups)
 
-            if (len(cups[0]) == 0 or len(cups[1]) == 0) and (game_algorithms.Player.game_score[0] > 0 or game_algorithms.Player.game_score[1] > 0):
-                game_phase = "game_over"
-                table_img = game_interface.set_table_image(TABLE_IMAGES[2])
 
             # region Cup selection
 
@@ -206,6 +203,10 @@ if __name__ == '__main__':
                                     opposite_team[k + 1 if k + 1 < len(opposite_team) else 0].drinks = True
                                     break
 
+            if (len(cups[0]) == 0 or len(cups[1]) == 0) and (game_algorithms.Player.game_score[0] > 0 or game_algorithms.Player.game_score[1] > 0):
+                game_phase = "game_over"
+                table_img = game_interface.set_table_image(TABLE_IMAGES[2])
+
             # endregion
 
             # CASUAL GAMEMODE
@@ -217,8 +218,8 @@ if __name__ == '__main__':
                     pygame.mixer.music.play(-1)
                 game_interface.display_table_image(screen, table_img)
                 game_interface.display_score(screen, font, teams)
-                game_interface.display_message(screen, font, teams, cups)
-                game_interface.display_cups(screen, cups)
+                # game_interface.display_message(screen, font, teams, cups)
+                game_interface.display_cups(screen, cups, teams)
 
             # COMPETITIVE GAMEMODE
             if game_interface.Button.selected_option == "COMPETITIVE":
@@ -229,8 +230,8 @@ if __name__ == '__main__':
                     pygame.mixer.music.play(-1)
                 game_interface.display_table_image(screen, table_img)
                 game_interface.display_score(screen, font, teams)
-                game_interface.display_message(screen, font, teams, cups)
-                game_interface.display_cups(screen, cups)
+                # game_interface.display_message(screen, font, teams, cups)
+                game_interface.display_cups(screen, cups, teams)
 
         elif game_phase == "game_over":
 

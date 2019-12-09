@@ -1,7 +1,7 @@
 import pygame
 
-DISPLAY_WIDTH = 960
-DISPLAY_HEIGHT = 540
+DISPLAY_WIDTH = 1920
+DISPLAY_HEIGHT = 1080
 
 
 GREEN_DISPLAY_COLOR = 7, 129, 30
@@ -121,7 +121,7 @@ def display_cups(target, cups, teams):
                     else:
                         pygame.draw.circle(target, (255, 200, 0), (x, y), 30)
                 else:
-                    pygame.draw.arc(target, (255, 255, 0), (x-15, y-15, 30, 30), 0.0, (cup.selection_meter / 10) * 6.283, 30)
+                    pygame.draw.arc(target, (255, 255, 0), (x-15, y-15, 30, 30), 0.0, (cup.selection_meter / 10) * 6.283, 15)
 
             else:
                 pygame.draw.circle(target, (255, 255, 255), (x, y), 30)
@@ -163,10 +163,10 @@ def game_over(target, teams, font, font2):
 
     if teamScoreA > teamScoreB:
         text = font2.render("TEAM 1 WON!", True, WHITE_DISPLAY_COLOR)
-        text_rect = text.get_rect(center=(DISPLAY_WIDTH*0.5, DISPLAY_HEIGHT/8))
+        text_rect = text.get_rect(center=(DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.15))
         target.blit(text, text_rect)
-    elif teamScoreB > teamScoreA:
+    else:
         text = font2.render("TEAM 2 WON!", True, WHITE_DISPLAY_COLOR)
-        text_rect = text.get_rect(center=(DISPLAY_WIDTH*0.5, DISPLAY_HEIGHT/8))
+        text_rect = text.get_rect(center=(DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.15))
         target.blit(text, text_rect)
 
