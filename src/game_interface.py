@@ -12,6 +12,8 @@ WHITE_DISPLAY_COLOR = 255, 255, 255
 
 class Button:
 
+    selected_option = ""
+
     def __init__(self, title, pos, working):
         self.title = title
         self.pos = pos
