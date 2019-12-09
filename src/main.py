@@ -4,9 +4,14 @@ import random
 from src import game_algorithms
 from src import game_interface
 
+
+congratulations = True
+team_a_won = False
+
 FONT_SANS_BOLD = ['freesansbold.ttf', 25]
 FONT_MYRIAD_PRO_REGULAR = ['../fonts/MyriadProRegular.ttf', 60]
 FONT_MYRIAD_PRO_REGULAR2 = ['../fonts/MyriadProRegular.ttf', 97]
+
 
 ICON = "../images/tableImages/cheers.png"
 TAPE_IMAGE = "../images/tableImages/tape.png"
@@ -16,10 +21,17 @@ SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]
 
 SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
           "../sound/cuteguisoundsset/Wav/Cursor.wav", "../sound/hit_the_golden_cup_jingle.wav"]
+whosTurnA = (0, 0, 0)
+whosTurnB = (0, 0, 0)
+whoHit = (0, 0, 0)
+totalScoreRight = 0
+totalScoreLeft = 0
 
 SPEAK = ["../sound/Speak/team_1_wins.wav", "../sound/Speak/team_2_wins.wav", "../sound/Speak/well_done.wav",
          "../sound/Speak/great_job.wav", "../sound/Speak/what_a_shot.wav",
-         "../sound/Speak/wow.wav", "../sound/Speak/you_did_it.wav"]
+         "../sound/Speak/wow.wav", "../sound/Speak/you_did_it.wav", "../sound/Speak/brilliantly_done.wav", "../sound/Speak/fantastic.wav",
+         "../sound/Speak/incredible_shot.wav", "../sound/Speak/keep_up_the_work.wav", "../sound/Speak/oh_yea.wav",
+         "../sound/Speak/you're_a_star.wav"]
 
 
 if __name__ == '__main__':
@@ -162,10 +174,12 @@ if __name__ == '__main__':
                 for cup in cups[i]:
                     for j in range(0, len(cup.has_balls)):
 
-                        if cup.has_balls[j] > 0 and not current_team[j].hit:
-                            print("I got to 1")
-                            if not speak.get_busy():
+                        if cup.has_balls[j] and not current_team[j].hit:
+                            if not pygame.mixer.find_channel(speak).get_busy():
+                                pygame.mixer.music.pause()
                                 speak.play(speak_fx[random.randrange(2, len(SPEAK))])
+                                if pygame.mixer.find_channel(speak).get_busy():
+                                    pygame.mixer.music.unpause()
 
                             current_team[j].score += 1
                             game_algorithms.Player.game_score[i] += 1
@@ -218,10 +232,10 @@ if __name__ == '__main__':
             game_interface.display_options(screen, font, tape_img, [play_again_button])
 
             if team_a_won:
-                if not speak.get_busy():
+                if not pygame.mixer.get_busy():
                     speak.play(speak_fx[0], 0)
             else:
-                if not speak.get_busy():
+                if not pygame.mixer.get_busy():
                     speak.play(speak_fx[1], 0)
 
         # KEYBOARD INPUT
