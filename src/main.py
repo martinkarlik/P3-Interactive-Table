@@ -217,6 +217,10 @@ if __name__ == '__main__':
 
         elif game_phase == "game_over":
 
+            pygame.mixer.music.stop()
+            selection_music_playing = False
+            gameplay_music_playing = False
+
             game_algorithms.choose_option(table, [play_again_button])
 
             if play_again_button.chosen:
@@ -241,11 +245,13 @@ if __name__ == '__main__':
             game_interface.display_options(screen, font, tape_img, [play_again_button])
 
             if game_algorithms.Player.game_score[0] > game_algorithms.Player.game_score[0]:
-                if not pygame.mixer.get_busy():
+                if not pygame.mixer.get_busy() and congratulations:
                     speak.play(speak_fx[0], 0)
+                    congratulations = False
             else:
-                if not pygame.mixer.get_busy():
+                if not pygame.mixer.get_busy() and congratulations:
                     speak.play(speak_fx[1], 0)
+                    congratulations = False
 
         # KEYBOARD INPUT
         for event in pygame.event.get():
