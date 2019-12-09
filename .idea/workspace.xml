@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test files/cupDetect.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test files/cupDetect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sound/epic_musix.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/sound/epic_musix.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sound/hit_the_golden_cup_jingle.wav" beforeDir="false" afterPath="$PROJECT_DIR$/sound/hit_the_golden_cup_jingle.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sound/mass_effect_elevator_music_2.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/sound/mass_effect_elevator_music_2.mp3" afterDir="false" />
-    </list>
+    <list default="true" id="e180a167-7425-4627-9ae6-394e693056d6" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -432,22 +426,22 @@
     <option name="LAST_COMMIT_MESSAGE" value="Cup Detection now spits out the x and y coordinates" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1515" height="83" key="GridCell.Tab.0.bottom" timestamp="1575892206169">
+    <state width="1515" height="83" key="GridCell.Tab.0.bottom" timestamp="1575895236596">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1515" height="83" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1575892206169" />
-    <state width="1515" height="83" key="GridCell.Tab.0.center" timestamp="1575892206169">
+    <state width="1515" height="83" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1575895236596" />
+    <state width="1515" height="83" key="GridCell.Tab.0.center" timestamp="1575895236595">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1515" height="83" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1575892206169" />
-    <state width="1515" height="83" key="GridCell.Tab.0.left" timestamp="1575892206168">
+    <state width="1515" height="83" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1575895236595" />
+    <state width="1515" height="83" key="GridCell.Tab.0.left" timestamp="1575895236595">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1515" height="83" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1575892206168" />
-    <state width="1515" height="83" key="GridCell.Tab.0.right" timestamp="1575892206169">
+    <state width="1515" height="83" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1575895236595" />
+    <state width="1515" height="83" key="GridCell.Tab.0.right" timestamp="1575895236596">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1515" height="83" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1575892206169" />
+    <state width="1515" height="83" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1575895236596" />
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1575881624764">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
