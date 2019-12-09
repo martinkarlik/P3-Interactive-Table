@@ -47,6 +47,8 @@ if __name__ == '__main__':
     icon = pygame.image.load(ICON)
     pygame.display.set_icon(icon)
 
+    songs = pygame.mixer.Channel(2)
+    songs.set_volume(0.7)
     speak = pygame.mixer.Channel(4)
     speak_fx = []
     for sound in SPEAK:
@@ -115,8 +117,7 @@ if __name__ == '__main__':
             if not selection_music_playing:
                 selection_music_playing = True
                 pygame.mixer.music.stop()
-                pygame.mixer.music.load(SONGS[0])
-                pygame.mixer.music.play(-1)
+                songs.play(pygame.mixer.music.load(SONGS[0]),-1)
 
             game_interface.display_table_image(screen, table_img)
             game_interface.display_options(screen, font, tape_img, modes)
