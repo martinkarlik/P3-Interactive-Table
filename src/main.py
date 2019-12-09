@@ -21,11 +21,7 @@ SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]
 
 SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
           "../sound/cuteguisoundsset/Wav/Cursor.wav", "../sound/hit_the_golden_cup_jingle.wav"]
-whosTurnA = (0, 0, 0)
-whosTurnB = (0, 0, 0)
-whoHit = (0, 0, 0)
-totalScoreRight = 0
-totalScoreLeft = 0
+
 
 SPEAK = ["../sound/Speak/team_1_wins.wav", "../sound/Speak/team_2_wins.wav", "../sound/Speak/well_done.wav",
          "../sound/Speak/great_job.wav", "../sound/Speak/what_a_shot.wav",
@@ -91,7 +87,6 @@ if __name__ == '__main__':
 
     _, frame = cap.read()
     table_transform = game_algorithms.find_table_transform(frame, game_algorithms.TABLE_SHAPE)
-    # table = cv2.imread("../images/testImages/table_trans.jpg")
 
     app_running = True
     while app_running and cap.isOpened():
@@ -117,7 +112,8 @@ if __name__ == '__main__':
             if not selection_music_playing:
                 selection_music_playing = True
                 pygame.mixer.music.stop()
-                songs.play(pygame.mixer.music.load(SONGS[0]),-1)
+                pygame.mixer.music.load(SONGS[0])
+                pygame.mixer.music.play(-1)
 
             game_interface.display_table_image(screen, table_img)
             game_interface.display_options(screen, font, tape_img, modes)
@@ -182,8 +178,8 @@ if __name__ == '__main__':
 
                 hit_balls = [False for i in range(0, game_algorithms.Cup.balls_num)]
                 for cup in cups[i]:
-                    for j in range(0, len(cup.has_balls)):
-                        if cup.has_balls[j]:
+                    for j in range(0, game_algorithms.Cup.balls_num):
+                        if cup.has_balls[j] > 0:
                             hit_balls[j] = True
 
                 for cup in cups[i]:
@@ -216,6 +212,7 @@ if __name__ == '__main__':
 
             game_interface.display_table_image(screen, table_img)
             game_interface.display_score(screen, font, teams)
+            game_interface.display_message(screen, font, teams, cups)
             game_interface.display_cups(screen, cups)
 
         elif game_phase == "game_over":
@@ -243,7 +240,7 @@ if __name__ == '__main__':
             game_interface.game_over(screen, teams, font, font)
             game_interface.display_options(screen, font, tape_img, [play_again_button])
 
-            if team_a_won:
+            if game_algorithms.Player.game_score[0] > game_algorithms.Player.game_score[0]:
                 if not pygame.mixer.get_busy():
                     speak.play(speak_fx[0], 0)
             else:

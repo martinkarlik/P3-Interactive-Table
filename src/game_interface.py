@@ -85,6 +85,14 @@ def display_score(target, font, teams):
             target.blit(pygame.transform.rotate(text, -90 + 180 * i), text_rect)
 
 
+def display_message(target, font, teams, cups):
+    for i in range(0, len(teams)):
+        for j in range(0, len(teams[i])):
+            text = font.render(str(teams[i][j].score), True, teams[i][j].color)
+            text_rect = text.get_rect(center=(0.05 * DISPLAY_WIDTH + i * 0.9 * DISPLAY_WIDTH, 0.05 * DISPLAY_HEIGHT + j * 0.9 * DISPLAY_HEIGHT))
+            target.blit(pygame.transform.rotate(text, -90 + 180 * i), text_rect)
+
+
 def display_cups(target, cups):
 
     for side in cups:
@@ -151,10 +159,10 @@ def game_over(target, teams, font, font2):
 
     if teamScoreA > teamScoreB:
         text = font2.render("TEAM 1 WON!", True, WHITE_DISPLAY_COLOR)
-        text_rect = text.get_rect(center=(DISPLAY_WIDTH*4/7, DISPLAY_HEIGHT/8))
+        text_rect = text.get_rect(center=(DISPLAY_WIDTH*0.5, DISPLAY_HEIGHT/8))
         target.blit(text, text_rect)
     elif teamScoreB > teamScoreA:
         text = font2.render("TEAM 2 WON!", True, WHITE_DISPLAY_COLOR)
-        text_rect = text.get_rect(center=(DISPLAY_WIDTH*4/7, DISPLAY_HEIGHT/8))
+        text_rect = text.get_rect(center=(DISPLAY_WIDTH*0.5, DISPLAY_HEIGHT/8))
         target.blit(text, text_rect)
 
