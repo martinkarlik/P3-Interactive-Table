@@ -56,7 +56,7 @@ while running:
         circularity = 4 * np.pi * (area / (arclength * arclength))
         print(area)
         print(circularity)
-        if area > 200 and area < 400:
+        if area > 70 and area < 400:
             print(area, " of circle")
             print(circularity, " of circle")
             if circularity > 0.7 and circularity < 1.2:
