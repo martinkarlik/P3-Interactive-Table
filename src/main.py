@@ -107,6 +107,7 @@ if __name__ == '__main__':
                 if mode.selection_meter >= 100:
                     sound_fx[0].play()
                     game_phase = "game_play"
+                    game_interface.Button.selected_option = mode.title
                     table_img = game_interface.set_table_image(TABLE_IMAGES[1])
 
             if not selection_music_playing:
@@ -212,8 +213,8 @@ if __name__ == '__main__':
 
             game_interface.display_table_image(screen, table_img)
             game_interface.display_score(screen, font, teams)
-            game_interface.display_message(screen, font, teams, cups)
-            game_interface.display_cups(screen, cups)
+            # game_interface.display_message(screen, font, teams, cups)
+            game_interface.display_cups(screen, cups, teams)
 
         elif game_phase == "game_over":
 

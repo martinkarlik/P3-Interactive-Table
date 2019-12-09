@@ -11,6 +11,7 @@ WHITE_DISPLAY_COLOR = 255, 255, 255
 
 
 class Button:
+
     def __init__(self, title, pos, working):
         self.title = title
         self.pos = pos
@@ -85,24 +86,25 @@ def display_score(target, font, teams):
             target.blit(pygame.transform.rotate(text, -90 + 180 * i), text_rect)
 
 
-def display_message(target, font, teams, cups):
-    for i in range(0, len(teams)):
-        for j in range(0, len(teams[i])):
-            text = font.render(str(teams[i][j].score), True, teams[i][j].color)
-            text_rect = text.get_rect(center=(0.05 * DISPLAY_WIDTH + i * 0.9 * DISPLAY_WIDTH, 0.05 * DISPLAY_HEIGHT + j * 0.9 * DISPLAY_HEIGHT))
-            target.blit(pygame.transform.rotate(text, -90 + 180 * i), text_rect)
+# def display_message(target, font, cups, teams):
+#     for i in range(0, len(teams)):
+#         for j in range(0, len(teams[i])):
+#             text = font.render(str(teams[i][j].score), True, teams[i][j].color)
+#             text_rect = text.get_rect(center=(0.05 * DISPLAY_WIDTH + i * 0.9 * DISPLAY_WIDTH, 0.05 * DISPLAY_HEIGHT + j * 0.9 * DISPLAY_HEIGHT))
+#             target.blit(pygame.transform.rotate(text, -90 + 180 * i), text_rect)
 
 
-def display_cups(target, cups):
+def display_cups(target, cups, teams):
 
-    for side in cups:
-        for cup in side:
+    for i in range(0, len(cups)):
+        for cup in cups[i]:
 
             x = int(cup.center[1] * DISPLAY_WIDTH)
             y = int(cup.center[0] * DISPLAY_HEIGHT)
 
             if any(cup.has_balls):
-                pygame.draw.circle(target, (25 * cup.has_balls[0], 25 * cup.has_balls[1], 0), (x, y), 30)
+
+                pygame.draw.circle(target, (25 * int(teams[i][0].drinks) * max(cup.has_balls), 25 * int(teams[i][1].drinks) * max(cup.has_balls), 0), (x, y), 30)
 
             elif cup.is_yellow:
                 pygame.draw.circle(target, (255, 223, 0), (x, y), 30)
@@ -117,7 +119,7 @@ def display_cups(target, cups):
                     else:
                         pygame.draw.circle(target, (255, 200, 0), (x, y), 30)
                 else:
-                    pygame.draw.arc(target, (255, 255, 0), (x-15, y-15, 30, 30), 0.0, (cup.selection_meter / 10) * 6.283, 15)
+                    pygame.draw.arc(target, (255, 255, 0), (x-15, y-15, 30, 30), 0.0, (cup.selection_meter / 10) * 6.283, 30)
 
             else:
                 pygame.draw.circle(target, (255, 255, 255), (x, y), 30)
