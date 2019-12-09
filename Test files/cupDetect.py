@@ -46,15 +46,20 @@ while running:
     closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
     opening = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel, iterations=2)
 
-    _, contours, _ = cv2.findContours(closing, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    _, contours, _ = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     for contour in contours:
         area = cv2.contourArea(contour)
         arclength = cv2.arcLength(contour, True)
         rect = cv2.minAreaRect(contour)
         box = cv2.boxPoints(rect)
         box = np.int0(box)
-        if 300 < area < 500:
-            if rect[1][1] > 20 or rect[1][0] > 20:
+        circularity = 4 * np.pi * (area / (arclength * arclength))
+        print(area)
+        print(circularity)
+        if area > 200 and area < 400:
+            print(area, " of circle")
+            print(circularity, " of circle")
+            if circularity > 0.7 and circularity < 1.2:
                 cv2.drawContours(frame, [box], 0, (0, 0, 255), 2)
 
     cv2.imshow('mask', mask)

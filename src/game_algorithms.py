@@ -129,39 +129,69 @@ def check_for_objects(source, cups):
                 # color threshold the ball colors
                 # blob detect and see if circular and of some area
                 # dependent on color return true to one of the ball conditions
-                if color_check_presence(current_beer_area, Cup.ball_colors[j], BALL_COLOR_OFFSET_HSI):
-                    cup.has_balls[j] = min(cup.has_balls[j] + 1, Cup.max_ball_lifetime)
-                else:
-                    cup.has_balls[j] = max(cup.has_balls[j] - 1, 0)
-            #TODO make this more robust
-            # color threshold the wand
-            # blob detect if it is big and somewhat rectangular
-            # return true if it is
-            blurred_frame = cv2.GaussianBlur(current_beer_area, (3, 3), 0)
-            hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
-            lower_color = np.array([99, 67, 63])
-            upper_color = np.array([125, 255, 255])
-            mask = cv2.inRange(hsv, lower_color, upper_color)
+            if color_check_presence():
+                cup.has_balls[j] = min(cup.has_balls[j] + 1, Cup.max_ball_lifetime)
+            # else:
+            #     cup.has_balls[j] = max(cup.has_balls[j] - 1, 0)
+            cup.has_wand = check_wand(current_beer_area)
 
-            result = cv2.bitwise_and(source, source, mask=mask)
-            #
-            kernel = np.ones((5, 5), np.uint8)
-            closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
+def check_ball(source):
+    blurred_frame = cv2.GaussianBlur(source, (3, 3), 0)
+    hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
 
-            _, contours, _ = cv2.findContours(closing, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-            for contour in contours:
-                area = cv2.contourArea(contour)
-                arclength = cv2.arcLength(contour, True)
-                rect = cv2.minAreaRect(contour)
-                box = cv2.boxPoints(rect)
-                box = np.int0(box)
-                if 300 < area < 500:
-                    if rect[1][1] > 20 or rect[1][0] > 20:
-                        cv2.drawContours(source, [box], 0, (0, 0, 255), 2)
-                        cup.has_wand = True
+    lower_color = np.array([l_h, l_S, l_V])
+    upper_color = np.array([u_h, u_s, u_v])
+    mask = cv2.inRange(hsv, lower_color, upper_color)
 
-            # cup.has_wand = color_check_presence(current_beer_area, WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
+    result = cv2.bitwise_and(source, source, mask=mask)
+    #
+    kernel = np.ones((5, 5), np.uint8)
+    closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
+    opening = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel, iterations=2)
 
+    _, contours, _ = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    for contour in contours:
+        area = cv2.contourArea(contour)
+        arclength = cv2.arcLength(contour, True)
+        rect = cv2.minAreaRect(contour)
+        box = cv2.boxPoints(rect)
+        box = np.int0(box)
+        circularity = 4 * np.pi * (area / (arclength * arclength))
+        print(area)
+        print(circularity)
+        if area > 200 and area < 400:
+            print(area, " of circle")
+            print(circularity, " of circle")
+            if circularity > 0.7 and circularity < 1.2:
+                cv2.drawContours(source, [box], 0, (0, 0, 255), 2)
+                return True
+    return True
+
+
+def check_wand(source):
+    blurred_frame = cv2.GaussianBlur(source, (3, 3), 0)
+    hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
+    lower_color = np.array([99, 67, 63])
+    upper_color = np.array([125, 255, 255])
+    mask = cv2.inRange(hsv, lower_color, upper_color)
+
+    result = cv2.bitwise_and(source, source, mask=mask)
+    #
+    kernel = np.ones((5, 5), np.uint8)
+    closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
+
+    _, contours, _ = cv2.findContours(closing, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    for contour in contours:
+        area = cv2.contourArea(contour)
+        rect = cv2.minAreaRect(contour)
+        box = cv2.boxPoints(rect)
+        box = np.int0(box)
+        if 300 < area < 500:
+            if rect[1][1] > 20 or rect[1][0] > 20:
+                cv2.drawContours(source, [box], 0, (0, 0, 255), 2)
+                return True
+
+    return False
 
 def find_table_transform(source, dims):
 
