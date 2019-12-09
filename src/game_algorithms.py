@@ -201,3 +201,6 @@ def choose_option(source, options):
         if option.working:
             option.chosen = color_check_presence(get_roi(source, option.pos), WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
 
+
+
+ar = [0, 0, 4, ]

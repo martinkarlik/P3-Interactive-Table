@@ -103,13 +103,13 @@ def display_cups(target, cups):
                 pygame.draw.circle(target, (255, 0, 0), (x, y), 30)
 
             elif cup.selection_meter > 0:
-                if cup.selection_meter >= 100:
+                if cup.selection_meter >= 10:
                     if cup.selection_meter in range(100, 105) or cup.selection_meter in range(110, 115):
                         pygame.draw.circle(target, (255, 255, 255), (x, y), 50, 10)
                     else:
                         pygame.draw.circle(target, (255, 200, 0), (x, y), 30)
                 else:
-                    pygame.draw.arc(target, (255, 255, 0), (x-15, y-15, 30, 30), 0.0, (cup.selection_meter / 20) * 6.283, 3)
+                    pygame.draw.arc(target, (255, 255, 0), (x-15, y-15, 30, 30), 0.0, (cup.selection_meter / 10) * 6.283, 15)
 
             else:
                 pygame.draw.circle(target, (255, 255, 255), (x, y), 30)
@@ -158,11 +158,3 @@ def game_over(target, teams, font, font2):
         text_rect = text.get_rect(center=(DISPLAY_WIDTH*4/7, DISPLAY_HEIGHT/8))
         target.blit(text, text_rect)
 
-
-
-# # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
-#                         # a cup on the right is highlighted
-#                         golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-#                         rotated_text = pygame.transform.rotate(golden_cup_txt, 90)
-#                         screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) + 50,
-#                                                                                 game_interface.DISPLAY_HEIGHT / 2)))

@@ -129,20 +129,26 @@ if __name__ == '__main__':
             game_algorithms.update_cups(current_cups, cups)
             game_algorithms.check_for_objects(table, cups)
 
-            if len(cups[0]) == len(cups[1]) == 0 and (game_algorithms.Player.game_score[0] > 0 or game_algorithms.Player.game_score[1] > 0):
+            if (len(cups[0]) == 0 or len(cups[1]) == 0) and (game_algorithms.Player.game_score[0] > 0 or game_algorithms.Player.game_score[1] > 0):
                 game_phase = "game_over"
                 table_img = game_interface.set_table_image(TABLE_IMAGES[2])
 
             # region Cup selection
 
+            yellow_cup_found = False
+
             for side in cups:
                 for cup in side:
-                    if cup.has_wand:
+                    if cup.is_yellow:
+                        yellow_cup_found = True
+
+                for cup in side:
+                    if cup.has_wand and not yellow_cup_found:
                         cup.selection_meter = min(cup.selection_meter + 1, 100)
                     else:
                         cup.selection_meter = max(cup.selection_meter - 10, 0)
 
-                    if not cup.is_yellow and cup.selection_meter >= 20 and not jingle.get_busy():
+                    if not cup.is_yellow and cup.selection_meter >= 10 and not jingle.get_busy():
                         jingle.play(sound_fx[3])
                         cup.is_yellow = True
 
@@ -162,6 +168,8 @@ if __name__ == '__main__':
                         if cup.selected_time <= 0:
                             cup.is_yellow = False
                             cup.selected_time = cup.max_selected_time
+                            for other_cup in side:
+                                other_cup.is_red = False
 
             # endregion
 
@@ -171,22 +179,25 @@ if __name__ == '__main__':
                 current_team = teams[len(teams) - i - 1]
                 opposite_team = teams[i]
 
+                hit_balls = [False for i in range(0, game_algorithms.Cup.balls_num)]
+                for cup in cups[i]:
+                    for j in range(0, len(cup.has_balls)):
+                        if cup.has_balls[j]:
+                            hit_balls[j] = True
+
                 for cup in cups[i]:
                     for j in range(0, len(cup.has_balls)):
 
-                        if cup.has_balls[j] and not current_team[j].hit:
-                            if not pygame.mixer.find_channel(speak).get_busy():
-                                pygame.mixer.music.pause()
+                        if cup.has_balls[j] > 0 and not current_team[j].hit:
+
+                            if not speak.get_busy():
                                 speak.play(speak_fx[random.randrange(2, len(SPEAK))])
-                                if pygame.mixer.find_channel(speak).get_busy():
-                                    pygame.mixer.music.unpause()
 
                             current_team[j].score += 1
                             game_algorithms.Player.game_score[i] += 1
                             current_team[j].hit = True
 
-                        elif current_team[j].hit and cup.has_balls[j] == 0:
-                            print("I got to 2")
+                        elif current_team[j].hit and not hit_balls[j]:
                             current_team[j].hit = False
                             for k in range(0, len(opposite_team)):
                                 if opposite_team[k].drinks:
