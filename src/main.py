@@ -4,8 +4,6 @@ import random
 from src import game_algorithms
 from src import game_interface
 
-
-congratulations = True
 team_a_won = False
 
 FONT_SANS_BOLD = ['freesansbold.ttf', 25]
@@ -17,7 +15,7 @@ ICON = "../images/tableImages/cheers.png"
 TAPE_IMAGE = "../images/tableImages/tape.png"
 TABLE_IMAGES = ["../images/tableImages/mode_selection.png", "../images/tableImages/game_play_competitive.png",
                 "../images/tableImages/game_over.png"]
-SONGS = ["../sound/mass_effect_elevator_music_2.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
+SONGS = ["../sound/kahoot_lobby.mp3", "../sound/jeopardy_theme.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
 
 SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset/Wav/Achievement.wav",
           "../sound/cuteguisoundsset/Wav/Cursor.wav", "../sound/hit_the_golden_cup_jingle.wav"]
@@ -83,7 +81,9 @@ if __name__ == '__main__':
     cups = [[], []]
 
     selection_music_playing = False
-    gameplay_music_playing = False
+    hardcore_music_playing = False
+    casual_music_playing = False
+    congratulations = True
 
     _, frame = cap.read()
     table_transform = game_algorithms.find_table_transform(frame, game_algorithms.TABLE_SHAPE)
@@ -204,22 +204,35 @@ if __name__ == '__main__':
 
             # endregion
 
-            if not gameplay_music_playing:
-                gameplay_music_playing = True
-                pygame.mixer.music.stop()
-                pygame.mixer.music.load(SONGS[1])
-                pygame.mixer.music.play(-1)
+            # CASUAL GAMEMODE
+            if game_interface.Button.selected_option == "CASUAL":
+                if not casual_music_playing:
+                    casual_music_playing = True
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load(SONGS[1])
+                    pygame.mixer.music.play(-1)
+                game_interface.display_table_image(screen, table_img)
+                game_interface.display_score(screen, font, teams)
+                game_interface.display_message(screen, font, teams, cups)
+                game_interface.display_cups(screen, cups)
 
-            game_interface.display_table_image(screen, table_img)
-            game_interface.display_score(screen, font, teams)
-            game_interface.display_message(screen, font, teams, cups)
-            game_interface.display_cups(screen, cups)
+            # COMPETITIVE GAMEMODE
+            if game_interface.Button.selected_option == "COMPETITIVE":
+                if not hardcore_music_playing:
+                    hardcore_music_playing = True
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load(SONGS[2])
+                    pygame.mixer.music.play(-1)
+                game_interface.display_table_image(screen, table_img)
+                game_interface.display_score(screen, font, teams)
+                game_interface.display_message(screen, font, teams, cups)
+                game_interface.display_cups(screen, cups)
 
         elif game_phase == "game_over":
 
             pygame.mixer.music.stop()
             selection_music_playing = False
-            gameplay_music_playing = False
+            hardcore_music_playing = False
 
             game_algorithms.choose_option(table, [play_again_button])
 
@@ -260,8 +273,6 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     app_running = False
-                if event.key == pygame.K_SPACE:
-                    random_cup = True
 
         pygame.display.update()
 
