@@ -36,12 +36,13 @@ class Player:
         self.drinks = False
         self.hit = False
 
+
 class Cup:
 
     ball_colors = [RED_COLOR_HSI, GREEN_COLOR_HSI, BLUE_COLOR_HSI]
     balls_num = 2
     max_lifetime = 10
-    max_ball_lifetime = 5
+    max_ball_lifetime = 10
     max_selected_time = 100
 
     def __init__(self, center):
@@ -66,6 +67,11 @@ def get_current_cups(source, template, current_cups):
 
     match = match_template(binary, template)
     binary_centers = threshold(match, 0.35, 1)
+
+    # cv2.imshow("binary", binary)
+    # cv2.imshow("match", match)
+    # cv2.imshow("bin centers", binary_centers)
+    # cv2.waitKey(0)
 
     full_binary_centers = np.zeros([source.shape[0], source.shape[1]])
     tpl_radius = int(template.shape[0] / 2)
@@ -126,7 +132,10 @@ def check_for_objects(source, cups):
             current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
             for j in range(0, Cup.balls_num):
                 if color_check_presence(current_beer_area, Cup.ball_colors[j], BALL_COLOR_OFFSET_HSI):
-                    cup.has_balls[j] = min(cup.has_balls[j] + 1, Cup.max_ball_lifetime)
+                    if cup.has_balls[j] == 0:
+                        cup.has_balls[j] = Cup.max_ball_lifetime
+                    else:
+                        cup.has_balls[j] = min(cup.has_balls[j] + 1, Cup.max_ball_lifetime)
                 else:
                     cup.has_balls[j] = max(cup.has_balls[j] - 1, 0)
             cup.has_wand = color_check_presence(current_beer_area, WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
@@ -162,7 +171,7 @@ def find_table_transform(source, dims):
 
     src_points = DEFAULT_SRC_POINTS
 
-    if len(markers) == 4:
+    if len(markers) == 4 and False:
         ordered_markers = [pop_closest(markers, [0, 0]), pop_closest(markers, [0, source.shape[1]]),
                            pop_closest(markers, [source.shape[0], source.shape[1]]) , pop_closest(markers, [source.shape[0], 0])]
 
