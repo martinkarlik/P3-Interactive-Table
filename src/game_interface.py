@@ -163,10 +163,10 @@ def game_over(target, teams, font, font2):
 
     if teamScoreA > teamScoreB:
         text = font2.render("TEAM 1 WON!", True, WHITE_DISPLAY_COLOR)
-        text_rect = text.get_rect(center=(DISPLAY_WIDTH*0.5, DISPLAY_HEIGHT/8))
+        text_rect = text.get_rect(center=(DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.15))
         target.blit(text, text_rect)
-    elif teamScoreB > teamScoreA:
+    else:
         text = font2.render("TEAM 2 WON!", True, WHITE_DISPLAY_COLOR)
-        text_rect = text.get_rect(center=(DISPLAY_WIDTH*0.5, DISPLAY_HEIGHT/8))
+        text_rect = text.get_rect(center=(DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.15))
         target.blit(text, text_rect)
 

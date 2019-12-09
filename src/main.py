@@ -130,9 +130,6 @@ if __name__ == '__main__':
             game_algorithms.update_cups(current_cups, cups)
             game_algorithms.check_for_objects(table, cups)
 
-            if (len(cups[0]) == 0 or len(cups[1]) == 0) and (game_algorithms.Player.game_score[0] > 0 or game_algorithms.Player.game_score[1] > 0):
-                game_phase = "game_over"
-                table_img = game_interface.set_table_image(TABLE_IMAGES[2])
 
             # region Cup selection
 
@@ -205,6 +202,10 @@ if __name__ == '__main__':
                                     opposite_team[k].drinks = False
                                     opposite_team[k + 1 if k + 1 < len(opposite_team) else 0].drinks = True
                                     break
+
+            if (len(cups[0]) == 0 or len(cups[1]) == 0) and (game_algorithms.Player.game_score[0] > 0 or game_algorithms.Player.game_score[1] > 0):
+                game_phase = "game_over"
+                table_img = game_interface.set_table_image(TABLE_IMAGES[2])
 
             # endregion
 
