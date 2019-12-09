@@ -82,9 +82,15 @@ def display_score(target, font, teams):
         for j in range(0, len(teams[i])):
             text = font.render(str(teams[i][j].score), True, teams[i][j].color)
             text_rect = text.get_rect(center=(0.05 * DISPLAY_WIDTH + i * 0.9 * DISPLAY_WIDTH, 0.05 * DISPLAY_HEIGHT + j * 0.9 * DISPLAY_HEIGHT))
-            target.blit(text, text_rect)
+            target.blit(pygame.transform.rotate(text, -90 + 180 * i), text_rect)
 
-            # will need to be rotated; target.blit(pygame.transform.rotate(display_text(scores[i], i % 2), -90, (x, y))
+
+def display_message(target, font, teams, cups):
+    for i in range(0, len(teams)):
+        for j in range(0, len(teams[i])):
+            text = font.render(str(teams[i][j].score), True, teams[i][j].color)
+            text_rect = text.get_rect(center=(0.05 * DISPLAY_WIDTH + i * 0.9 * DISPLAY_WIDTH, 0.05 * DISPLAY_HEIGHT + j * 0.9 * DISPLAY_HEIGHT))
+            target.blit(pygame.transform.rotate(text, -90 + 180 * i), text_rect)
 
 
 def display_cups(target, cups):
@@ -96,20 +102,23 @@ def display_cups(target, cups):
             y = int(cup.center[0] * DISPLAY_HEIGHT)
 
             if any(cup.has_balls):
-                pygame.draw.circle(target, (30 * int(cup.has_balls[0]), 30 * int(cup.has_balls[1]), 30 * cup.has_balls[2]),
-                                   (x, y), 30)
+                pygame.draw.circle(target, (25 * cup.has_balls[0], 25 * cup.has_balls[1], 0), (x, y), 30)
+
             elif cup.is_yellow:
                 pygame.draw.circle(target, (255, 223, 0), (x, y), 30)
+
             elif cup.is_red:
                 pygame.draw.circle(target, (255, 0, 0), (x, y), 30)
+
             elif cup.selection_meter > 0:
-                if cup.selection_meter >= 100:
+                if cup.selection_meter >= 10:
                     if cup.selection_meter in range(100, 105) or cup.selection_meter in range(110, 115):
                         pygame.draw.circle(target, (255, 255, 255), (x, y), 50, 10)
                     else:
                         pygame.draw.circle(target, (255, 200, 0), (x, y), 30)
                 else:
-                    pygame.draw.arc(target, (255, 255, 0), (x, y, x, y), 0.0, (cup.selection_meter / 100) * 6.283, 15)
+                    pygame.draw.arc(target, (255, 255, 0), (x-15, y-15, 30, 30), 0.0, (cup.selection_meter / 10) * 6.283, 15)
+
             else:
                 pygame.draw.circle(target, (255, 255, 255), (x, y), 30)
 
@@ -150,18 +159,10 @@ def game_over(target, teams, font, font2):
 
     if teamScoreA > teamScoreB:
         text = font2.render("TEAM 1 WON!", True, WHITE_DISPLAY_COLOR)
-        text_rect = text.get_rect(center=(DISPLAY_WIDTH*4/7, DISPLAY_HEIGHT/8))
+        text_rect = text.get_rect(center=(DISPLAY_WIDTH*0.5, DISPLAY_HEIGHT/8))
         target.blit(text, text_rect)
     elif teamScoreB > teamScoreA:
         text = font2.render("TEAM 2 WON!", True, WHITE_DISPLAY_COLOR)
-        text_rect = text.get_rect(center=(DISPLAY_WIDTH*4/7, DISPLAY_HEIGHT/8))
+        text_rect = text.get_rect(center=(DISPLAY_WIDTH*0.5, DISPLAY_HEIGHT/8))
         target.blit(text, text_rect)
 
-
-
-# # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
-#                         # a cup on the right is highlighted
-#                         golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
-#                         rotated_text = pygame.transform.rotate(golden_cup_txt, 90)
-#                         screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) + 50,
-#                                                                                 game_interface.DISPLAY_HEIGHT / 2)))

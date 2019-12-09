@@ -36,12 +36,13 @@ class Player:
         self.drinks = False
         self.hit = False
 
+
 class Cup:
 
     ball_colors = [RED_COLOR_HSI, GREEN_COLOR_HSI, BLUE_COLOR_HSI]
     balls_num = 2
     max_lifetime = 10
-    max_ball_lifetime = 5
+    max_ball_lifetime = 10
     max_selected_time = 100
 
     def __init__(self, center):
@@ -66,6 +67,11 @@ def get_current_cups(source, template, current_cups):
 
     match = match_template(binary, template)
     binary_centers = threshold(match, 0.35, 1)
+
+    # cv2.imshow("binary", binary)
+    # cv2.imshow("match", match)
+    # cv2.imshow("bin centers", binary_centers)
+    # cv2.waitKey(0)
 
     full_binary_centers = np.zeros([source.shape[0], source.shape[1]])
     tpl_radius = int(template.shape[0] / 2)
@@ -125,22 +131,28 @@ def check_for_objects(source, cups):
 
             current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
             for j in range(0, Cup.balls_num):
-                #TODO make this more robust
-                # color threshold the ball colors
-                # blob detect and see if circular and of some area
-                # dependent on color return true to one of the ball conditions
-            if color_check_presence():
-                cup.has_balls[j] = min(cup.has_balls[j] + 1, Cup.max_ball_lifetime)
-            # else:
-            #     cup.has_balls[j] = max(cup.has_balls[j] - 1, 0)
+                if check_ball(current_beer_area, j):
+                    if cup.has_balls[j] == 0:
+                        cup.has_balls[j] = Cup.max_ball_lifetime
+                    else:
+                        cup.has_balls[j] = min(cup.has_balls[j] + 1, Cup.max_ball_lifetime)
+                else:
+                    cup.has_balls[j] = max(cup.has_balls[j] - 1, 0)
+
             cup.has_wand = check_wand(current_beer_area)
 
-def check_ball(source):
+def check_ball(source, index):
+
     blurred_frame = cv2.GaussianBlur(source, (3, 3), 0)
     hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
 
-    lower_color = np.array([l_h, l_S, l_V])
-    upper_color = np.array([u_h, u_s, u_v])
+    if index == 0:
+        lower_color = np.array([150, 63, 79])
+        upper_color = np.array([179, 255, 255])
+    else:
+        lower_color = np.array([47, 58, 62])
+        upper_color = np.array([66, 207, 200])
+
     mask = cv2.inRange(hsv, lower_color, upper_color)
 
     result = cv2.bitwise_and(source, source, mask=mask)
@@ -149,7 +161,7 @@ def check_ball(source):
     closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
     opening = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel, iterations=2)
 
-    _, contours, _ = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     for contour in contours:
         area = cv2.contourArea(contour)
         arclength = cv2.arcLength(contour, True)
@@ -157,15 +169,11 @@ def check_ball(source):
         box = cv2.boxPoints(rect)
         box = np.int0(box)
         circularity = 4 * np.pi * (area / (arclength * arclength))
-        print(area)
-        print(circularity)
-        if area > 200 and area < 400:
-            print(area, " of circle")
-            print(circularity, " of circle")
-            if circularity > 0.7 and circularity < 1.2:
+        if area > 70 and area < 600:
+            if circularity > 0.5 and circularity < 1.5:
                 cv2.drawContours(source, [box], 0, (0, 0, 255), 2)
                 return True
-    return True
+    return False
 
 
 def check_wand(source):
@@ -180,13 +188,14 @@ def check_wand(source):
     kernel = np.ones((5, 5), np.uint8)
     closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
 
-    _, contours, _ = cv2.findContours(closing, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    contours, _ = cv2.findContours(closing, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     for contour in contours:
         area = cv2.contourArea(contour)
         rect = cv2.minAreaRect(contour)
         box = cv2.boxPoints(rect)
         box = np.int0(box)
-        if 300 < area < 500:
+        if 300 < area < 1000:
             if rect[1][1] > 20 or rect[1][0] > 20:
                 cv2.drawContours(source, [box], 0, (0, 0, 255), 2)
                 return True
@@ -223,7 +232,7 @@ def find_table_transform(source, dims):
 
     src_points = DEFAULT_SRC_POINTS
 
-    if len(markers) == 4:
+    if len(markers) == 4 and False:
         ordered_markers = [pop_closest(markers, [0, 0]), pop_closest(markers, [0, source.shape[1]]),
                            pop_closest(markers, [source.shape[0], source.shape[1]]) , pop_closest(markers, [source.shape[0], 0])]
 
@@ -251,5 +260,6 @@ def get_roi(source, pos):
 def choose_option(source, options):
     for option in options:
         if option.working:
-            option.chosen = color_check_presence(get_roi(source, option.pos), WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
+            # option.chosen = color_check_presence(get_roi(source, option.pos), WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
+            option.chosen = check_wand(get_roi(source, option.pos))
 
