@@ -117,31 +117,6 @@ def color_check_presence(source, target_color, target_offset):
     color_match = color_threshold(source, target_color, target_offset)
     return color_match.any()
 
-#
-# def color_check_presence(source, target_color):
-#     hsv = cv2.cvtColor(source, cv2.COLOR_BGR2HSV)
-#
-#     # Input BGR color to get HSV
-#     colorBGR = np.uint8([[[target_color[0], target_color[1], target_color[2]]]])
-#     hsv_color = cv2.cvtColor(colorBGR, cv2.COLOR_BGR2HSV)
-#
-#     hue = hsv_color[0, 0, 0]
-#     # print(hue)
-#
-#     lowerValue = np.array([hue, 80, 0])
-#     upperValue = np.array([hue, 255, 255])
-#
-#     lowerValue[0] -= 15
-#     # print("Lower", lowerValue)
-#     upperValue[0] += 15
-#     # print("Upper: ", upperValue)
-#
-#     blurred_frame = cv2.GaussianBlur(hsv, (5, 5), cv2.BORDER_DEFAULT)
-#     mask = cv2.inRange(blurred_frame, lowerValue, upperValue)
-#     resBGR = cv2.bitwise_and(source, source, mask=mask)
-#     #cv2.imshow('res', resBGR)
-#     cv2.waitKey(1)
-#     return resBGR.any()
 
 def bgr_to_gray(source):
     blue = source[:, :, 0] / 255
@@ -208,3 +183,5 @@ def edge_detection_sobel_hv(source):
             gradient_y = int(np.dot(sobel_v, image_patch) / 4)
             new_image[y, x] = (abs(gradient_x) + abs(gradient_y)) / 2
     return new_image
+
+

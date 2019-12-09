@@ -1,45 +1,65 @@
 from src._ip_algorithms import *
 
-MOVED_BEER_THRESHOLD = 0.01
-
 TABLE_SHAPE = (800, 400)
+CUP_RADIUS = 20
+MOVED_CUP_THRESHOLD = 0.01
 
 GREEN_COLOR_HSI = (115, 0.75, 0.5)
 RED_COLOR_HSI = (350, 0.85, 0.5)
 BLUE_COLOR_HSI = (350, 0.9, 0.5)
-WAND_COLOR_HSI = (216, 0.8, 0.5)
+WAND_COLOR_HSI = (216, 0.7, 0.6)
 
-GREEN_COLOR_BGR = (14, 94, 1)
-RED_COLOR_BGR = (20, 9, 165)
-BLUE_COLOR_BGR = (110, 58, 21)
-WAND_COLOR_BGR = (110, 58, 21)
+GREEN_COLOR_RGB = (1, 94, 14)
+RED_COLOR_RGB = (165, 9, 20)
+BLUE_COLOR_RGB = (21, 58, 110)
+
 
 BALL_COLOR_OFFSET_HSI = (10, 0.3, 0.4)
-WAND_COLOR_OFFSET_HSI = (20, 0.2, 0.3)
+WAND_COLOR_OFFSET_HSI = (20, 0.2, 0.4)
 
 DEFAULT_SRC_POINTS = np.float32([(1, 55), (619, 61), (610, 383), (7, 379)])
 
 
-class Beer:
+class Player:
+    # static fields... python is weird about it, you don't have to declare anything, it's just static
+    # "static" = variable same for every object of this class, "field" = instance variable
+
+    team_colors = [RED_COLOR_RGB, GREEN_COLOR_RGB, BLUE_COLOR_RGB]
+    team_names = ["Red", "Green", "Blue"]
+    game_score = [0, 0]
+    players_num = 2
+
+    def __init__(self, name, color):
+        self.name = name
+        self.color = color
+        self.score = 0
+        self.drinks = False
+        self.hit = False
+
+class Cup:
 
     ball_colors = [RED_COLOR_HSI, GREEN_COLOR_HSI, BLUE_COLOR_HSI]
     balls_num = 2
     max_lifetime = 10
+    max_ball_lifetime = 5
+    max_selected_time = 100
 
     def __init__(self, center):
         self.center = center
         self.is_present = True
         self.lifetime = self.max_lifetime
 
-        self.wand_here = False
-        self.meter = 0
-        self.counter = 100
-        self.yellow = False
-        self.red = False
-        self.balls = [False for i in range(0, self.balls_num)]
+        self.selection_meter = 0
+        self.selected_time = self.max_selected_time
+
+        self.is_yellow = False
+        self.is_red = False
+
+        self.has_wand = False
+        self.has_balls = [0 for i in range(0, self.balls_num)]
 
 
-def extract_beers(source, template, beers_left, beers_right):
+def get_current_cups(source, template, current_cups):
 
     gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
     _, binary = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY_INV)
@@ -51,74 +71,65 @@ def extract_beers(source, template, beers_left, beers_right):
     tpl_radius = int(template.shape[0] / 2)
     full_binary_centers[tpl_radius:source.shape[0] - tpl_radius + 1, tpl_radius:source.shape[1] - tpl_radius + 1] = binary_centers
 
-    cv2.imshow("bin", binary_centers)
-    cv2.imshow("full bin", full_binary_centers)
-
     blobs = extract_blobs(full_binary_centers)
 
     for blob in blobs:
         relative_center = [blob.center[0] / source.shape[0], blob.center[1] / source.shape[1]]
         if relative_center[1] < 0.5:
-            beers_left.append(Beer(relative_center))
+            current_cups[0].append(Cup(relative_center))
         else:
-            beers_right.append(Beer(relative_center))
+            current_cups[1].append(Cup(relative_center))
 
 
-def inform_beers(beers_left, beers_right, current_beers_left, current_beers_right):
+def update_cups(current_cups, cups):
 
-    current_sides = [current_beers_left, current_beers_right]
-    sides = [beers_left, beers_right]
+    for i in range(0, len(cups)):
 
-    for i in range(0, len(sides)):
+        for cup in cups[i]:
+            cup.is_present = False
 
-        for beer in sides[i]:
-            beer.is_present = False
-
-        for current_beer in current_sides[i]:
-            existing_beer_found = False
-            for beer in sides[i]:
-                distance = abs(beer.center[0] - current_beer.center[0]) + abs(beer.center[1] - current_beer.center[1])
-                if distance < MOVED_BEER_THRESHOLD:
-                    beer.is_present = True
-                    beer.center = current_beer.center
-                    existing_beer_found = True
+        for current_cup in current_cups[i]:
+            existing_cup_found = False
+            for cup in cups[i]:
+                distance = abs(cup.center[0] - current_cup.center[0]) + abs(cup.center[1] - current_cup.center[1])
+                if distance < MOVED_CUP_THRESHOLD:
+                    cup.is_present = True
+                    cup.center = current_cup.center
+                    existing_cup_found = True
                     break
 
-            if not existing_beer_found:
-                sides[i].append(Beer(current_beer.center))
+            if not existing_cup_found:
+                cups[i].append(Cup(current_cup.center))
 
-        for beer in sides[i]:
-            if beer.is_present:
-                beer.lifetime = min(beer.max_lifetime, beer.lifetime + 1)
+        for cup in cups[i]:
+            if cup.is_present:
+                cup.lifetime = min(cup.lifetime + 1, cup.max_lifetime)
             else:
-                beer.lifetime -= 1
-                print("some beer is not present")
+                cup.lifetime -= 1
 
-        beers_len_init = len(sides[i])
-        for j in range(0, beers_len_init):
-            if sides[i][beers_len_init - j - 1].lifetime <= 0:
-                sides[i].pop(beers_len_init - j - 1)
-                print("deleted something")
+        cups_len_init = len(cups[i])
+        for j in range(0, cups_len_init):
+            if cups[i][cups_len_init - j - 1].lifetime <= 0:
+                cups[i].pop(cups_len_init - j - 1)
 
 
-def check_for_objects(source, beers_left, beers_right):
+def check_for_objects(source, cups):
 
-    sides = [beers_left, beers_right]
+    for side in cups:
+        for cup in side:
 
-    for side in sides:
-        for beer in side:
-
-            start_point_y = int(source.shape[0] * beer.center[0] - 25) if int(source.shape[0] * beer.center[0] - 25) > 0 else 0
-            start_point_x = int(source.shape[1] * beer.center[1] - 25) if int(source.shape[1] * beer.center[1] - 25) > 0 else 0
-            end_point_y = int(start_point_y + 50) if start_point_y + 50 < source.shape[0] else source.shape[0]
-            end_point_x = int(start_point_x + 50) if start_point_x + 50 < source.shape[1] else source.shape[1]
-
-            # source[start_point_y:end_point_y, start_point_x:end_point_x] = 0
+            start_point_y = int(source.shape[0] * cup.center[0] - CUP_RADIUS) if int(source.shape[0] * cup.center[0] - CUP_RADIUS) > 0 else 0
+            start_point_x = int(source.shape[1] * cup.center[1] - CUP_RADIUS) if int(source.shape[1] * cup.center[1] - CUP_RADIUS) > 0 else 0
+            end_point_y = int(start_point_y + CUP_RADIUS * 2) if start_point_y + CUP_RADIUS * 2 < source.shape[0] else source.shape[0]
+            end_point_x = int(start_point_x + CUP_RADIUS * 2) if start_point_x + CUP_RADIUS * 2 < source.shape[1] else source.shape[1]
 
             current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
-            for i in range(0, Beer.balls_num):
-                beer.balls[i] = color_check_presence(current_beer_area, Beer.ball_colors[i], BALL_COLOR_OFFSET_HSI)
-            beer.wand_here = color_check_presence(current_beer_area, WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
+            for j in range(0, Cup.balls_num):
+                if color_check_presence(current_beer_area, Cup.ball_colors[j], BALL_COLOR_OFFSET_HSI):
+                    cup.has_balls[j] = min(cup.has_balls[j] + 1, Cup.max_ball_lifetime)
+                else:
+                    cup.has_balls[j] = max(cup.has_balls[j] - 1, 0)
+            cup.has_wand = color_check_presence(current_beer_area, WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
 
 
 def find_table_transform(source, dims):
@@ -141,12 +152,11 @@ def find_table_transform(source, dims):
     open = cv2.morphologyEx(binary_inv, cv2.MORPH_OPEN, kernel=(15, 15))
     close = cv2.morphologyEx(open, cv2.MORPH_CLOSE, kernel=(18, 18))
 
-    cv2.waitKey(1)
     blobs = extract_blobs(close)
 
     markers = []
     for blob in blobs:
-        if blob.area in range(700, 1200) and blob.compactness > 0.7:
+        if blob.area in range(700, 1200) and blob.compactness > 0.8:
             print("Blob: ", blob.area, blob.compactness)
             markers.append(blob)
 
@@ -154,13 +164,12 @@ def find_table_transform(source, dims):
 
     if len(markers) == 4:
         ordered_markers = [pop_closest(markers, [0, 0]), pop_closest(markers, [0, source.shape[1]]),
-                           pop_closest(markers, [source.shape[0], source.shape[1]]), pop_closest(markers, [source.shape[0], 0])]
+                           pop_closest(markers, [source.shape[0], source.shape[1]]) , pop_closest(markers, [source.shape[0], 0])]
 
         src_points = np.float32([(ordered_markers[0].bounding_box[1], ordered_markers[0].bounding_box[0]),
                                 (ordered_markers[1].bounding_box[3], ordered_markers[1].bounding_box[0]),
                                 (ordered_markers[2].bounding_box[3], ordered_markers[2].bounding_box[2]),
                                 (ordered_markers[3].bounding_box[1], ordered_markers[3].bounding_box[2])])
-        print(src_points)
 
     dst_points = np.float32([(0, 0),
                   (dims[0], 0),
@@ -183,51 +192,3 @@ def choose_option(source, options):
         if option.working:
             option.chosen = color_check_presence(get_roi(source, option.pos), WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
 
-
-def detect_liquid(source, beers_left, beers_right):
-    return
-    # if color_check_presence(source,DARK_BROWN_ALE, DARK_BROWN_ALE_OFFSET):
-    #
-    #     DarkBrownAleDetected = color_threshold(source, DARK_BROWN_ALE, DARK_BROWN_ALE_OFFSET)
-    #     kernelForClosingDarkAle = np.ones((9, 9), np.uint8)
-    #     kernelForOpenningDarkAle = np.ones((5, 5), np.uint8)
-    #
-    #     # opening = cv2.morphologyEx(BeerDetected, cv2.MORPH_OPEN, kernelForOpeningDarkAle)
-    #     # closing = cv2.morphologyEx(DarkBrownAleDetected, cv2.MORPH_CLOSE, kernelForClosingDarkAle)
-    #     closing = DarkBrownAleDetected
-    #
-    # if color_check_presence(source, BEER_COLOR, BEER_OFFSET):
-    #
-    #     BeerDetected = color_threshold(source, BEER_COLOR, BEER_OFFSET)
-    #     kernel = np.ones((9, 9), np.uint8)
-    #     kernelOpening = np.ones((5, 5), np.uint8)
-    #
-    #     # opening = cv2.morphologyEx(BeerDetected, cv2.MORPH_OPEN, kernelOpening)
-    #     # closing = cv2.morphologyEx(BeerDetected, cv2.MORPH_CLOSE, kernel)
-    #     closing = BeerDetected
-    #
-    # if color_check_presence(source, MILK, MILK_OFFSET):
-    #     MilkDetected = color_threshold(source, MILK, MILK_OFFSET)
-    #     kernel = np.ones((7, 7), np.uint8)
-    #     kernelOpening = np.ones((5, 5), np.uint8)
-    #     kernelSmall = np.ones((10, 10), np.uint8)
-    #
-    #     # opening = cv2.morphologyEx(MilkDetected, cv2.MORPH_OPEN, kernelOpening)
-    #     # closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
-    #     closing = MilkDetected
-    #
-    #
-    # if color_check_presence(source, COLA, COLA_OFFSET):
-    #     ColaDetected = color_threshold(source, COLA, COLA_OFFSET)
-    #     kernelForClosingCola = np.ones((20, 20), np.uint8)
-    #     kernelForOpenningCola = np.ones((10, 10), np.uint8)
-    #
-    #     # opening = cv2.morphologyEx(ColaDetected, cv2.MORPH_OPEN, kernelForOpenningScotch)
-    #     # closing = cv2.morphologyEx(ColaDetected, cv2.MORPH_CLOSE, kernelForClosingCola)
-    #     closing = ColaDetected
-    #
-    #
-    #
-    #
-    # if color_check_presence (source,DARK_BROWN_ALE, DARK_BROWN_ALE_OFFSET) == False and color_check_presence(source,BEER_COLOR, BEER_OFFSET) == False and color_check_presence(source,MILK, MILK_OFFSET) == False and color_check_presence(source,COLA, COLA_OFFSET) == False :
-    #     print("There is neither Brown ale, Beer, Milk or Cola in the cup ")

@@ -1,20 +1,7 @@
 import pygame
 
-# DISPLAY_WIDTH = 960
-# DISPLAY_HEIGHT = 540
-# #
-from src import main
-
-DISPLAY_WIDTH = 1920
-DISPLAY_HEIGHT = 1080
-
-FONT_MYRIAD_PRO_REGULAR = ['../fonts/MyriadProRegular.ttf', 60]
-FONT_MYRIAD_PRO_REGULAR2 = ['../fonts/MyriadProRegular.ttf', 97]
-#FONT_SANS_BOLD = ['freesansbold.ttf', 40]
-TABLE_IMG1 = "../images/tableImages/choose_game_mode.png"
-TABLE_IMG2 = "../images/tableImages/PlaceCups.png"
-TABLE_IMG3 = "../images/tableImages/gameover_screen.png"
-TABLE_IMG4 = "../images/tableImages/digital_design.jpg"
+DISPLAY_WIDTH = 960
+DISPLAY_HEIGHT = 540
 
 
 GREEN_DISPLAY_COLOR = 7, 129, 30
@@ -23,30 +10,13 @@ BLUE_DISPLAY_COLOR = 50, 50, 200
 WHITE_DISPLAY_COLOR = 255, 255, 255
 
 
-class Player:
-    # static fields... python is weird about it, you don't have to declare anything, it's just static
-    # "static" = variable same for every object of this class, "field" = instance variable
-
-    team_colors = [RED_DISPLAY_COLOR, GREEN_DISPLAY_COLOR, BLUE_DISPLAY_COLOR]
-    team_names = ["Red", "Green", "Blue"]
-    players_num = 2
-
-    def __init__(self, name, color):
-        self.name = name
-        self.color = color
-        self.score = 0
-        self.drinks = False
-        self.hit = False
-
-
 class Button:
     def __init__(self, title, pos, working):
         self.title = title
         self.pos = pos
-        self.meter = 0
+        self.selection_meter = 0
         self.chosen = False
         self.working = working
-
 
 
 def display_text(font, score, player):
@@ -58,34 +28,32 @@ def display_text(font, score, player):
         return score
 
 
-# the function that is responsible for changing the table image
-def set_table_img(path):
+# The function that is responsible for changing the table image
+def set_table_image(path):
     img = pygame.image.load(path)
     return pygame.transform.scale(img, (DISPLAY_WIDTH, DISPLAY_HEIGHT))
 
 
 # The function that shows the current table image
-
-
-def display_table_img(target, img):
+def display_table_image(target, img):
     target.blit(img, (0, 0))
 
 
-def display_mode_selection(target, font, tape, modes):
-    for i in range(0, len(modes)):
-        x = int(modes[i].pos[2] * DISPLAY_WIDTH)
-        y = int(modes[i].pos[0] * DISPLAY_HEIGHT)
-        w = int(modes[i].pos[3] * DISPLAY_WIDTH) - int(modes[i].pos[2] * DISPLAY_WIDTH)
-        h = int(modes[i].pos[1] * DISPLAY_HEIGHT) - int(modes[i].pos[0] * DISPLAY_HEIGHT)
+def display_options(target, font, tape, options):
+    for i in range(0, len(options)):
+        x = int(options[i].pos[2] * DISPLAY_WIDTH)
+        y = int(options[i].pos[0] * DISPLAY_HEIGHT)
+        w = int(options[i].pos[3] * DISPLAY_WIDTH) - int(options[i].pos[2] * DISPLAY_WIDTH)
+        h = int(options[i].pos[1] * DISPLAY_HEIGHT) - int(options[i].pos[0] * DISPLAY_HEIGHT)
 
         pygame.draw.rect(target, (50, 50, 50), (x, y, w, h), 5)
 
-        text = font.render(modes[i].title, True, WHITE_DISPLAY_COLOR)
+        text = font.render(options[i].title, True, WHITE_DISPLAY_COLOR)
         text_rect = text.get_rect(center=(x + w / 2, y + h / 2))
         target.blit(text, text_rect)
 
-        if modes[i].working:
-            fire_len = int(modes[i].meter / 100 * (2 * w + 2 * h))
+        if options[i].working:
+            fire_len = int(options[i].selection_meter / 100 * (2 * w + 2 * h))
             line_num = 0
 
             while fire_len > 0:
@@ -108,97 +76,49 @@ def display_mode_selection(target, font, tape, modes):
             target.blit(tape, (x, y))
 
 
-def gamebutton (target, font, gameoverbutton):
-    for i in range(0, len(gameoverbutton)):
-        w = int(gameoverbutton[i].pos[3] * DISPLAY_WIDTH) - int(gameoverbutton[i].pos[2] * DISPLAY_WIDTH)
-        h = int(gameoverbutton[i].pos[1] * DISPLAY_HEIGHT) - int(gameoverbutton[i].pos[0] * DISPLAY_HEIGHT)
-        x = int(DISPLAY_WIDTH/2 - w/2)
-        y = int(DISPLAY_HEIGHT*3/4)
-        pygame.draw.rect(target, (50, 50, 50), (x, y, w, h), 5)
+def display_score(target, font, teams):
 
-        text = font.render(gameoverbutton[i].title, True, WHITE_DISPLAY_COLOR)
-        text_rect = text.get_rect(center=(DISPLAY_WIDTH/2, DISPLAY_HEIGHT*6/7))
-        target.blit(text, text_rect)
+    for i in range(0, len(teams)):
+        for j in range(0, len(teams[i])):
+            text = font.render(str(teams[i][j].score), True, teams[i][j].color)
+            text_rect = text.get_rect(center=(0.05 * DISPLAY_WIDTH + i * 0.9 * DISPLAY_WIDTH, 0.05 * DISPLAY_HEIGHT + j * 0.9 * DISPLAY_HEIGHT))
+            target.blit(text, text_rect)
 
-        fire_len = int(gameoverbutton[i].meter / 100 * (2 * w + 2 * h))
-        line_num = 0
-
-        while fire_len > 0:
-            start_x = x if line_num < 2 else x + w
-            start_y = y if line_num == 0 or line_num == 3 else y + h
-            end_x = x if line_num == 0 or line_num == 3 else x + w
-            end_y = y if line_num >= 2 else y + h
-
-            fire_end_x = start_x + min(fire_len, abs(end_x - start_x)) if line_num < 2 else start_x - min(fire_len, abs(
-            end_x - start_x))
-            fire_end_y = start_y + min(fire_len, abs(end_y - start_y)) if line_num < 2 else start_y - min(fire_len, abs(
-            end_y - start_y))
-
-            pygame.draw.line(target, (255, 255, 255), (start_x, start_y), (fire_end_x, fire_end_y), 5)
-
-            fire_len = fire_len - h if line_num % 2 == 0 else fire_len - w
-            line_num += 1
+            # will need to be rotated; target.blit(pygame.transform.rotate(display_text(scores[i], i % 2), -90, (x, y))
 
 
-def display_score(target, font, team_a, team_b):
+def display_cups(target, cups):
 
-    for player in team_a:
-        print("team a", player.score)
+    for side in cups:
+        for cup in side:
 
-    for player in team_b:
-        print("team b", player.score)
+            x = int(cup.center[1] * DISPLAY_WIDTH)
+            y = int(cup.center[0] * DISPLAY_HEIGHT)
 
-    # for player in team_a:
-    #     text = font.render(player.score, True, player.color)
-    #     text_rect = text.get_rect(center=(0.1 * DISPLAY_WIDTH, 0.1 * DISPLAY_HEIGHT))
-    #     target.blit(text, text_rect)
-    #
-    #     # target.blit(pygame.transform.rotate(display_text(scores[i], i % 2), -90, (x, y))
-    #
-    # for player in team_b:
-    #     text = font.render(player.score, True, player.color)
-    #     text_rect = text.get_rect(center=(0.1 * DISPLAY_WIDTH, 0.1 * DISPLAY_HEIGHT))
-    #     target.blit(text, text_rect)
-
-
-def display_beers(target, beers_left, beers_right, colour):
-
-    for beer in beers_left:
-
-        if beer.balls[0] or beer.balls[1]:
-            # pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
-            #                    (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
-            pygame.draw.circle(target, colour,
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
-        elif beer.yellow:
-            pygame.draw.circle(target, (0, 255, 255,),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
-        elif beer.red:
-            pygame.draw.circle(target, (255, 0, 0,),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
-        else:
-            pygame.draw.circle(target, (255, 255, 255),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
-
-    for beer in beers_right:
-
-        if beer.balls[0] or beer.balls[1]:
-            pygame.draw.circle(target, colour,
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 30)
-            # pygame.draw.circle(target, (255 * int(beer.balls[0]), 255 * int(beer.balls[1]), 0),
-            #                    (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
-        elif beer.yellow:
-            pygame.draw.circle(target, (0, 255, 255,),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
-        elif beer.red:
-            pygame.draw.circle(target, (255, 0, 0,),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
-        else:
-            pygame.draw.circle(target, (255, 255, 255),
-                               (int(beer.center[1] * DISPLAY_WIDTH), int(beer.center[0] * DISPLAY_HEIGHT)), 50)
+            if any(cup.has_balls):
+                pygame.draw.circle(target, (30 * int(cup.has_balls[0]), 30 * int(cup.has_balls[1]), 30 * cup.has_balls[2]),
+                                   (x, y), 30)
+            elif cup.is_yellow:
+                pygame.draw.circle(target, (255, 223, 0), (x, y), 30)
+            elif cup.is_red:
+                pygame.draw.circle(target, (255, 0, 0), (x, y), 30)
+            elif cup.selection_meter > 0:
+                if cup.selection_meter >= 100:
+                    if cup.selection_meter in range(100, 105) or cup.selection_meter in range(110, 115):
+                        pygame.draw.circle(target, (255, 255, 255), (x, y), 50, 10)
+                    else:
+                        pygame.draw.circle(target, (255, 200, 0), (x, y), 30)
+                else:
+                    pygame.draw.arc(target, (255, 255, 0), (x, y, x, y), 0.0, (cup.selection_meter / 100) * 6.283, 15)
+            else:
+                pygame.draw.circle(target, (255, 255, 255), (x, y), 30)
 
 
-def game_over(target, team_a, team_b, font2, font):
+def game_over(target, teams, font, font2):
+
+    team_a = teams[0]
+    team_b = teams[1]
+
     team1 = ("1", (0.3, 0.5, 0.1, 0.4))
     team2 = ("2", (0.3, 0.5, 0.1, 0.4))
 
@@ -206,7 +126,6 @@ def game_over(target, team_a, team_b, font2, font):
     scoreA2 = str(team_a[1].score)
     scoreB1 = str(team_b[0].score)
     scoreB2 = str(team_b[1].score)
-
 
 
     textA1 = font.render(scoreA1, True, WHITE_DISPLAY_COLOR)
@@ -230,17 +149,19 @@ def game_over(target, team_a, team_b, font2, font):
     teamScoreB = team_b[0].score + team_b[1].score
 
     if teamScoreA > teamScoreB:
-        main.team_a_won = True
-        text = font2.render("1", True, WHITE_DISPLAY_COLOR)
+        text = font2.render("TEAM 1 WON!", True, WHITE_DISPLAY_COLOR)
         text_rect = text.get_rect(center=(DISPLAY_WIDTH*4/7, DISPLAY_HEIGHT/8))
         target.blit(text, text_rect)
     elif teamScoreB > teamScoreA:
-        main.team_a_won = False
-        text = font2.render("2", True, WHITE_DISPLAY_COLOR)
+        text = font2.render("TEAM 2 WON!", True, WHITE_DISPLAY_COLOR)
         text_rect = text.get_rect(center=(DISPLAY_WIDTH*4/7, DISPLAY_HEIGHT/8))
         target.blit(text, text_rect)
-    else:
-        main.team_a_won = True
-        text = font2.render("1", True, WHITE_DISPLAY_COLOR)
-        text_rect = text.get_rect(center=(DISPLAY_WIDTH * 4 / 7, DISPLAY_HEIGHT / 8))
-        target.blit(text, text_rect)
+
+
+
+# # Display text Gold cup text: for when the left side has highlighted a cup in the right side. So
+#                         # a cup on the right is highlighted
+#                         golden_cup_txt = font.render('Golden Cup active', True, (255, 255, 0))
+#                         rotated_text = pygame.transform.rotate(golden_cup_txt, 90)
+#                         screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) + 50,
+#                                                                                 game_interface.DISPLAY_HEIGHT / 2)))

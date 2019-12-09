@@ -1,19 +1,29 @@
 import pygame
 import cv2
+import math
 
 pygame.init()
 pygame.display.set_caption("BeerPong")
 screen = pygame.display.set_mode((960, 540))
 
 
-def show_circle(frame_count):
-    if frame_count >= 150:
-        pygame.draw.circle(screen, (255, 255, 0), (100, 100), 50)
-        if frame_count in range(150, 155) or frame_count in range(160, 165):
-            pygame.draw.circle(screen, (255, 255, 255), (100, 100), 60, 10)
+# def show_circle(frame_count):
+#     if frame_count >= 150:
+#         pygame.draw.circle(screen, (255, 255, 0), (100, 100), 50)
+#         if frame_count in range(150, 155) or frame_count in range(160, 165):
+#             pygame.draw.circle(screen, (255, 255, 255), (100, 100), 60, 10)
+#
+#     else:
+#         pygame.draw.circle(screen, (255, 255, 0), (100, 100), round(frame_count/2.6))
+#
 
+def show_circle(frame_count):
+    if frame_count >= 100:
+        pygame.draw.circle(screen, (255, 255, 0), (100, 100), 50)
+        if frame_count in range(100, 105) or frame_count in range(110, 115):
+            pygame.draw.circle(screen, (255, 255, 255), (100, 100), 50, 10)
     else:
-        pygame.draw.circle(screen, (255, 255, 0), (100, 100), round(frame_count/2.6))
+        pygame.draw.arc(screen, (255, 255, 0), (100, 100, 100, 100), 0.0, (frame_count / 100) * 2 * math.pi, 15)
 
 
 frame_count = 0
