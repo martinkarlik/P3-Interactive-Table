@@ -4,6 +4,7 @@ import random
 from src import game_algorithms
 from src import game_interface
 
+congratulations = True
 team_a_won = False
 
 FONT_SANS_BOLD = ['freesansbold.ttf', 40]
@@ -18,7 +19,7 @@ SOUNDS = ["../sound/cuteguisoundsset/Wav/Select.wav", "../sound/cuteguisoundsset
           "../sound/cuteguisoundsset/Wav/Cursor.wav", "../sound/hit_the_golden_cup_jingle.wav"]
 whosTurnA = (0, 0, 0)
 whosTurnB = (0, 0, 0)
-whoHit = (0,0,0)
+whoHit = (0, 0, 0)
 totalScoreRight = 0
 totalScoreLeft = 0
 
@@ -28,7 +29,7 @@ SPEAK = ["../sound/Speak/team_1_wins.wav", "../sound/Speak/team_2_wins.wav", "..
 
 if __name__ == '__main__':
     # CAPTURE SETUP
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
     cap.set(cv2.CAP_PROP_EXPOSURE, -5)
 
@@ -56,7 +57,7 @@ if __name__ == '__main__':
                      cv2.IMREAD_GRAYSCALE)  # this template will be replaced by a numpy array with 1's where the circle is and 0's where not
 
     # GAME LOGIC SETUP
-    game_phase = "mode_selection"
+    game_phase = "game_over"
     modes = [game_interface.Button("CASUAL", [0.3, 0.5, 0.1, 0.4], True),
              game_interface.Button("COMPETITIVE", [0.3, 0.5, 0.6, 0.9], True),
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
@@ -64,7 +65,8 @@ if __name__ == '__main__':
 
     gameoverbutton = [game_interface.Button("PLAY AGAIN", [0.75, 0.95, 0.3, 0.7], True)]
 
-    team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in range(0, game_interface.Player.players_num)]
+    team_a = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
+              range(0, game_interface.Player.players_num)]
     team_a[random.randint(0, len(team_a) - 1)].drinks = True
 
     team_b = [game_interface.Player(game_interface.Player.team_names[i], game_interface.Player.team_colors[i]) for i in
@@ -130,7 +132,8 @@ if __name__ == '__main__':
             game_algorithms.check_for_objects(table, beers_left, beers_right)
 
             # -------------------------
-            if(len(current_beers_left) > 1 or len(current_beers_right) > 1) and totalScoreRight == 0 and totalScoreLeft == 0:
+            if (len(current_beers_left) > 1 or len(
+                    current_beers_right) > 1) and totalScoreRight == 0 and totalScoreLeft == 0:
 
                 # region Wand Detection/ Golden cup
                 for beer in beers_left:
@@ -173,7 +176,7 @@ if __name__ == '__main__':
                         screen.blit(rotated_text, rotated_text.get_rect(center=((game_interface.DISPLAY_WIDTH / 2) - 50,
                                                                                 game_interface.DISPLAY_HEIGHT / 2)))
 
-                        #print(beer.counter)
+                        # print(beer.counter)
                         beer.counter -= 1
                         if beer.counter <= 0:
                             beer.yellow = False
@@ -259,7 +262,7 @@ if __name__ == '__main__':
                     for i in range(0, len(beer.balls)):
                         if beer.balls[i] and not team_a[i].hit:
                             if not speak.get_busy():
-                                speak.play(sound_fx[random.randrange(2, len(SPEAK))])
+                                speak.play(speak_fx[random.randrange(2, len(SPEAK))])
                             team_a[i].score += 1
                             team_a[i].hit = True
                             totalScoreRight = team_a[0].score + team_a[1].score
@@ -270,10 +273,10 @@ if __name__ == '__main__':
 
 
                         elif team_a[i].hit and not beer.balls[i]:
-                            if whosTurnB == team_b[0].color and totalScoreRight %2 == 0:
+                            if whosTurnB == team_b[0].color and totalScoreRight % 2 == 0:
                                 whosTurnB = team_b[1].color
                                 print("I am in team_b[1]")
-                            elif whosTurnB == team_b[1].color and totalScoreRight %2 == 1:
+                            elif whosTurnB == team_b[1].color and totalScoreRight % 2 == 1:
                                 whosTurnB = team_b[0].color
                                 print("I am in team_b[0]")
                         #     for j in range(1, len(team_b)):
@@ -282,7 +285,8 @@ if __name__ == '__main__':
                         #             team_b[j + 1 if j + 1 < len(team_b) else 0].drinks = True
                 # endregion
 
-            elif (len(current_beers_right) == 0 or len(current_beers_left) == 0) and (totalScoreLeft > 0 or totalScoreRight > 0):
+            elif (len(current_beers_right) == 0 or len(current_beers_left) == 0) and (
+                    totalScoreLeft > 0 or totalScoreRight > 0):
                 game_phase = "game_over"
                 table_img = game_interface.set_table_img(TABLE_IMAGES[2])
             # -------------------------
@@ -312,13 +316,13 @@ if __name__ == '__main__':
             game_interface.display_mode_selection(screen, font, tape_img, gameoverbutton)
             game_interface.game_over(screen, team_a, team_b, font, font)
 
-
-            if team_a_won:
-                if not speak.get_busy():
-                    speak.play(speak_fx[0], 0)
-            else:
-                if not speak.get_busy():
-                    speak.play(speak_fx[1], 0)
+            if congratulations and not speak.get_busy():
+                if team_a_won and not speak.get_busy():
+                    speak.play(speak_fx[0])
+                    congratulations = False
+                if not team_a_won and not speak.get_busy():
+                    speak.play(speak_fx[1])
+                    congratulations = False
 
         # KEYBOARD INPUT
         for event in pygame.event.get():
@@ -329,7 +333,7 @@ if __name__ == '__main__':
                     app_running = False
                 if event.key == pygame.K_SPACE:
                     random_cup = True
-                    #print('You have pressed spacebar')
+                    # print('You have pressed spacebar')
 
         pygame.display.update()
 

@@ -239,3 +239,8 @@ def game_over(target, team_a, team_b, font2, font):
         text = font2.render("2", True, WHITE_DISPLAY_COLOR)
         text_rect = text.get_rect(center=(DISPLAY_WIDTH*4/7, DISPLAY_HEIGHT/8))
         target.blit(text, text_rect)
+    else:
+        main.team_a_won = True
+        text = font2.render("1", True, WHITE_DISPLAY_COLOR)
+        text_rect = text.get_rect(center=(DISPLAY_WIDTH * 4 / 7, DISPLAY_HEIGHT / 8))
+        target.blit(text, text_rect)
