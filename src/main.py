@@ -108,7 +108,10 @@ if __name__ == '__main__':
                     sound_fx[0].play()
                     game_phase = "game_play"
                     game_interface.Button.selected_option = mode.title
-                    table_img = game_interface.set_table_image(TABLE_IMAGES[1])
+                    if game_interface.Button.selected_option == "CASUAL":
+                        table_img = game_interface.set_table_image(TABLE_IMAGES[1])
+                    elif game_interface.Button.selected_option == "COMPETITIVE":
+                        table_img = game_interface.set_table_image(TABLE_IMAGES[1])
 
             if not selection_music_playing:
                 selection_music_playing = True
