@@ -52,7 +52,7 @@ if __name__ == '__main__':
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
     font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
 
     table_img = game_interface.set_table_image(TABLE_IMAGES[0])
@@ -87,12 +87,14 @@ if __name__ == '__main__':
 
     _, frame = cap.read()
     table_transform = game_algorithms.find_table_transform(frame, game_algorithms.TABLE_SHAPE)
+    # table = cv2.imread("../images/testImages/table_trans.jpg")
 
     app_running = True
     while app_running and cap.isOpened():
 
         _, frame = cap.read()
         table = game_algorithms.apply_transform(frame, table_transform, game_algorithms.TABLE_SHAPE)
+        # cv2.imshow("table", table)
 
         if game_phase == "mode_selection":
             game_algorithms.choose_option(table, modes)
@@ -128,8 +130,9 @@ if __name__ == '__main__':
 
             game_algorithms.get_current_cups(table, template, current_cups)
             game_algorithms.update_cups(current_cups, cups)
-            game_algorithms.check_for_objects(table, cups)
+            game_algorithms.investigate_cups(cups)
 
+            print("Cups: ", len(cups[0]), len(cups[1]))
 
             # region Cup selection
 
@@ -238,6 +241,7 @@ if __name__ == '__main__':
             pygame.mixer.music.stop()
             selection_music_playing = False
             hardcore_music_playing = False
+            congratulations = False
 
             game_algorithms.choose_option(table, [play_again_button])
 
@@ -251,6 +255,8 @@ if __name__ == '__main__':
                 game_phase = "mode_selection"
                 table_img = game_interface.set_table_image(TABLE_IMAGES[0])
                 game_algorithms.Player.game_score = [0, 0]
+                cups = [[], []]
+
                 for side in teams:
                     for player in side:
                         player.score = 0
@@ -258,8 +264,10 @@ if __name__ == '__main__':
                 for mode in modes:
                     mode.selection_meter = 0
 
+                play_again_button.selection_meter = 0
+
             game_interface.display_table_image(screen, table_img)
-            game_interface.game_over(screen, teams, font, font)
+            game_interface.game_over(screen, teams, font)
             game_interface.display_options(screen, font, tape_img, [play_again_button])
 
             if game_algorithms.Player.game_score[0] > game_algorithms.Player.game_score[0]:

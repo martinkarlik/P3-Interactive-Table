@@ -1,20 +1,20 @@
 from src._ip_algorithms import *
 
 TABLE_SHAPE = (800, 400)
-CUP_RADIUS = 20
+CUP_RADIUS = 22
 MOVED_CUP_THRESHOLD = 0.01
 
-GREEN_COLOR_HSI = (115, 0.75, 0.5)
-RED_COLOR_HSI = (350, 0.85, 0.5)
-BLUE_COLOR_HSI = (350, 0.9, 0.5)
+RED_COLOR_HSI = (330, 0.6, 0.6)
+GREEN_COLOR_HSI = (115, 0.6, 0.6)
+BLUE_COLOR_HSI = (350, 0.6, 0.6)
 WAND_COLOR_HSI = (216, 0.7, 0.6)
 
-GREEN_COLOR_RGB = (1, 94, 14)
-RED_COLOR_RGB = (165, 9, 20)
+GREEN_COLOR_RGB = (16, 153, 102)
+RED_COLOR_RGB = (176, 114, 222)
 BLUE_COLOR_RGB = (21, 58, 110)
 
 
-BALL_COLOR_OFFSET_HSI = (10, 0.3, 0.4)
+BALL_COLOR_OFFSET_HSI = (15, 0.4, 0.4)
 WAND_COLOR_OFFSET_HSI = (20, 0.2, 0.4)
 
 DEFAULT_SRC_POINTS = np.float32([(2, 58), (622, 53), (619, 377), (14, 383)])
@@ -44,11 +44,19 @@ class Cup:
     max_lifetime = 10
     max_ball_lifetime = 10
     max_selected_time = 100
+    max_region_history_len = 10
 
-    def __init__(self, center):
+    def __init__(self, center, region_init):
         self.center = center
         self.is_present = True
         self.lifetime = self.max_lifetime
+
+        self.region_master = region_init
+        self.region_median = region_init
+        self.region_history = [region_init]
+
+        self.is_empty = True
+        self.empty_time = 1
 
         self.selection_meter = 0
         self.selected_time = self.max_selected_time
@@ -63,10 +71,11 @@ class Cup:
 def get_current_cups(source, template, current_cups):
 
     gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
-    _, binary = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY_INV)
+    _, binary = cv2.threshold(gray, 40, 255, cv2.THRESH_BINARY_INV)
 
     match = match_template(binary, template)
-    binary_centers = threshold(match, 0.35, 1)
+
+    binary_centers = threshold(match, 0.4, 1)
 
     # cv2.imshow("binary", binary)
     # cv2.imshow("match", match)
@@ -81,10 +90,11 @@ def get_current_cups(source, template, current_cups):
 
     for blob in blobs:
         relative_center = [blob.center[0] / source.shape[0], blob.center[1] / source.shape[1]]
+        current_area = source[blob.center[0] - CUP_RADIUS:blob.center[0] + CUP_RADIUS, blob.center[1] - CUP_RADIUS:blob.center[1] + CUP_RADIUS]
         if relative_center[1] < 0.5:
-            current_cups[0].append(Cup(relative_center))
+            current_cups[0].append(Cup(relative_center, current_area))
         else:
-            current_cups[1].append(Cup(relative_center))
+            current_cups[1].append(Cup(relative_center, current_area))
 
 
 def update_cups(current_cups, cups):
@@ -101,11 +111,14 @@ def update_cups(current_cups, cups):
                 if distance < MOVED_CUP_THRESHOLD:
                     cup.is_present = True
                     cup.center = current_cup.center
+                    cup.region_history.append(current_cup.region_master)
+                    if len(cup.region_history) > Cup.max_region_history_len:
+                        cup.region_history.pop(0)
                     existing_cup_found = True
                     break
 
             if not existing_cup_found:
-                cups[i].append(Cup(current_cup.center))
+                cups[i].append(Cup(current_cup.center, current_cup.region_master))
 
         for cup in cups[i]:
             if cup.is_present:
@@ -119,76 +132,92 @@ def update_cups(current_cups, cups):
                 cups[i].pop(cups_len_init - j - 1)
 
 
-def check_for_objects(source, cups):
+def investigate_cups(cups):
 
     for side in cups:
         for cup in side:
 
-            start_point_y = int(source.shape[0] * cup.center[0] - CUP_RADIUS) if int(source.shape[0] * cup.center[0] - CUP_RADIUS) > 0 else 0
-            start_point_x = int(source.shape[1] * cup.center[1] - CUP_RADIUS) if int(source.shape[1] * cup.center[1] - CUP_RADIUS) > 0 else 0
-            end_point_y = int(start_point_y + CUP_RADIUS * 2) if start_point_y + CUP_RADIUS * 2 < source.shape[0] else source.shape[0]
-            end_point_x = int(start_point_x + CUP_RADIUS * 2) if start_point_x + CUP_RADIUS * 2 < source.shape[1] else source.shape[1]
+            cup.region_median = np.median(cup.region_history, axis=0)
+            #
+            region_variety = np.abs(cup.region_median - cup.region_master)
+            region_gray = bgr_to_gray(region_variety)
+            region_difference = threshold(region_gray, 0.02, 1)
 
-            current_beer_area = source[start_point_y:end_point_y, start_point_x:end_point_x]
+            # cv2.imshow("region master", cup.region_master / 255)
+            # cv2.imshow("region median", cup.region_median / 255)
+            # # cv2.imshow("gray variety", region_gray)
+            # cv2.imshow("region difference", region_difference)
+            # cv2.waitKey(1)
+
+            blobs = extract_blobs(region_difference)
+            cup.is_empty = True
+
             for j in range(0, Cup.balls_num):
-                if check_ball(current_beer_area, j):
-                    if cup.has_balls[j] == 0:
-                        cup.has_balls[j] = Cup.max_ball_lifetime
-                    else:
-                        cup.has_balls[j] = min(cup.has_balls[j] + 1, Cup.max_ball_lifetime)
+                if check_ball(blobs, cup, j):
+                    cup.is_empty = False
+                    if j == 0:
+                        print("think red is in there")
+                    elif j == 1:
+                        print("think green is in there")
+                    cup.has_balls[j] = min(cup.has_balls[j] + 1, Cup.max_ball_lifetime)
                 else:
                     cup.has_balls[j] = max(cup.has_balls[j] - 1, 0)
 
-            cup.has_wand = check_wand(current_beer_area)
+            if check_wand_blue(blobs, cup):
+                print("think wand is there")
+                cup.is_empty = False
+                cup.has_wand = True
+            else:
+                cup.has_wand = False
 
-def check_ball(source, index):
+            if not cup.is_empty:
+                cup.empty_time = 0
+            elif cup.is_empty:
+                cup.empty_time = min(cup.empty_time + 1, len(cup.region_history))
 
+            print(cup.empty_time)
+            if cup.empty_time == len(cup.region_history):
+                cup.region_master = cup.region_median
+
+
+def check_ball(blobs, cup, ball_index):
+
+    for blob in blobs:
+
+        if blob.area < 30:
+            continue
+
+        region_to_check = np.zeros([cup.region_median.shape[0], cup.region_median.shape[1], 3])
+
+        region_pixels = np.array(blob.pixels)
+        region_to_check[region_pixels[:, 0], region_pixels[:, 1], :] = cup.region_median[region_pixels[:, 0], region_pixels[:, 1], :]
+
+        if color_check_presence(region_to_check, Cup.ball_colors[ball_index], BALL_COLOR_OFFSET_HSI):
+            return True
+
+
+def check_wand_blue(blobs, cup):
+
+    for blob in blobs:
+        region_to_check = np.zeros([cup.region_median.shape[0], cup.region_median.shape[1], 3])
+
+        region_pixels = np.array(blob.pixels)
+        region_to_check[region_pixels[:, 0], region_pixels[:, 1], :] = cup.region_median[region_pixels[:, 0], region_pixels[:, 1], :]
+
+        if color_check_presence(region_to_check, WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI):
+            return True
+
+
+def check_wand_black(source):
     blurred_frame = cv2.GaussianBlur(source, (3, 3), 0)
     hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
-
-    if index == 0:
-        lower_color = np.array([0, 131, 0])
-        upper_color = np.array([12, 255, 255])
-    else:
-        lower_color = np.array([48, 80, 50])
-        upper_color = np.array([61, 255, 255])
-
+    lower_color = np.array([0, 0, 0])
+    upper_color = np.array([179, 255, 70])
     mask = cv2.inRange(hsv, lower_color, upper_color)
 
     result = cv2.bitwise_and(source, source, mask=mask)
-
     kernel = np.ones((5, 5), np.uint8)
     closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
-    opening = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel, iterations=2)
-
-    contours, _ = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    for contour in contours:
-        area = cv2.contourArea(contour)
-        arclength = cv2.arcLength(contour, True)
-        rect = cv2.minAreaRect(contour)
-        box = cv2.boxPoints(rect)
-        box = np.int0(box)
-        circularity = 4 * np.pi * (area / (arclength * arclength))
-        if area > 70 and area < 600:
-            if circularity > 0.5 and circularity < 1.5:
-                cv2.drawContours(source, [box], 0, (0, 0, 255), 2)
-                return True
-    return False
-
-
-def check_wand(source):
-    blurred_frame = cv2.GaussianBlur(source, (3, 3), 0)
-    hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
-    lower_color = np.array([99, 67, 63])
-    upper_color = np.array([125, 255, 255])
-    mask = cv2.inRange(hsv, lower_color, upper_color)
-
-    result = cv2.bitwise_and(source, source, mask=mask)
-    kernel = np.ones((5, 5), np.uint8)
-    closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
-
-    cv2.imshow("closing", closing)
-
 
     contours, _ = cv2.findContours(closing, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     for contour in contours:
@@ -196,13 +225,10 @@ def check_wand(source):
         rect = cv2.minAreaRect(contour)
         box = cv2.boxPoints(rect)
         box = np.int0(box)
-        print(area)
         if 300 < area < 1000:
             if rect[1][1] > 20 or rect[1][0] > 20:
                 cv2.drawContours(source, [box], 0, (0, 0, 255), 2)
                 return True
-
-    cv2.imshow("source", source)
     return False
 
 def find_table_transform(source, dims):
@@ -265,5 +291,9 @@ def choose_option(source, options):
     for option in options:
         if option.working:
             # option.chosen = color_check_presence(get_roi(source, option.pos), WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI)
-            option.chosen = check_wand(get_roi(source, option.pos))
+            option.chosen = check_wand_black(get_roi(source, option.pos))
 
+
+# a = np.array([[1, 2], [3, 4], [5, 6]])
+# b = np.median(a)
+# print(b)

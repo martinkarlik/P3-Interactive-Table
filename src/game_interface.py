@@ -1,7 +1,7 @@
 import pygame
 
-DISPLAY_WIDTH = 1920
-DISPLAY_HEIGHT = 1080
+DISPLAY_WIDTH = 960
+DISPLAY_HEIGHT = 540
 
 
 GREEN_DISPLAY_COLOR = 7, 129, 30
@@ -49,7 +49,7 @@ def display_options(target, font, tape, options):
         w = int(options[i].pos[3] * DISPLAY_WIDTH) - int(options[i].pos[2] * DISPLAY_WIDTH)
         h = int(options[i].pos[1] * DISPLAY_HEIGHT) - int(options[i].pos[0] * DISPLAY_HEIGHT)
 
-        pygame.draw.rect(target, (50, 50, 50), (x, y, w, h), 5)
+        pygame.draw.rect(target, (50, 50, 50), (x, y, w, h), 10)
 
         text = font.render(options[i].title, True, WHITE_DISPLAY_COLOR)
         text_rect = text.get_rect(center=(x + w / 2, y + h / 2))
@@ -70,7 +70,7 @@ def display_options(target, font, tape, options):
                 fire_end_y = start_y + min(fire_len, abs(end_y - start_y)) if line_num < 2 else start_y - min(fire_len, abs(
                     end_y - start_y))
 
-                pygame.draw.line(target, (255, 255, 255), (start_x, start_y), (fire_end_x, fire_end_y), 5)
+                pygame.draw.line(target, (255, 255, 255), (start_x, start_y), (fire_end_x, fire_end_y), 10)
 
                 fire_len = fire_len - h if line_num % 2 == 0 else fire_len - w
                 line_num += 1
@@ -106,28 +106,29 @@ def display_cups(target, cups, teams):
 
             if any(cup.has_balls):
 
-                pygame.draw.circle(target, (25 * int(teams[i][0].drinks) * max(cup.has_balls), 25 * int(teams[i][1].drinks) * max(cup.has_balls), 0), (x, y), 30)
+                # pygame.draw.circle(target, (25 * int(teams[i][0].drinks) * max(cup.has_balls), 25 * int(teams[i][1].drinks) * max(cup.has_balls), 0), (x, y), 34, 5)
+                pygame.draw.circle(target, (25 * cup.has_balls[0], 25 * cup.has_balls[1], 0), (x, y), 34, 5)
 
             elif cup.is_yellow:
-                pygame.draw.circle(target, (255, 223, 0), (x, y), 30)
+                pygame.draw.circle(target, (255, 223, 0), (x, y), 34, 5)
 
             elif cup.is_red:
-                pygame.draw.circle(target, (255, 0, 0), (x, y), 30)
+                pygame.draw.circle(target, (115, 50, 50), (x, y), 34, 5)
 
             elif cup.selection_meter > 0:
                 if cup.selection_meter >= 10:
                     if cup.selection_meter in range(100, 105) or cup.selection_meter in range(110, 115):
-                        pygame.draw.circle(target, (255, 255, 255), (x, y), 50, 10)
+                        pygame.draw.circle(target, (255, 255, 255), (x, y), 34, 5)
                     else:
-                        pygame.draw.circle(target, (255, 200, 0), (x, y), 30)
+                        pygame.draw.circle(target, (255, 200, 0), (x, y), 34, 5)
                 else:
-                    pygame.draw.arc(target, (255, 255, 0), (x-15, y-15, 30, 30), 0.0, (cup.selection_meter / 10) * 6.283, 15)
+                    pygame.draw.arc(target, (50, 50, 150), (x-20, y-20, 40, 40), 0.0, (cup.selection_meter / 10) * 6.283, 20)
 
             else:
-                pygame.draw.circle(target, (255, 255, 255), (x, y), 30)
+                pygame.draw.circle(target, (255, 255, 255), (x, y), 34, 5)
 
 
-def game_over(target, teams, font, font2):
+def game_over(target, teams, font):
 
     team_a = teams[0]
     team_b = teams[1]
@@ -162,11 +163,11 @@ def game_over(target, teams, font, font2):
     teamScoreB = team_b[0].score + team_b[1].score
 
     if teamScoreA > teamScoreB:
-        text = font2.render("TEAM 1 WON!", True, WHITE_DISPLAY_COLOR)
+        text = font.render("TEAM 1 WON!", True, WHITE_DISPLAY_COLOR)
         text_rect = text.get_rect(center=(DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.15))
         target.blit(text, text_rect)
     else:
-        text = font2.render("TEAM 2 WON!", True, WHITE_DISPLAY_COLOR)
+        text = font.render("TEAM 2 WON!", True, WHITE_DISPLAY_COLOR)
         text_rect = text.get_rect(center=(DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.15))
         target.blit(text, text_rect)
 
