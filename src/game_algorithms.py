@@ -15,7 +15,7 @@ BLUE_COLOR_RGB = (21, 58, 110)
 
 
 BALL_COLOR_OFFSET_HSI = (15, 0.4, 0.4)
-WAND_COLOR_OFFSET_HSI = (20, 0.2, 0.4)
+WAND_COLOR_OFFSET_HSI = (15, 0.2, 0.4)
 
 DEFAULT_SRC_POINTS = np.float32([(2, 58), (622, 53), (619, 377), (14, 383)])
 
@@ -44,7 +44,7 @@ class Cup:
     max_lifetime = 10
     max_ball_lifetime = 10
     max_selected_time = 100
-    max_region_history_len = 10
+    max_region_history_len = 15
 
     def __init__(self, center, region_init):
         self.center = center
@@ -71,7 +71,7 @@ class Cup:
 def get_current_cups(source, template, current_cups):
 
     gray = cv2.cvtColor(source, cv2.COLOR_BGR2GRAY)
-    _, binary = cv2.threshold(gray, 40, 255, cv2.THRESH_BINARY_INV)
+    _, binary = cv2.threshold(gray, 45, 255, cv2.THRESH_BINARY_INV)
 
     match = match_template(binary, template)
 
@@ -132,22 +132,16 @@ def update_cups(current_cups, cups):
                 cups[i].pop(cups_len_init - j - 1)
 
 
-def investigate_cups(cups):
+def inform_cups(cups, chosen_mode):
 
     for side in cups:
         for cup in side:
 
             cup.region_median = np.median(cup.region_history, axis=0)
-            #
+
             region_variety = np.abs(cup.region_median - cup.region_master)
             region_gray = bgr_to_gray(region_variety)
-            region_difference = threshold(region_gray, 0.02, 1)
-
-            # cv2.imshow("region master", cup.region_master / 255)
-            # cv2.imshow("region median", cup.region_median / 255)
-            # # cv2.imshow("gray variety", region_gray)
-            # cv2.imshow("region difference", region_difference)
-            # cv2.waitKey(1)
+            region_difference = threshold(region_gray, 0.03, 1)
 
             blobs = extract_blobs(region_difference)
             cup.is_empty = True
@@ -155,28 +149,24 @@ def investigate_cups(cups):
             for j in range(0, Cup.balls_num):
                 if check_ball(blobs, cup, j):
                     cup.is_empty = False
-                    if j == 0:
-                        print("think red is in there")
-                    elif j == 1:
-                        print("think green is in there")
                     cup.has_balls[j] = min(cup.has_balls[j] + 1, Cup.max_ball_lifetime)
                 else:
                     cup.has_balls[j] = max(cup.has_balls[j] - 1, 0)
 
-            if check_wand_blue(blobs, cup):
-                print("think wand is there")
-                cup.is_empty = False
-                cup.has_wand = True
-            else:
-                cup.has_wand = False
+            if chosen_mode == "CASUAL":
+                if check_wand_blue(blobs, cup):
+                    cup.is_empty = False
+                    cup.has_wand = True
+                else:
+                    cup.has_wand = False
 
             if not cup.is_empty:
                 cup.empty_time = 0
+
             elif cup.is_empty:
                 cup.empty_time = min(cup.empty_time + 1, len(cup.region_history))
 
-            print(cup.empty_time)
-            if cup.empty_time == len(cup.region_history):
+            if cup.empty_time == Cup.max_region_history_len:
                 cup.region_master = cup.region_median
 
 
@@ -184,7 +174,7 @@ def check_ball(blobs, cup, ball_index):
 
     for blob in blobs:
 
-        if blob.area < 30:
+        if blob.area < 50:
             continue
 
         region_to_check = np.zeros([cup.region_median.shape[0], cup.region_median.shape[1], 3])
@@ -195,10 +185,15 @@ def check_ball(blobs, cup, ball_index):
         if color_check_presence(region_to_check, Cup.ball_colors[ball_index], BALL_COLOR_OFFSET_HSI):
             return True
 
+    return False
+
 
 def check_wand_blue(blobs, cup):
 
     for blob in blobs:
+
+        if blob.area < 50:
+            continue
         region_to_check = np.zeros([cup.region_median.shape[0], cup.region_median.shape[1], 3])
 
         region_pixels = np.array(blob.pixels)
@@ -206,6 +201,8 @@ def check_wand_blue(blobs, cup):
 
         if color_check_presence(region_to_check, WAND_COLOR_HSI, WAND_COLOR_OFFSET_HSI):
             return True
+
+    return False
 
 
 def check_wand_black(source):

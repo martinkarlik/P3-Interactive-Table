@@ -57,7 +57,7 @@ class Blob:
 
 
 def match_template(source, template):
-    return cv2.matchTemplate(source, template, cv2.TM_CCORR_NORMED)
+    return cv2.matchTemplate(source, template, cv2.TM_CCOEFF_NORMED)
 
 
 def threshold(source, threshold_value, max_value):

@@ -88,15 +88,7 @@ def display_score(target, font, teams):
             target.blit(pygame.transform.rotate(text, -90 + 180 * i), text_rect)
 
 
-# def display_message(target, font, cups, teams):
-#     for i in range(0, len(teams)):
-#         for j in range(0, len(teams[i])):
-#             text = font.render(str(teams[i][j].score), True, teams[i][j].color)
-#             text_rect = text.get_rect(center=(0.05 * DISPLAY_WIDTH + i * 0.9 * DISPLAY_WIDTH, 0.05 * DISPLAY_HEIGHT + j * 0.9 * DISPLAY_HEIGHT))
-#             target.blit(pygame.transform.rotate(text, -90 + 180 * i), text_rect)
-
-
-def display_cups(target, cups, teams):
+def display_cups(target, cups, teams, chosen_mode):
 
     for i in range(0, len(cups)):
         for cup in cups[i]:
@@ -106,8 +98,10 @@ def display_cups(target, cups, teams):
 
             if any(cup.has_balls):
 
-                # pygame.draw.circle(target, (25 * int(teams[i][0].drinks) * max(cup.has_balls), 25 * int(teams[i][1].drinks) * max(cup.has_balls), 0), (x, y), 34, 5)
-                pygame.draw.circle(target, (25 * cup.has_balls[0], 25 * cup.has_balls[1], 0), (x, y), 34, 5)
+                if chosen_mode == "CASUAL":
+                    pygame.draw.circle(target, (25 * int(teams[i][0].drinks) * max(cup.has_balls), 25 * int(teams[i][1].drinks) * max(cup.has_balls), 0), (x, y), 34, 5)
+                else:
+                    pygame.draw.circle(target, (25 * cup.has_balls[0], 25 * cup.has_balls[1], 0), (x, y), 34, 5)
 
             elif cup.is_yellow:
                 pygame.draw.circle(target, (255, 223, 0), (x, y), 34, 5)
@@ -128,7 +122,7 @@ def display_cups(target, cups, teams):
                 pygame.draw.circle(target, (255, 255, 255), (x, y), 34, 5)
 
 
-def game_over(target, teams, font):
+def display_result(target, teams, font):
 
     team_a = teams[0]
     team_b = teams[1]

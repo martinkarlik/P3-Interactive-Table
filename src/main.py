@@ -4,7 +4,6 @@ import random
 from src import game_algorithms
 from src import game_interface
 
-team_a_won = False
 
 FONT_SANS_BOLD = ['freesansbold.ttf', 25]
 FONT_MYRIAD_PRO_REGULAR = ['../fonts/MyriadProRegular.ttf', 60]
@@ -13,7 +12,7 @@ FONT_MYRIAD_PRO_REGULAR2 = ['../fonts/MyriadProRegular.ttf', 97]
 
 ICON = "../images/tableImages/cheers.png"
 TAPE_IMAGE = "../images/tableImages/tape.png"
-TABLE_IMAGES = ["../images/tableImages/mode_selection.png", "../images/tableImages/game_play_competitive.png",
+TABLE_IMAGES = ["../images/tableImages/mode_selection.png", "../images/tableImages/game_play_competitive.png",  "../images/tableImages/game_play_casual.png",
                 "../images/tableImages/game_over.png"]
 SONGS = ["../sound/kahoot_lobby.mp3", "../sound/jeopardy_theme.mp3", "../sound/epic_musix.mp3"]  # you_can_add_more
 
@@ -69,7 +68,6 @@ if __name__ == '__main__':
     play_again_button = game_interface.Button("PLAY AGAIN", [0.75, 0.95, 0.3, 0.7], True)
 
     teams = [[], []]
-    team_a_won = True
 
     teams[0] = [game_algorithms.Player(game_algorithms.Player.team_names[i], game_algorithms.Player.team_colors[i]) for i in range(0, game_algorithms.Player.players_num)]
     teams[0][random.randint(0, len(teams[0]) - 1)].drinks = True
@@ -83,14 +81,12 @@ if __name__ == '__main__':
     selection_music_playing = False
     hardcore_music_playing = False
     casual_music_playing = False
-    congratulations = True
 
     _, frame = cap.read()
     table_transform = game_algorithms.find_table_transform(frame, game_algorithms.TABLE_SHAPE)
-    # table = cv2.imread("../images/testImages/table_trans.jpg")
 
-    app_running = True
-    while app_running and cap.isOpened():
+    game_running = True
+    while game_running and cap.isOpened():
 
         _, frame = cap.read()
         table = game_algorithms.apply_transform(frame, table_transform, game_algorithms.TABLE_SHAPE)
@@ -109,9 +105,10 @@ if __name__ == '__main__':
                 if mode.selection_meter >= 100:
                     sound_fx[0].play()
                     game_phase = "game_play"
+                    congratulations = True
                     game_interface.Button.selected_option = mode.title
                     if game_interface.Button.selected_option == "CASUAL":
-                        table_img = game_interface.set_table_image(TABLE_IMAGES[1])
+                        table_img = game_interface.set_table_image(TABLE_IMAGES[2])
                     elif game_interface.Button.selected_option == "COMPETITIVE":
                         table_img = game_interface.set_table_image(TABLE_IMAGES[1])
 
@@ -130,51 +127,7 @@ if __name__ == '__main__':
 
             game_algorithms.get_current_cups(table, template, current_cups)
             game_algorithms.update_cups(current_cups, cups)
-            game_algorithms.investigate_cups(cups)
-
-            print("Cups: ", len(cups[0]), len(cups[1]))
-
-            # region Cup selection
-
-            yellow_cup_found = False
-
-            for side in cups:
-                for cup in side:
-                    if cup.is_yellow:
-                        yellow_cup_found = True
-
-                for cup in side:
-                    if cup.has_wand and not yellow_cup_found:
-                        cup.selection_meter = min(cup.selection_meter + 1, 100)
-                    else:
-                        cup.selection_meter = max(cup.selection_meter - 10, 0)
-
-                    if not cup.is_yellow and cup.selection_meter >= 10 and not jingle.get_busy():
-                        jingle.play(sound_fx[3])
-                        cup.is_yellow = True
-
-                        min_distance = 1000
-                        closest_cup_index = -1
-                        for i in range(0, len(side)):
-                            if cup is not side[i]:
-                                distance = abs(cup.center[0] - side[i].center[0]) + abs(cup.center[1] - side[i].center[1])
-                                if distance < min_distance:
-                                    min_distance = distance
-                                    closest_cup_index = i
-                        if closest_cup_index > -1:
-                            side[closest_cup_index].is_red = True
-
-                    if cup.is_yellow:
-                        cup.selected_time -= 1
-                        if cup.selected_time <= 0:
-                            cup.is_yellow = False
-                            cup.selected_time = cup.max_selected_time
-                            for other_cup in side:
-                                other_cup.is_red = False
-
-            # endregion
-
-            # region Score checking
+            game_algorithms.inform_cups(cups, game_interface.Button.selected_option)
 
             for i in range(0, len(teams)):
                 current_team = teams[len(teams) - i - 1]
@@ -206,42 +159,77 @@ if __name__ == '__main__':
                                     opposite_team[k + 1 if k + 1 < len(opposite_team) else 0].drinks = True
                                     break
 
-            if (len(cups[0]) == 0 or len(cups[1]) == 0) and (game_algorithms.Player.game_score[0] > 0 or game_algorithms.Player.game_score[1] > 0):
+            if game_interface.Button.selected_option == "CASUAL":
+
+                yellow_cup_found = False
+
+                for side in cups:
+                    for cup in side:
+                        if cup.is_yellow:
+                            yellow_cup_found = True
+
+                    for cup in side:
+                        if cup.has_wand and not yellow_cup_found:
+                            cup.selection_meter = min(cup.selection_meter + 1, 100)
+                        else:
+                            cup.selection_meter = max(cup.selection_meter - 10, 0)
+
+                        if not cup.is_yellow and cup.selection_meter >= 10 and not jingle.get_busy():
+                            jingle.play(sound_fx[3])
+                            cup.is_yellow = True
+
+                            min_distance = 1000
+                            closest_cup_index = -1
+                            for i in range(0, len(side)):
+                                if cup is not side[i]:
+                                    distance = abs(cup.center[0] - side[i].center[0]) + abs(cup.center[1] - side[i].center[1])
+                                    if distance < min_distance:
+                                        min_distance = distance
+                                        closest_cup_index = i
+                            if closest_cup_index > -1:
+                                side[closest_cup_index].is_red = True
+
+                        if cup.is_yellow:
+                            cup.selected_time -= 1
+                            if cup.selected_time <= 0:
+                                cup.is_yellow = False
+                                cup.selected_time = cup.max_selected_time
+                                for other_cup in side:
+                                    other_cup.is_red = False
+
+            if (len(cups[0]) == 0 and len(cups[1]) == 0) and (game_algorithms.Player.game_score[0] > 0 or game_algorithms.Player.game_score[1] > 0):
                 game_phase = "game_over"
-                table_img = game_interface.set_table_image(TABLE_IMAGES[2])
+                table_img = game_interface.set_table_image(TABLE_IMAGES[3])
 
-            # endregion
-
-            # CASUAL GAMEMODE
+            # CASUAL INTERFACE
             if game_interface.Button.selected_option == "CASUAL":
                 if not casual_music_playing:
                     casual_music_playing = True
                     pygame.mixer.music.stop()
                     pygame.mixer.music.load(SONGS[1])
                     pygame.mixer.music.play(-1)
+
                 game_interface.display_table_image(screen, table_img)
                 game_interface.display_score(screen, font, teams)
-                # game_interface.display_message(screen, font, teams, cups)
-                game_interface.display_cups(screen, cups, teams)
+                game_interface.display_cups(screen, cups, teams, game_interface.Button.selected_option)
 
-            # COMPETITIVE GAMEMODE
+            # COMPETITIVE INTERFACE
             if game_interface.Button.selected_option == "COMPETITIVE":
                 if not hardcore_music_playing:
                     hardcore_music_playing = True
                     pygame.mixer.music.stop()
                     pygame.mixer.music.load(SONGS[2])
                     pygame.mixer.music.play(-1)
+
                 game_interface.display_table_image(screen, table_img)
-                game_interface.display_score(screen, font, teams)
-                # game_interface.display_message(screen, font, teams, cups)
-                game_interface.display_cups(screen, cups, teams)
+                game_interface.display_cups(screen, cups, teams, game_interface.Button.selected_option)
 
         elif game_phase == "game_over":
 
             pygame.mixer.music.stop()
             selection_music_playing = False
             hardcore_music_playing = False
-            congratulations = False
+            congratulations = True
 
             game_algorithms.choose_option(table, [play_again_button])
 
@@ -267,10 +255,10 @@ if __name__ == '__main__':
                 play_again_button.selection_meter = 0
 
             game_interface.display_table_image(screen, table_img)
-            game_interface.game_over(screen, teams, font)
+            game_interface.display_result(screen, teams, font)
             game_interface.display_options(screen, font, tape_img, [play_again_button])
 
-            if game_algorithms.Player.game_score[0] > game_algorithms.Player.game_score[0]:
+            if game_algorithms.Player.game_score[0] < game_algorithms.Player.game_score[1]:
                 if not pygame.mixer.get_busy() and congratulations:
                     speak.play(speak_fx[0], 0)
                     congratulations = False
@@ -282,16 +270,12 @@ if __name__ == '__main__':
         # KEYBOARD INPUT
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                app_running = False
+                game_running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    app_running = False
+                    game_running = False
 
         pygame.display.update()
 
     cap.release()
     cv2.destroyAllWindows()
-
-
-# TODO better cup detection - make template matching not care about the middle part of the circle
-# TODO better object detection - either Malte's method, or at least less naive color thresholding than "one pixel -> it's a ball!"
