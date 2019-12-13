@@ -120,6 +120,8 @@ def display_cups(target, cups, teams, chosen_mode):
 
             else:
                 pygame.draw.circle(target, (255, 255, 255), (x, y), 34, 5)
+                pygame.draw.circle(target, (255, 0, 0), (x, y), 1)
+
 
 
 def display_result(target, teams, font):

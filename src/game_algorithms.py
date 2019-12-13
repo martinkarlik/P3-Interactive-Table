@@ -17,7 +17,12 @@ BLUE_COLOR_RGB = (21, 58, 110)
 BALL_COLOR_OFFSET_HSI = (15, 0.4, 0.4)
 WAND_COLOR_OFFSET_HSI = (15, 0.2, 0.4)
 
-DEFAULT_SRC_POINTS = np.float32([(2, 58), (622, 53), (619, 377), (14, 383)])
+DEFAULT_SRC_POINTS = np.float32([(3, 43), (624, 27), (625, 351), (20, 367)])
+
+# [[  3.  43.]
+#  [624.  27.]
+#  [625. 351.]
+#  [ 20. 367.]]
 
 
 class Player:
@@ -254,12 +259,11 @@ def find_table_transform(source, dims):
     markers = []
     for blob in blobs:
         if blob.area in range(700, 1200) and blob.compactness > 0.85:
-            print("Blob: ", blob.area, blob.compactness)
             markers.append(blob)
 
     src_points = DEFAULT_SRC_POINTS
 
-    if len(markers) == 4 and False:
+    if len(markers) == 4:
         ordered_markers = [pop_closest(markers, [0, 0]), pop_closest(markers, [0, source.shape[1]]),
                            pop_closest(markers, [source.shape[0], source.shape[1]]) , pop_closest(markers, [source.shape[0], 0])]
 
@@ -267,6 +271,8 @@ def find_table_transform(source, dims):
                                 (ordered_markers[1].bounding_box[3], ordered_markers[1].bounding_box[0]),
                                 (ordered_markers[2].bounding_box[3], ordered_markers[2].bounding_box[2]),
                                 (ordered_markers[3].bounding_box[1], ordered_markers[3].bounding_box[2])])
+
+        print(src_points)
 
     dst_points = np.float32([(0, 0),
                   (dims[0], 0),

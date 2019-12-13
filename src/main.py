@@ -1,9 +1,11 @@
 import pygame
 import cv2
 import random
+import time
 from src import game_algorithms
 from src import game_interface
 
+started = False
 
 FONT_SANS_BOLD = ['freesansbold.ttf', 25]
 FONT_MYRIAD_PRO_REGULAR = ['../fonts/MyriadProRegular.ttf', 60]
@@ -29,6 +31,9 @@ SPEAK = ["../sound/Speak/team_1_wins.wav", "../sound/Speak/team_2_wins.wav", "..
 
 if __name__ == '__main__':
 
+    total_time = 0
+    total_frames = 0
+
     # CAPTURE SETUP
     cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
@@ -51,7 +56,7 @@ if __name__ == '__main__':
     for sound in SOUNDS:
         sound_fx.append(pygame.mixer.Sound(sound))
 
-    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((game_interface.DISPLAY_WIDTH, game_interface.DISPLAY_HEIGHT))
     font = pygame.font.Font(FONT_SANS_BOLD[0], FONT_SANS_BOLD[1])
 
     table_img = game_interface.set_table_image(TABLE_IMAGES[0])
@@ -59,7 +64,7 @@ if __name__ == '__main__':
     template = cv2.imread("../images/testImages/beer.jpg", cv2.IMREAD_GRAYSCALE)
 
     # GAME LOGIC SETUP
-    game_phase = "mode_selection"
+    game_phase = "game_play"
     modes = [game_interface.Button("CASUAL", [0.35, 0.55, 0.1, 0.4], True),
              game_interface.Button("COMPETITIVE", [0.35, 0.55, 0.6, 0.9], True),
              game_interface.Button("CUSTOM", [0.7, 0.9, 0.1, 0.4], False),
@@ -88,7 +93,15 @@ if __name__ == '__main__':
     game_running = True
     while game_running and cap.isOpened():
 
+        start = time.time()
+
+
+
         _, frame = cap.read()
+
+        # fps = cap.get(cv2.CAP_PROP_FPS)
+        # print(game_phase, ": Frames per second using video.get(cv2.CAP_PROP_FPS) : {0}".format(fps))
+
         table = game_algorithms.apply_transform(frame, table_transform, game_algorithms.TABLE_SHAPE)
         # cv2.imshow("table", table)
 
@@ -125,9 +138,22 @@ if __name__ == '__main__':
 
             current_cups = [[], []]
 
-            game_algorithms.get_current_cups(table, template, current_cups)
-            game_algorithms.update_cups(current_cups, cups)
-            game_algorithms.inform_cups(cups, game_interface.Button.selected_option)
+            # game_algorithms.get_current_cups(table, template, current_cups)
+            # game_algorithms.update_cups(current_cups, cups)
+            # game_algorithms.inform_cups(cups, game_interface.Button.selected_option)
+
+
+            # if len(cups[0]) == 1 and not started and not cups[0][0].is_present:
+            #     start = time.time()
+            #     started = True
+            #
+            # if len(cups[0]) == 0 and started:
+            #     end = time.time()
+            #     occluded = end - start
+            #     print("Occluded for: ", occluded)
+            #     started = False
+
+
 
             for i in range(0, len(teams)):
                 current_team = teams[len(teams) - i - 1]
@@ -276,6 +302,19 @@ if __name__ == '__main__':
                     game_running = False
 
         pygame.display.update()
+
+        end = time.time()
+
+        time_per_frame = end - start
+
+        total_frames += 1
+        total_time += time_per_frame
+
+        if total_time >= 120:
+            game_running = False
+
+            print("Average framerate: ", total_frames/total_time)
+
 
     cap.release()
     cv2.destroyAllWindows()
